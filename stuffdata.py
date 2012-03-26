@@ -329,29 +329,3 @@ class StuffContainer :
 
         # 4.操作完成.
         self.log("\n@@@---- 成功: 员工脱离工作状态! ----@@@")
-
-    def leaveWait(self, Id) :
-        self.log("\n{}号员工脱离等待状态操作: ".format(Id))
-        # 1.取得员工基本信息
-        stuff = self.__stuffs[Id]
-        time = stuff.wTime
-        wType = stuff.wType
-        sType = stuff.sType
-        waitPos = stuff.waitPos
-        self.log(
-        "\n工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
-                     .format(waitPos, time, wType, sType))
-
-        # 2.脱离waitPoses序列
-        self.__workSeqs[time].waitPoses.remove( (waitPos, Id) )
-        self.log("\n工号:{}, 脱离第{}次等待位置序列."\
-                     .format(waitPos, time))
-
-        # 3.脱离workSeq[time]
-        if sType is not self.WAIT :
-            self.log("\n!!!---- 错误: 员工队伍类型有误----!!!")
-            return
-        self.__workSeqs[time].wSeq.pop(waitPos)
-
-        # 4.操作完成
-        self.log("\n@@@---- 成功: 员工脱离等待状态! ----@@@")
