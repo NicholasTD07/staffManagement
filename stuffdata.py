@@ -399,3 +399,18 @@ class StuffContainer :
 
         # 2.调用 self.updateMax(Id, time + 1)完成功能
         self.updateMax(Id, time + 1)
+
+    # 复合操作 #
+    def stuffWait(Id) :
+    self.log("\n{}号员工进入等待状态操作: ".format(Id))
+
+    # 1.获得员工基本信息
+    stuff = self.__stuffs[Id]
+    if workPos is not None :
+        workPos = stuff.workPos
+    if stuff.waitPos is not None:
+        waitPos = stuff.waitPos
+
+    # 2.判断工作状态,确定是否需要脱离工作队伍
+    if 
+        self.leaveWork(Id)
