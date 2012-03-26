@@ -301,6 +301,7 @@ class StuffContainer :
     # 基本操作 #
     def leaveWork(self, Id) :
         self.log("\n{}号员工脱离工作状态操作: ".format(Id))
+
         # 1.取得员工基本信息
         stuff = self.__stuffs[Id]
         time = stuff.wTime
@@ -332,6 +333,7 @@ class StuffContainer :
 
     def leaveWait(self, Id) :
         self.log("\n{}号员工脱离等待状态操作: ".format(Id))
+
         # 1.取得员工基本信息
         stuff = self.__stuffs[Id]
         time = stuff.wTime
