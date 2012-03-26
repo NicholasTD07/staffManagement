@@ -309,21 +309,21 @@ class StuffContainer :
         sType = stuff.sType
         workPos = stuff.workPos
         self.log(
-        "\n工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
+        "\n\n工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(workPos, time, wType, sType))
 
         # 2.脱离workPoses序列
         self.__workSeqs[time].workPoses.remove( (workPos, Id) )
-        self.log("\n工号:{}, 脱离第{}次工作位置序列."\
+        self.log("\n\n工号:{}, 脱离第{}次工作位置序列."\
                      .format(workPos, time))
 
         # 3.脱离workSeqs[time]
         if sType is self.NOR :
             self.__workSeqs[time].nSeq.pop(workPos)
-            self.log("\n脱离NOR工作队伍.")
+            self.log("\n\n脱离NOR工作队伍.")
         elif sType is self.SEL :
             self.__workSeqs[time].sSeq.pop(workPos)
-            self.log("\n脱离SEL工作队伍.")
+            self.log("\n\n脱离SEL工作队伍.")
         else :
             self.log("\n!!!---- 错误: 员工队伍类型有误----!!!")
             return
@@ -341,12 +341,12 @@ class StuffContainer :
         sType = stuff.sType
         waitPos = stuff.waitPos
         self.log(
-        "\n工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
+        "\n\n工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(waitPos, time, wType, sType))
 
         # 2.脱离waitPoses序列
         self.__workSeqs[time].waitPoses.remove( (waitPos, Id) )
-        self.log("\n工号:{}, 脱离第{}次等待位置序列."\
+        self.log("\n\n工号:{}, 脱离第{}次等待位置序列."\
                      .format(waitPos, time))
 
         # 3.脱离workSeq[time]
@@ -373,12 +373,12 @@ class StuffContainer :
         # 3.判断是否超出当前最大值
         if time > self.__maxTime :
             self.__maxTime = time
-            self.log("\n序列最大最大次数被更新: {}次"\
+            self.log("\n\n序列最大最大次数被更新: {}次"\
             .format(time))
 
             # 4.自动新增序列
 
-            self.log("\n更新时间队列: 自动更新最大工作次数.")
+            self.log("\n\n更新时间队列: 自动更新最大工作次数.")
             count = 0
             while len(self.__workSeqs) < ( time + 1 ) :
                 self.__workSeqs.append(TimeSeq())
