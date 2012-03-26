@@ -357,3 +357,35 @@ class StuffContainer :
 
         # 4.操作完成
         self.log("\n@@@---- 成功: 员工脱离等待状态! ----@@@")
+
+    def updateMax(self, Id, time) :
+        self.log("\n{}号员工指定第{}次工作操作, 并自动更新: "\
+        .format(Id, time))
+
+        # 1.取得员工基本信息
+        stuff = self.__stuffs[Id]
+        self.log("\n员工工作次数:{}, 序列最大值: {}."\
+         .format(stuff.wTime, self.__maxTime))
+
+        # 2.设定员工工作序号为指定次数
+        stuff.wTime = time
+
+        # 3.判断是否超出当前最大值
+        if time > self.__maxTime :
+            self.__maxTime = time
+            self.log("\n序列最大最大次数被更新: {}次"\
+            .format(time))
+
+            # 4.自动新增序列
+
+            self.log("\n更新时间队列: 自动更新最大工作次数.")
+            count = 0
+            while len(self.__workSeqs) < ( time + 1 ) :
+                self.__workSeqs.append(TimeSeq())
+                count += 1
+            self.log("\n@更新时间队列: 自动增加了{}列时间队列@"\
+            .format(count))
+        else :
+            self.log("\n@@@----序列最大工作次数保持: {}次----@@@"\
+            .format(time))
+
