@@ -395,17 +395,6 @@ class StuffContainer :
             self.log("\n@@@----序列最大工作次数保持: {}次----@@@"\
             .format(time))
 
-    #def incUpdate(Id) :
-    #    self.log("\n{}号员工增加一次工作次数, 并自动更新: "\
-    #    .format(Id))
-
-    #    # 1.取得员工基本信息
-    #    stuff = self.__stuffs[Id]
-    #    time = stuff.wTime
-
-    #    # 2.调用 self.updateMax(Id, time + 1)完成功能
-    #    self.updateMax(Id, time + 1)
-
     # 复合操作 #
     def stuffWait(Id) :
         self.log("\n{}号员工进入等待状态操作: ".format(Id))
