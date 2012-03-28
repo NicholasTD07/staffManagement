@@ -33,8 +33,8 @@ class Stuff :
     def tell(self) :
         print("""我是{}号员工, 我叫{}, {}.处于第{}时间队列内.
 我的工作类型是: {}, 队伍类型是: {}. 我的等待序号: {}, 工作序号: {}."""\
-        .format(Id, name, gender, wTime,
-            wType, sType, waitPos, workPos))
+        .format(self.Id, self.name, self.gender, self.wTime,
+            self.wType, self.sType, self.waitPos, self.workPos))
 
 class TimeSeq :
     """包含不同工作次数的员工"""
@@ -325,6 +325,9 @@ class StuffContainer :
 
         # 3.脱离workSeqs[time]
         if sType is self.NOR :
+            # test only #
+            for stuff in self.__workSeqs[time].nSeq.values() :
+                print(stuff.Id, stuff.workPos)
             self.__workSeqs[time].nSeq.pop(workPos)
             self.log("\t\t\t脱离NOR工作队伍.")
         elif sType is self.SEL :
@@ -419,7 +422,7 @@ class StuffContainer :
             self.log("\t\t\t当前序列正常工作序号更新为 {}"\
                 .format(self.__workSeqs[time].nPos))
             # 4.加入对应工作队列
-            self.__workSeqs[time].nSeq[Id] = stuff
+            self.__workSeqs[time].nSeq[nPos] = stuff
             # 5.设定员工队列类型
             stuff.sType = self.NOR
         elif wType is self.SEL :
@@ -432,7 +435,7 @@ class StuffContainer :
             self.log("\t\t\t当前序列选钟等待序号更新为 {}"\
                 .format(self.__workSeqs[time].sPos))
             # 4.加入对应工作队列
-            self.__workSeqs[time].sSeq[Id] = stuff
+            self.__workSeqs[time].sSeq[waitPos] = stuff
             # 5.设定员工队列类型
             stuff.sType = self.SEL
         elif wType is self.NAMED :
@@ -446,7 +449,7 @@ class StuffContainer :
                 self.log("\t\t\t当前序列选钟序号更新为 {}"\
                     .format(self.__workSeqs[time].sPos))
                 # 4.加入对应工作队列
-                self.__workSeqs[time].sSeq[Id] = stuff
+                self.__workSeqs[time].sSeq[sPos] = stuff
                 # 5.设定员工队列类型
                 stuff.sType = self.SEL
             else :
@@ -459,7 +462,7 @@ class StuffContainer :
                 self.log("\t\t\t当前序列正常工作序号更新为 {}"\
                     .format(self.__workSeqs[time].nPos))
                 # 4.加入对应工作队列
-                self.__workSeqs[time].nSeq[Id] = stuff
+                self.__workSeqs[time].nSeq[nPos] = stuff
                 # 5.设定员工队列类型
                 stuff.sType = self.NOR
         else :
@@ -688,6 +691,16 @@ if __name__ == '__main__' :
             (endTime - stuffWorkTime)))
     print("员工工号: {}".format(S.getIDs()))
 
+
+    S.stuffsWork(S.NOR, 4, 5, 6)
+    S.stuffsWork(S.NAMED, 7, 8)
+    S.getStuffs()[1].tell()
+    S.stuffsWork(S.SEL, 1, 2, 3)
+    S.stuffsWork(S.NAMED, 5, 6)
+    S.stuffsWork(S.SEL, 9)
+    S.reportStuffs()
+    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.reportStuffs()
 
     #S.save("/home/thedevil/test.qpc")
     #S.load("/home/thedevil/test.qpc")
