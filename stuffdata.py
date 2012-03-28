@@ -497,3 +497,12 @@ class StuffContainer :
 
     def stuffWork(Id) :
         stuffJumpWork(Id, self.__stuffs[Id].wTime + 1)
+
+    # 批量操作 #
+    def stuffsWait(self, *IDs)
+        for Id in IDs :
+            self.stuffWait(Id)
+
+    def StuffsWork(self, wType=NOR, *IDs)
+        for Id in IDs :
+            self.stuffWork(Id, wType)
