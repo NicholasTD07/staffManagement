@@ -395,6 +395,74 @@ class StuffContainer :
             self.log("\n@@@----序列最大工作次数保持: {}次----@@@"\
             .format(time))
 
+    def goWork(self, Id, wType) :
+        self.log("\n\n{}号员工goWork操作.".format(Id))
+
+        # 1.获得员工基本信息
+        stuff = self.__stuffs[Id]
+
+        # 2.设定员工工作类型
+        stuff.wType = wType
+
+        # 3.设定员工工作序号, 并更新序列中的序号
+        # 4.加入对应工作队列
+        # 5.设定员工队列类型
+
+        if wType is self.NOR :
+            # 3.设定员工工作序号, 并更新序列中的序号
+            nPos = self.__workSeqs[time].nPos
+            stuff.workPos = nPos 
+            self.log("\n\n\n工作序号已设置为当前序列正常工作号: {}"\
+                .format(nPos))
+            self.__workSeqs[time].nPos += 1
+            self.log("\n\n\n当前序列正常工作序号更新为 {}"\
+                .format(self.__workSeqs[time].nPos))
+            # 4.加入对应工作队列
+            self.__workSeqs[time].nSeq[Id] = stuff
+            # 5.设定员工队列类型
+            stuff.sType = self.NOR
+        elif wType is self.SEL :
+            # 3.设定员工工作序号, 并更新序列中的序号
+            waitPos = stuff.waitPos
+            stuff.workPos = waitPos
+            self.log("\n\n\n工作序号已设置为员工等待序号: {}"\
+                .format(waitPos))
+            self.__workSeqs[time].sPos = waitPos + 1
+            self.log("\n\n\n当前序列选钟等待序号更新为 {}"\
+                .format(self.__workSeqs[time].sPos))
+            # 4.加入对应工作队列
+            self.__workSeqs[time].sSeq[Id] = stuff
+            # 5.设定员工队列类型
+            stuff.sType = self.SEL
+        elif wType is self.NAMED :
+            if self.__workSeqs[time].sSeq :
+                # 3.设定员工工作序号, 并更新序列中的序号
+                sPos = self.__workSeqs[time].sPos
+                stuff.workPos = sPos
+                self.log("\n\n\n工作序号已设置为当前序列选钟序号: {}"\
+                    .format(sPos))
+                self.__workSeqs[time].sPos += 1
+                self.log("\n\n\n当前序列选钟序号更新为 {}"\
+                    .format(self.__workSeqs[time].sPos))
+                # 4.加入对应工作队列
+                self.__workSeqs[time].sSeq[Id] = stuff
+                # 5.设定员工队列类型
+                stuff.sType = self.SEL
+            else :
+                # 3.设定员工工作序号, 并更新序列中的序号
+                nPos = self.__workSeqs[time].nPos
+                stuff.workPos = nPos 
+                self.log("\n\n\n工作序号已设置为当前序列正常工作号:{}"\
+                    .format(nPos))
+                self.__workSeqs[time].nPos += 1
+                self.log("\n\n\n当前序列正常工作序号更新为 {}"\
+                    .format(self.__workSeqs[time].nPos))
+                # 4.加入对应工作队列
+                self.__workSeqs[time].nSeq[Id] = stuff
+                # 5.设定员工队列类型
+                stuff.sType = self.NOR
+        # 6.清除等待序号
+            
     # 复合操作 #
     def stuffWait(Id) :
         self.log("\n{}号员工进入等待状态操作: ".format(Id))
