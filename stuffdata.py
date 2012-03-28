@@ -459,7 +459,10 @@ class StuffContainer :
         #wType = stuff.wType
 
         # 2.员工脱离等待状态
-        self.leaveWait(Id)
+        try :
+            self.leaveWait(Id)
+        except error.wrongType :
+            return
         self.updateMax(Id, time)
 
         # 3.设定员工工作类型, 加入工作队列, 设定队列类型
