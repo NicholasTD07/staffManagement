@@ -612,6 +612,43 @@ class StuffContainer :
         for Id in IDs :
             self.stuffWork(Id, wType)
 
+    # 调试 #
+    def reportStuffs(self) :
+        """汇报当前正在工作的员工情况."""
+        print("含有{0}名员工.".format(len(S)))
+        for workSeq in self.__workSeqs :
+            if 1 :
+                print("第{0}次工作队列 \t"\
+                    .format(self.__workSeqs.index(workSeq)))
+                print()
+                print("正常上班序列")
+                print("当前上班班号: {0}"\
+                    .format(workSeq.nPos))
+                for stuff in workSeq.nSeq.values() :
+                    print(
+                    "员工工号: {0} 上班号码: {1} 上班次数:{2}"\
+                    .format(stuff.Id,
+                    stuff.workPos, stuff.wTime))
+                print()
+                print("选钟后上班序列")
+                print("当前上班班号: {0}"\
+                    .format(workSeq.sPos))
+                for stuff in workSeq.sSeq.values() :
+                    print(
+                    "员工工号: {0} 上班号码: {1} 上班次数:{2}"\
+                    .format(stuff.Id,
+                    stuff.workPos, stuff.wTime))
+                print()
+                print("等待员工")
+                print("当前等待班号: {0}"\
+                    .format(workSeq.wPos))
+                for stuff in workSeq.wSeq.values() :
+                    print(
+                    "员工工号: {0} 等待号码: {1} 上班次数:{2}"\
+                    .format(stuff.Id,
+                    stuff.waitPos, stuff.wTime))
+        print("\n END ")
+        print("最大工作次数: {0}".format(S.getMaxTime()))
 
 if __name__ == '__main__' :
     
