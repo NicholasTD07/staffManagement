@@ -576,3 +576,36 @@ class StuffContainer :
     def StuffsWork(self, wType=NOR, *IDs)
         for Id in IDs :
             self.stuffWork(Id, wType)
+
+
+if __name__ == '__main__' :
+    
+    S = StuffContainer()
+
+
+    startTime = time()
+    S.addStuffs(S.MALE, 1,2,3,4,5,6,7,8,9)
+    createTime = time()
+    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.reportStuffs()
+    S.stuffsWork(S.NOR,1, 2, 3, 4, 5, 6, 7, 8, 9)
+    stuffWorkTime = time()
+
+    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.stuffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    stuffWork2Time = time()
+    S.reportStuffs()
+    endTime = time()
+    print("""创建员工时间 {0} \n
+员工第一次工作时间 {1}\n员工第二次工作时间 {2}
+报告时间 {3}"""\
+        .format((createTime - startTime),
+            (stuffWorkTime - createTime),
+            (stuffWork2Time - stuffWorkTime),
+            (endTime - stuffWorkTime)))
+    print("员工工号: {}".format(S.getIDs()))
+
+
+    #S.save("/home/thedevil/test.qpc")
+    #S.load("/home/thedevil/test.qpc")
