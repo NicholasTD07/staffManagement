@@ -221,6 +221,7 @@ class StuffContainer :
     def loadPickle(self) :
         error = None
         theFile = None
+        stuffs = None
         try :
             theFile = open(self.__fileName, "rb")
             self.clear(False)
@@ -236,7 +237,7 @@ class StuffContainer :
             self.dirty = False
             msg = "\t读取文件: 成功!"
             self.log(msg)
-            return True, msg, stuffs
+            return (True, msg, stuffs)
 
     #------------------#
 
@@ -702,5 +703,5 @@ if __name__ == '__main__' :
     S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.reportStuffs()
 
-    #S.save("/home/thedevil/test.qpc")
-    #S.load("/home/thedevil/test.qpc")
+    S.save("/home/thedevil/test.qpc")
+    S.load("/home/thedevil/test.qpc")
