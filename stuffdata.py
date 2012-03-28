@@ -402,22 +402,59 @@ class StuffContainer :
 
     # 复合操作 #
     def stuffWait(Id) :
-    self.log("\n{}号员工进入等待状态操作: ".format(Id))
+        self.log("\n{}号员工进入等待状态操作: ".format(Id))
 
-    # 1.获得员工基本信息
-    stuff = self.__stuffs[Id]
-    time = stuff.wTime
-    wType = stuff.wType
-    #if workPos is not None :
-    #    workPos = stuff.workPos
-    #if stuff.waitPos is not None:
-    #    waitPos = stuff.waitPos
+        # 1.获得员工基本信息
+        stuff = self.__stuffs[Id]
+        time = stuff.wTime
+        wType = stuff.wType
+        #if workPos is not None :
+        #    workPos = stuff.workPos
+        #if stuff.waitPos is not None:
+        #    waitPos = stuff.waitPos
 
-    # 2.判断工作状态,确定是否需要脱离工作队伍
-    if wType is self.NOR or self.SEL or self.NAMED :
-        self.leaveWork(Id)
-        # 3.
-    elif wType is self.IDLE :
-    elif wType is self.WAIT :
-        self.log()
-        return
+        # 2.判断工作状态,确定是否需要脱离工作队伍
+        if wType is self.NOR or self.SEL or self.NAMED :
+            self.leaveWork(Id)
+            # 3.脱离工作队伍, 将等待序号设置为当前工作序号(原位等待)
+            stuff.waitPos = stuff.workPos
+            # 4.将工作序号清除
+            stuff.workPos = None
+            self.log("\n\n等待序号已设置为当前工作序号: {}, 工作序号清零."\
+            .format(stuff.waitPos))
+        elif wType is self.IDLE :
+            # 3.将等待序号设置为当前序列等待序号
+            wPos = self.__workSeqs[time].wPos
+            stuff.waitPos = wPos
+            self.log("\n\n等待序号已设置为序列等待序号: {}."
+            .format(wPos))
+            # 4.更新当前序列等待序号
+            self.__workSeqs[time].wPos += 1
+            self.log("\n\n当前序列等待序号更新为: {}"\
+            .format(self.__workSeqs[time].wPos))
+        elif wType is self.WAIT :
+            self.log("\n\n{}号员工已处于等待状态, 退出操作."format(Id))
+            return
+
+        # 5.更新 最大等待序号
+        waitPos = stuff.waitPos
+        if waitPos > self.__maxWaitPos :
+            self.__maxWaitPos = waitPos
+            self.log("\n\n员工工作序号为当前最大值.更新容器中最大值.")
+        
+        # 6.设置 工作状态为等待
+        stuff.wType = self.WAIT
+        self.log("\n\n员工工作状态改变: 等待.")
+
+        # 7.加入 等待序列, 并更新等待序号序列
+        self.__workSeqs[time].wSeq[Id] = stuff
+        self.__workSeqs[time].waitPoses.append( (waitPos, Id) )
+        self.log("\n\n员工被加入第{}此时间队列的等待序列, 并添加waitPoses"\
+        .format(time))
+
+        # 8.将员工序号加入 被更改员工队列
+        self.__modStuffs.append(Id)
+        self.log("\n\n员工进入等待状态操作已完成, 加入变动员工组")
+
+        # 4.操作完成
+        self.log("\n@@@---- 成功: 员工进入等待状态! ----@@@")
