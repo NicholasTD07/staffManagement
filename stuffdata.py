@@ -488,3 +488,6 @@ class StuffContainer :
 
         # 7.操作完成
         self.log("\n@@@---- 成功: 员工进入工作状态! ----@@@")
+
+    def stuffWork(Id) :
+        stuffJumpWork(Id, self.__stuffs[Id].wTime + 1)
