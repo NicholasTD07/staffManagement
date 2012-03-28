@@ -461,7 +461,11 @@ class StuffContainer :
                 self.__workSeqs[time].nSeq[Id] = stuff
                 # 5.设定员工队列类型
                 stuff.sType = self.NOR
+        else :
+            raise errorclass.wrongType("员工下一次工作类型有误.")
+
         # 6.清除等待序号
+        stuff.waitPos = None
             
     # 复合操作 #
     def stuffWait(Id) :
@@ -529,14 +533,19 @@ class StuffContainer :
         # 2.员工脱离等待状态
         try :
             self.leaveWait(Id)
-        except error.wrongType :
+        except errorclass.wrongType :
             self.log("\n!!!---- 错误: 进入工作状态操作不成功----!!!")
             return
         self.updateMax(Id, time)
 
         # 3.设定员工工作类型, 加入工作队列, 设定队列类型
         #   并且 清除等待序号
-        self.goWork(Id)
+        try :
+            self.goWork(Id)
+        except errorclass.wrongType :
+            self.log("\n!!!---- 错误: 进入工作状态操作不成功----!!!")
+            self.updateMax(Id, wTime)
+            return
 
         # 4.更新最大工作序号
         workPos = stuff.workPos
