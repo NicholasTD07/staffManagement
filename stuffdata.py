@@ -350,16 +350,16 @@ class StuffContainer :
         "\n\n工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(waitPos, time, wType, sType))
 
-        # 2.脱离waitPoses序列
-        self.__workSeqs[time].waitPoses.remove( (waitPos, Id) )
-        self.log("\n\n工号:{}, 脱离第{}次等待位置序列."\
-                     .format(waitPos, time))
-
-        # 3.脱离workSeq[time]
+        # 2.脱离workSeq[time]
         if sType is not self.WAIT :
             self.log("\n!!!---- 错误: 员工队伍类型有误----!!!")
             raise errorclass.wrongType("员工队伍类型有误.")
         self.__workSeqs[time].wSeq.pop(waitPos)
+
+        # 3.脱离waitPoses序列
+        self.__workSeqs[time].waitPoses.remove( (waitPos, Id) )
+        self.log("\n\n工号:{}, 脱离第{}次等待位置序列."\
+                     .format(waitPos, time))
 
         # 4.操作完成
         self.log("\n@@@---- 成功: 员工脱离等待状态! ----@@@")
@@ -462,6 +462,7 @@ class StuffContainer :
         try :
             self.leaveWait(Id)
         except error.wrongType :
+            self.log("\n!!!---- 错误: 进入工作状态操作不成功----!!!")
             return
         self.updateMax(Id, time)
 
