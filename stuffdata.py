@@ -600,6 +600,10 @@ class StuffContainer :
         stuffJumpWork(Id, wType, self.__stuffs[Id].wTime + 1)
 
     # 批量操作 #
+    def addStuffs(self, gender, *IDs) :
+        for Id in IDs :
+            self.updateStuff(Id,gender)
+
     def stuffsWait(self, *IDs)
         for Id in IDs :
             self.stuffWait(Id)
