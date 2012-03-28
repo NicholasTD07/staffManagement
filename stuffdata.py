@@ -406,11 +406,18 @@ class StuffContainer :
 
     # 1.获得员工基本信息
     stuff = self.__stuffs[Id]
-    if workPos is not None :
-        workPos = stuff.workPos
-    if stuff.waitPos is not None:
-        waitPos = stuff.waitPos
+    time = stuff.wTime
+    wType = stuff.wType
+    #if workPos is not None :
+    #    workPos = stuff.workPos
+    #if stuff.waitPos is not None:
+    #    waitPos = stuff.waitPos
 
     # 2.判断工作状态,确定是否需要脱离工作队伍
-    if 
+    if wType is self.NOR or self.SEL or self.NAMED :
         self.leaveWork(Id)
+        # 3.
+    elif wType is self.IDLE :
+    elif wType is self.WAIT :
+        self.log()
+        return
