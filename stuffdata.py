@@ -468,6 +468,33 @@ class StuffContainer :
         stuff.waitPos = None
             
     # 复合操作 #
+    def updateStuff(self, Id, 
+            gender=None, name=None) :
+        self.log("\n更新员工操作: ")
+
+        # 1.判断员工工号是否存在
+        if Id not in self.__stuffs :
+            self.log("\n\n没有工号为: {}号的员工, 添加员工."
+            self.stuffs[Id] = Stuff(Id)
+            self.__IDs.append(Id)
+            self.__IDs.sort()
+            # 2.判断员工工号是否为最大值
+            if Id > self.__maxId :
+                self.__maxId = Id
+            # 3.设置员工工作类型为空闲
+            self.__stuffs[Id].wType = self.IDLE
+        # 4.获得员工
+        stuff = self.__stuffs[Id]
+        # 5.更新员工信息
+        if gender is not None :
+            stuff.gender = gender
+        if name is not None :
+            stuff.name = name
+        # 6.将员工添加至 变动员工组
+        self.__modStuffs.append(Id)
+        # 7.设置容器状态为已改变
+        self.__dirty = True
+
     def stuffWait(Id) :
         self.log("\n{}号员工进入等待状态操作: ".format(Id))
 
@@ -519,8 +546,11 @@ class StuffContainer :
         self.__modStuffs.append(Id)
         self.log("\n\n员工进入等待状态操作已完成, 加入变动员工组")
 
-        # 4.操作完成
+        # 9.操作完成
         self.log("\n@@@---- 成功: 员工进入等待状态! ----@@@")
+
+        # 10. dirty
+        self.__dirty = True
 
     def stuffJumpWork(Id, wType=NOR, time) :
         self.log("\n{}号员工进入工作状态操作: ".format(Id))
@@ -564,6 +594,7 @@ class StuffContainer :
 
         # 7.操作完成
         self.log("\n@@@---- 成功: 员工进入工作状态! ----@@@")
+        self.__dirty = True
 
     def stuffWork(Id, wType=NOR) :
         stuffJumpWork(Id, wType, self.__stuffs[Id].wTime + 1)
