@@ -408,10 +408,6 @@ class StuffContainer :
         stuff = self.__stuffs[Id]
         time = stuff.wTime
         wType = stuff.wType
-        #if workPos is not None :
-        #    workPos = stuff.workPos
-        #if stuff.waitPos is not None:
-        #    waitPos = stuff.waitPos
 
         # 2.判断工作状态,确定是否需要脱离工作队伍
         if wType is self.NOR or self.SEL or self.NAMED :
@@ -440,7 +436,7 @@ class StuffContainer :
         waitPos = stuff.waitPos
         if waitPos > self.__maxWaitPos :
             self.__maxWaitPos = waitPos
-            self.log("\n\n员工工作序号为当前最大值.更新容器中最大值.")
+            self.log("\n\n员工等待序号为当前最大值.更新容器中最大值.")
         
         # 6.设置 工作状态为等待
         stuff.wType = self.WAIT
@@ -458,3 +454,37 @@ class StuffContainer :
 
         # 4.操作完成
         self.log("\n@@@---- 成功: 员工进入等待状态! ----@@@")
+
+    def stuffJumpWork(Id, time) :
+        self.log("\n{}号员工进入工作状态操作: ".format(Id))
+
+        # 1.获得员工基本信息
+        stuff = self.__stuffs[Id]
+        wTime = stuff.wTime
+        wType = stuff.wType
+
+        # 2.员工脱离等待状态
+        self.leaveWait(Id)
+        self.updateMax(Id, time)
+
+        # 3.设定员工工作类型, 加入工作队列, 设定队列类型
+        #   并且 清除等待序号
+        self.goWork(Id)
+
+        # 4.更新最大工作序号
+        workPos = stuff.workPos
+        if workPos > self.__maxWorkPos :
+            self.__maxWorkPos = workPos
+            self.log("\n\n员工工作序号为当前最大值.更新容器中最大值.")
+
+        # 5.更新工作序号序列
+        self.workSeqs[time].workPoses.append( (workPos, Id) )
+        self.log("\n\n员工被加入第{}此时间队列的工作序列, 并添加workPoses"\
+        .format(time))
+
+        # 6.将员工序号加入 变动员工组
+        self.__modStuffs.append(Id)
+        self.log("\n\n员工进入工作状态操作已完成, 加入变动员工组")
+
+        # 7.操作完成
+        self.log("\n@@@---- 成功: 员工进入工作状态! ----@@@")
