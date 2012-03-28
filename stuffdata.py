@@ -461,13 +461,13 @@ class StuffContainer :
         # 4.操作完成
         self.log("\n@@@---- 成功: 员工进入等待状态! ----@@@")
 
-    def stuffJumpWork(Id, time) :
+    def stuffJumpWork(Id, wType=NOR, time) :
         self.log("\n{}号员工进入工作状态操作: ".format(Id))
 
         # 1.获得员工基本信息
         stuff = self.__stuffs[Id]
         wTime = stuff.wTime
-        wType = stuff.wType
+        #wType = stuff.wType
 
         # 2.员工脱离等待状态
         self.leaveWait(Id)
@@ -495,8 +495,8 @@ class StuffContainer :
         # 7.操作完成
         self.log("\n@@@---- 成功: 员工进入工作状态! ----@@@")
 
-    def stuffWork(Id) :
-        stuffJumpWork(Id, self.__stuffs[Id].wTime + 1)
+    def stuffWork(Id, wType=NOR) :
+        stuffJumpWork(Id, wType, self.__stuffs[Id].wTime + 1)
 
     # 批量操作 #
     def stuffsWait(self, *IDs)
