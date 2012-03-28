@@ -358,7 +358,7 @@ class StuffContainer :
         # 3.脱离workSeq[time]
         if sType is not self.WAIT :
             self.log("\n!!!---- 错误: 员工队伍类型有误----!!!")
-            return
+            raise errorclass.wrongType("员工队伍类型有误.")
         self.__workSeqs[time].wSeq.pop(waitPos)
 
         # 4.操作完成
