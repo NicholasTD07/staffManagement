@@ -306,7 +306,7 @@ class StuffContainer :
 
     # 基本操作 #
     def leaveWork(self, Id) :
-        self.log("\t{}号员工脱离工作状态操作: ".format(Id))
+        self.log("\t\t{}号员工脱离工作状态操作: ".format(Id))
 
         # 1.取得员工基本信息
         stuff = self.__stuffs[Id]
@@ -315,30 +315,30 @@ class StuffContainer :
         sType = stuff.sType
         workPos = stuff.workPos
         self.log(
-        "\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
+        "\t\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(workPos, time, wType, sType))
 
         # 2.脱离workPoses序列
         self.__workSeqs[time].workPoses.remove( (workPos, Id) )
-        self.log("\t\t工号:{}, 脱离第{}次工作位置序列."\
+        self.log("\t\t\t工号:{}, 脱离第{}次工作位置序列."\
                      .format(workPos, time))
 
         # 3.脱离workSeqs[time]
         if sType is self.NOR :
             self.__workSeqs[time].nSeq.pop(workPos)
-            self.log("\t\t脱离NOR工作队伍.")
+            self.log("\t\t\t脱离NOR工作队伍.")
         elif sType is self.SEL :
             self.__workSeqs[time].sSeq.pop(workPos)
-            self.log("\t\t脱离SEL工作队伍.")
+            self.log("\t\t\t脱离SEL工作队伍.")
         else :
-            self.log("\t!!!---- 错误: 员工队伍类型有误----!!!")
+            self.log("\t\t!!!---- 错误: 员工队伍类型有误----!!!")
             return
 
         # 4.操作完成.
-        self.log("\t@@@---- 成功: 员工脱离工作状态! ----@@@")
+        self.log("\t\t@@@---- 成功: 员工脱离工作状态! ----@@@")
 
     def leaveWait(self, Id) :
-        self.log("\t{}号员工脱离等待状态操作: ".format(Id))
+        self.log("\t\t{}号员工脱离等待状态操作: ".format(Id))
 
         # 1.取得员工基本信息
         stuff = self.__stuffs[Id]
@@ -347,30 +347,30 @@ class StuffContainer :
         sType = stuff.sType
         waitPos = stuff.waitPos
         self.log(
-        "\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
+        "\t\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(waitPos, time, wType, sType))
 
         # 2.脱离workSeq[time]
         if sType is not self.WAIT :
-            self.log("\t!!!---- 错误: 员工队伍类型有误----!!!")
+            self.log("\t\t!!!---- 错误: 员工队伍类型有误----!!!")
             raise errorclass.wrongType("员工队伍类型有误.")
         self.__workSeqs[time].wSeq.pop(waitPos)
 
         # 3.脱离waitPoses序列
         self.__workSeqs[time].waitPoses.remove( (waitPos, Id) )
-        self.log("\t\t工号:{}, 脱离第{}次等待位置序列."\
+        self.log("\t\t\t工号:{}, 脱离第{}次等待位置序列."\
                      .format(waitPos, time))
 
         # 4.操作完成
-        self.log("\t@@@---- 成功: 员工脱离等待状态! ----@@@")
+        self.log("\t\t@@@---- 成功: 员工脱离等待状态! ----@@@")
 
     def updateMax(self, Id, time) :
-        self.log("\t{}号员工指定第{}次工作操作, 并自动更新: "\
+        self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
         .format(Id, time))
 
         # 1.取得员工基本信息
         stuff = self.__stuffs[Id]
-        self.log("\t员工工作次数:{}, 序列最大值: {}."\
+        self.log("\t\t员工工作次数:{}, 序列最大值: {}."\
          .format(stuff.wTime, self.__maxTime))
 
         # 2.设定员工工作序号为指定次数
@@ -379,20 +379,20 @@ class StuffContainer :
         # 3.判断是否超出当前最大值
         if time > self.__maxTime :
             self.__maxTime = time
-            self.log("\t\t序列最大最大次数被更新: {}次"\
+            self.log("\t\t\t序列最大最大次数被更新: {}次"\
             .format(time))
 
             # 4.自动新增序列
 
-            self.log("\t\t更新时间队列: 自动更新最大工作次数.")
+            self.log("\t\t\t更新时间队列: 自动更新最大工作次数.")
             count = 0
             while len(self.__workSeqs) < ( time + 1 ) :
                 self.__workSeqs.append(TimeSeq())
                 count += 1
-            self.log("\t@更新时间队列: 自动增加了{}列时间队列@"\
+            self.log("\t\t@更新时间队列: 自动增加了{}列时间队列@"\
             .format(count))
         else :
-            self.log("\t@@@----序列最大工作次数保持: {}次----@@@"\
+            self.log("\t\t@@@----序列最大工作次数保持: {}次----@@@"\
             .format(time))
 
     def goWork(self, Id, wType) :
