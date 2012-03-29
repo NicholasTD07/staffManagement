@@ -93,7 +93,7 @@ class StaffContainer :
     def getIDs(self) :
         return self.__IDs
 
-    def getStuff(self, Id) :
+    def getStaff(self, Id) :
         return self.__staffs[Id]
 
     def getStaffs(self) :
