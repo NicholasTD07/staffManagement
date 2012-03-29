@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# File Name : stuffData.py
+# File Name : staffData.py
 
 from os import path
 from time import time
@@ -13,7 +13,7 @@ __version__ = "0.3.1"
 DEBUG = True
 
 
-class Stuff :
+class Staff :
     """包含员工的详细信息"""
 
     def __init__(self, Id, gender='男', name=None) :
@@ -26,7 +26,7 @@ class Stuff :
         self.waitPos = None
         self.workPos = None
         self.wTime = 0
-        self.wType = StuffContainer.IDLE
+        self.wType = StaffContainer.IDLE
         self.sType = None
 
 
@@ -50,7 +50,7 @@ class TimeSeq :
         self.workPoses = []
 
 
-class StuffContainer :
+class StaffContainer :
     """员工以及工作对列的容器"""
 
     MALE = '男'
@@ -64,8 +64,8 @@ class StuffContainer :
 
     def __init__(self) :
         self.__IDs = []
-        self.__stuffs = {}
-        self.__modStuffs = []
+        self.__staffs = {}
+        self.__modStaffs = []
         self.__workSeqs = []
         self.__maxTime = 0
         self.__maxId = 0
@@ -78,11 +78,11 @@ class StuffContainer :
     #---- 自定义内置函数 ----#
 
     def __iter__(self) :
-        for stuff in iter(self.__stuffs.values()) :
-            yield stuff
+        for staff in iter(self.__staffs.values()) :
+            yield staff
 
     def __len__(self) :
-        return len(self.__stuffs)
+        return len(self.__staffs)
 
     #------------------------#
 
@@ -93,11 +93,11 @@ class StuffContainer :
     def getIDs(self) :
         return self.__IDs
 
-    def getStuffs(self) :
-        return self.__stuffs
+    def getStaffs(self) :
+        return self.__staffs
 
-    def getModStuffs(self) :
-        return self.__modStuffs
+    def getModStaffs(self) :
+        return self.__modStaffs
 
     def getWorkSeq(self) :
         return self.__workSeqs
@@ -221,11 +221,11 @@ class StuffContainer :
     def loadPickle(self) :
         error = None
         theFile = None
-        stuffs = None
+        staffs = None
         try :
             theFile = open(self.__fileName, "rb")
             self.clear(False)
-            stuffs = pickle.load(theFile)
+            staffs = pickle.load(theFile)
         except EnvironmentError as e :
             error = "\t读取文件: 失败. 错误: {}".format(e)
             self.log(error)
@@ -237,7 +237,7 @@ class StuffContainer :
             self.dirty = False
             msg = "\t读取文件: 成功!"
             self.log(msg)
-            return (True, msg, stuffs)
+            return (True, msg, staffs)
 
     #------------------#
 
@@ -310,11 +310,11 @@ class StuffContainer :
         self.log("\t\t{}号员工脱离工作状态操作: ".format(Id))
 
         # 1.取得员工基本信息
-        stuff = self.__stuffs[Id]
-        time = stuff.wTime
-        wType = stuff.wType
-        sType = stuff.sType
-        workPos = stuff.workPos
+        staff = self.__staffs[Id]
+        time = staff.wTime
+        wType = staff.wType
+        sType = staff.sType
+        workPos = staff.workPos
         self.log(
         "\t\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(workPos, time, wType, sType))
@@ -327,8 +327,8 @@ class StuffContainer :
         # 3.脱离workSeqs[time]
         if sType is self.NOR :
             # test only #
-            for stuff in self.__workSeqs[time].nSeq.values() :
-                print(stuff.Id, stuff.workPos)
+            for staff in self.__workSeqs[time].nSeq.values() :
+                print(staff.Id, staff.workPos)
             self.__workSeqs[time].nSeq.pop(workPos)
             self.log("\t\t\t脱离NOR工作队伍.")
         elif sType is self.SEL :
@@ -345,11 +345,11 @@ class StuffContainer :
         self.log("\t\t{}号员工脱离等待状态操作: ".format(Id))
 
         # 1.取得员工基本信息
-        stuff = self.__stuffs[Id]
-        time = stuff.wTime
-        wType = stuff.wType
-        sType = stuff.sType
-        waitPos = stuff.waitPos
+        staff = self.__staffs[Id]
+        time = staff.wTime
+        wType = staff.wType
+        sType = staff.sType
+        waitPos = staff.waitPos
         self.log(
         "\t\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
                      .format(waitPos, time, wType, sType))
@@ -373,12 +373,12 @@ class StuffContainer :
         .format(Id, time))
 
         # 1.取得员工基本信息
-        stuff = self.__stuffs[Id]
+        staff = self.__staffs[Id]
         self.log("\t\t员工工作次数:{}, 序列最大值: {}."\
-         .format(stuff.wTime, self.__maxTime))
+         .format(staff.wTime, self.__maxTime))
 
         # 2.设定员工工作序号为指定次数
-        stuff.wTime = time
+        staff.wTime = time
 
         # 3.判断是否超出当前最大值
         if time > self.__maxTime :
@@ -403,11 +403,11 @@ class StuffContainer :
         self.log("\t\t{}号员工goWork操作.".format(Id))
 
         # 1.获得员工基本信息
-        stuff = self.__stuffs[Id]
-        time = stuff.wTime
+        staff = self.__staffs[Id]
+        time = staff.wTime
 
         # 2.设定员工工作类型
-        stuff.wType = wType
+        staff.wType = wType
 
         # 3.设定员工工作序号, 并更新序列中的序号
         # 4.加入对应工作队列
@@ -416,112 +416,112 @@ class StuffContainer :
         if wType is self.NOR :
             # 3.设定员工工作序号, 并更新序列中的序号
             nPos = self.__workSeqs[time].nPos
-            stuff.workPos = nPos 
+            staff.workPos = nPos 
             self.log("\t\t\t工作序号已设置为当前序列正常工作号: {}"\
                 .format(nPos))
             self.__workSeqs[time].nPos += 1
             self.log("\t\t\t当前序列正常工作序号更新为 {}"\
                 .format(self.__workSeqs[time].nPos))
             # 4.加入对应工作队列
-            self.__workSeqs[time].nSeq[nPos] = stuff
+            self.__workSeqs[time].nSeq[nPos] = staff
             # 5.设定员工队列类型
-            stuff.sType = self.NOR
+            staff.sType = self.NOR
         elif wType is self.SEL :
             # 3.设定员工工作序号, 并更新序列中的序号
-            waitPos = stuff.waitPos
-            stuff.workPos = waitPos
+            waitPos = staff.waitPos
+            staff.workPos = waitPos
             self.log("\t\t\t工作序号已设置为员工等待序号: {}"\
                 .format(waitPos))
             self.__workSeqs[time].sPos = waitPos + 1
             self.log("\t\t\t当前序列选钟等待序号更新为 {}"\
                 .format(self.__workSeqs[time].sPos))
             # 4.加入对应工作队列
-            self.__workSeqs[time].sSeq[waitPos] = stuff
+            self.__workSeqs[time].sSeq[waitPos] = staff
             # 5.设定员工队列类型
-            stuff.sType = self.SEL
+            staff.sType = self.SEL
         elif wType is self.NAMED :
             if self.__workSeqs[time].sSeq :
                 # 3.设定员工工作序号, 并更新序列中的序号
                 sPos = self.__workSeqs[time].sPos
-                stuff.workPos = sPos
+                staff.workPos = sPos
                 self.log("\t\t\t工作序号已设置为当前序列选钟序号: {}"\
                     .format(sPos))
                 self.__workSeqs[time].sPos += 1
                 self.log("\t\t\t当前序列选钟序号更新为 {}"\
                     .format(self.__workSeqs[time].sPos))
                 # 4.加入对应工作队列
-                self.__workSeqs[time].sSeq[sPos] = stuff
+                self.__workSeqs[time].sSeq[sPos] = staff
                 # 5.设定员工队列类型
-                stuff.sType = self.SEL
+                staff.sType = self.SEL
             else :
                 # 3.设定员工工作序号, 并更新序列中的序号
                 nPos = self.__workSeqs[time].nPos
-                stuff.workPos = nPos 
+                staff.workPos = nPos 
                 self.log("\t\t\t工作序号已设置为当前序列正常工作号:{}"\
                     .format(nPos))
                 self.__workSeqs[time].nPos += 1
                 self.log("\t\t\t当前序列正常工作序号更新为 {}"\
                     .format(self.__workSeqs[time].nPos))
                 # 4.加入对应工作队列
-                self.__workSeqs[time].nSeq[nPos] = stuff
+                self.__workSeqs[time].nSeq[nPos] = staff
                 # 5.设定员工队列类型
-                stuff.sType = self.NOR
+                staff.sType = self.NOR
         else :
             raise errorclass.wrongType("员工下一次工作类型有误.")
 
         # 6.清除等待序号
-        stuff.waitPos = None
+        staff.waitPos = None
             
     # 复合操作 #
-    def updateStuff(self, Id, 
+    def updateStaff(self, Id, 
             gender=None, name=None) :
         self.log("\t更新员工操作: ")
 
         # 1.判断员工工号是否存在
-        if Id not in self.__stuffs :
+        if Id not in self.__staffs :
             self.log("\t\t没有工号为: {}号的员工, 添加员工.")
-            self.__stuffs[Id] = Stuff(Id)
+            self.__staffs[Id] = Staff(Id)
             self.__IDs.append(Id)
             self.__IDs.sort()
             # 2.判断员工工号是否为最大值
             if Id > self.__maxId :
                 self.__maxId = Id
             # 3.设置员工工作类型为空闲
-            self.__stuffs[Id].wType = self.IDLE
+            self.__staffs[Id].wType = self.IDLE
         # 4.获得员工
-        stuff = self.__stuffs[Id]
+        staff = self.__staffs[Id]
         # 5.更新员工信息
         if gender is not None :
-            stuff.gender = gender
+            staff.gender = gender
         if name is not None :
-            stuff.name = name
+            staff.name = name
         # 6.将员工添加至 变动员工组
-        self.__modStuffs.append(Id)
+        self.__modStaffs.append(Id)
         # 7.设置容器状态为已改变
         self.__dirty = True
 
-    def stuffWait(self, Id) :
+    def staffWait(self, Id) :
         self.log("\t{}号员工进入等待状态操作: ".format(Id))
 
         # 1.获得员工基本信息
-        stuff = self.__stuffs[Id]
-        time = stuff.wTime
-        wType = stuff.wType
+        staff = self.__staffs[Id]
+        time = staff.wTime
+        wType = staff.wType
 
         # 2.判断工作状态,确定是否需要脱离工作队伍
         if (wType is self.NOR or wType is self.SEL or
             wType is self.NAMED ) :
             self.leaveWork(Id)
             # 3.脱离工作队伍, 将等待序号设置为当前工作序号(原位等待)
-            stuff.waitPos = stuff.workPos
+            staff.waitPos = staff.workPos
             # 4.将工作序号清除
-            stuff.workPos = None
+            staff.workPos = None
             self.log("\t\t等待序号已设置为当前工作序号: {}, 工作序号清零."\
-            .format(stuff.waitPos))
+            .format(staff.waitPos))
         elif wType is self.IDLE :
             # 3.将等待序号设置为当前序列等待序号
             wPos = self.__workSeqs[time].wPos
-            stuff.waitPos = wPos
+            staff.waitPos = wPos
             self.log("\t\t等待序号已设置为序列等待序号: {}."
             .format(wPos))
             # 4.更新当前序列等待序号
@@ -537,25 +537,25 @@ class StuffContainer :
                 .format(wType))
 
         # 5.更新 最大等待序号
-        waitPos = stuff.waitPos
+        waitPos = staff.waitPos
         #if waitPos and waitPos > self.__maxWaitPos :
         if waitPos > self.__maxWaitPos :
             self.__maxWaitPos = waitPos
             self.log("\t\t员工等待序号为当前最大值.更新容器中最大值.")
         
         # 6.设置 工作状态为等待, 队列类型为等待
-        stuff.wType = self.WAIT
-        stuff.sType = self.WAIT
+        staff.wType = self.WAIT
+        staff.sType = self.WAIT
         self.log("\t\t员工工作状态改变: 等待.")
 
         # 7.加入 等待序列, 并更新等待序号序列
-        self.__workSeqs[time].wSeq[Id] = stuff
+        self.__workSeqs[time].wSeq[Id] = staff
         self.__workSeqs[time].waitPoses.append( (waitPos, Id) )
         self.log("\t\t员工被加入第{}此时间队列的等待序列, 并添加waitPoses"\
         .format(time))
 
         # 8.将员工序号加入 被更改员工队列
-        self.__modStuffs.append(Id)
+        self.__modStaffs.append(Id)
         self.log("\t\t员工进入等待状态操作已完成, 加入变动员工组")
 
         # 9.操作完成
@@ -564,13 +564,13 @@ class StuffContainer :
         # 10. dirty
         self.__dirty = True
 
-    def stuffJumpWork(self, Id, time, wType=NOR) :
+    def staffJumpWork(self, Id, time, wType=NOR) :
         self.log("\t{}号员工进入工作状态操作: ".format(Id))
 
         # 1.获得员工基本信息
-        stuff = self.__stuffs[Id]
-        wTime = stuff.wTime
-        #wType = stuff.wType
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+        #wType = staff.wType
 
         # 2.员工脱离等待状态
         try :
@@ -590,7 +590,7 @@ class StuffContainer :
             return
 
         # 4.更新最大工作序号
-        workPos = stuff.workPos
+        workPos = staff.workPos
         if workPos and workPos > self.__maxWorkPos :
             self.__maxWorkPos = workPos
             self.log("\t\t员工工作序号为当前最大值.更新容器中最大值.")
@@ -601,32 +601,32 @@ class StuffContainer :
         .format(time))
 
         # 6.将员工序号加入 变动员工组
-        self.__modStuffs.append(Id)
+        self.__modStaffs.append(Id)
         self.log("\t\t员工进入工作状态操作已完成, 加入变动员工组")
 
         # 7.操作完成
         self.log("\t@@@---- 成功: 员工进入工作状态! ----@@@")
         self.__dirty = True
 
-    def stuffWork(self, Id, wType=NOR) :
-        self.stuffJumpWork(Id,
-            self.__stuffs[Id].wTime + 1, wType)
+    def staffWork(self, Id, wType=NOR) :
+        self.staffJumpWork(Id,
+            self.__staffs[Id].wTime + 1, wType)
 
     # 批量操作 #
-    def addStuffs(self, gender, *IDs) :
+    def addStaffs(self, gender, *IDs) :
         for Id in IDs :
-            self.updateStuff(Id,gender)
+            self.updateStaff(Id,gender)
 
-    def stuffsWait(self, *IDs) :
+    def staffsWait(self, *IDs) :
         for Id in IDs :
-            self.stuffWait(Id)
+            self.staffWait(Id)
 
-    def stuffsWork(self, wType=NOR, *IDs) :
+    def staffsWork(self, wType=NOR, *IDs) :
         for Id in IDs :
-            self.stuffWork(Id, wType)
+            self.staffWork(Id, wType)
 
     # 调试 #
-    def reportStuffs(self) :
+    def reportStaffs(self) :
         """汇报当前正在工作的员工情况."""
         print("含有{0}名员工.".format(len(S)))
         for workSeq in self.__workSeqs :
@@ -637,71 +637,71 @@ class StuffContainer :
                 print("正常上班序列")
                 print("当前上班班号: {0}"\
                     .format(workSeq.nPos))
-                for stuff in workSeq.nSeq.values() :
+                for staff in workSeq.nSeq.values() :
                     print(
                     "员工工号: {0} 上班号码: {1} 上班次数:{2}"\
-                    .format(stuff.Id,
-                    stuff.workPos, stuff.wTime))
+                    .format(staff.Id,
+                    staff.workPos, staff.wTime))
                 print()
                 print("选钟后上班序列")
                 print("当前上班班号: {0}"\
                     .format(workSeq.sPos))
-                for stuff in workSeq.sSeq.values() :
+                for staff in workSeq.sSeq.values() :
                     print(
                     "员工工号: {0} 上班号码: {1} 上班次数:{2}"\
-                    .format(stuff.Id,
-                    stuff.workPos, stuff.wTime))
+                    .format(staff.Id,
+                    staff.workPos, staff.wTime))
                 print()
                 print("等待员工")
                 print("当前等待班号: {0}"\
                     .format(workSeq.wPos))
-                for stuff in workSeq.wSeq.values() :
+                for staff in workSeq.wSeq.values() :
                     print(
                     "员工工号: {0} 等待号码: {1} 上班次数:{2}"\
-                    .format(stuff.Id,
-                    stuff.waitPos, stuff.wTime))
+                    .format(staff.Id,
+                    staff.waitPos, staff.wTime))
         print("\n END ")
         print("最大工作次数: {0}".format(S.getMaxTime()))
 
 if __name__ == '__main__' :
     
-    S = StuffContainer()
+    S = StaffContainer()
     S.log("\nAGAIN")
 
 
     startTime = time()
-    S.addStuffs(S.MALE, 1,2,3,4,5,6,7,8,9)
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
     createTime = time()
-    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.reportStuffs()
-    S.stuffsWork(S.NOR,1, 2, 3, 4, 5, 6, 7, 8, 9)
-    stuffWorkTime = time()
+    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.reportStaffs()
+    S.staffsWork(S.NOR,1, 2, 3, 4, 5, 6, 7, 8, 9)
+    staffWorkTime = time()
 
-    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.stuffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    stuffWork2Time = time()
-    S.reportStuffs()
+    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    staffWork2Time = time()
+    S.reportStaffs()
     endTime = time()
     print("""创建员工时间 {0} \n
 员工第一次工作时间 {1}\n员工第二次工作时间 {2}
 报告时间 {3}"""\
         .format((createTime - startTime),
-            (stuffWorkTime - createTime),
-            (stuffWork2Time - stuffWorkTime),
-            (endTime - stuffWorkTime)))
+            (staffWorkTime - createTime),
+            (staffWork2Time - staffWorkTime),
+            (endTime - staffWorkTime)))
     print("员工工号: {}".format(S.getIDs()))
 
 
-    S.stuffsWork(S.NOR, 4, 5, 6)
-    S.stuffsWork(S.NAMED, 7, 8)
-    S.getStuffs()[1].tell()
-    S.stuffsWork(S.SEL, 1, 2, 3)
-    S.stuffsWork(S.NAMED, 5, 6)
-    S.stuffsWork(S.SEL, 9)
-    S.reportStuffs()
-    S.stuffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.reportStuffs()
+    S.staffsWork(S.NOR, 4, 5, 6)
+    S.staffsWork(S.NAMED, 7, 8)
+    S.getStaffs()[1].tell()
+    S.staffsWork(S.SEL, 1, 2, 3)
+    S.staffsWork(S.NAMED, 5, 6)
+    S.staffsWork(S.SEL, 9)
+    S.reportStaffs()
+    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.reportStaffs()
 
     S.save("/home/thedevil/test.qpc")
     S.load("/home/thedevil/test.qpc")
