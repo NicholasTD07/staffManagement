@@ -149,10 +149,10 @@ class StaffContainer :
         else :
             self.log("保持不变: {}.".format(self.__maxWaitPos))
 
-    def getFileName(self) :
+    def getFilename(self) :
         return self.__fileName
 
-    def setFileName(self, fileName) :
+    def setFilename(self, fileName) :
         self.__fileName = fileName
 
     def isDirty(self) :
