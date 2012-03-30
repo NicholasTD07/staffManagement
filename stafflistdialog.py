@@ -65,7 +65,7 @@ class StaffListDialog(QDialog,
                     "没有此工号."
                     "\n请查询后重新输入.")
         # 定位: 所有员工表
-        self.findCell(self.allTable, 0, Id - 1)
+        self.allTable.setCurrentCell(0, Id - 1)
         # 获得: 员工 及 工作类型
         staff = self.staffs.getStaff(Id)
         wType = staff.wType
@@ -75,13 +75,13 @@ class StaffListDialog(QDialog,
             # 获得: 工作位置
             workPos = self.workPoses[Id]
             # 定位: 工作表
-            self.findCell(self.workTable, time, workPos - 1)
+            self.workTable.setCurrentCell(time, workPos - 1)
             self.waitTable.setCurrentItem(None)
         elif wType is self.staffs.WAIT :
             # 获得: 等待位置
             waitPos = self.waitPoses[Id]
             # 定位: 等待表
-            self.findCell(self.waitTable, time, waitPos - 1)
+            self.waitTable.setCurrentCell(time, waitPos - 1)
             self.workTable.setCurrentItem(None)
 
     # 双击: 所有员工表 #
@@ -140,10 +140,6 @@ class StaffListDialog(QDialog,
             self.populate(self.WORK)
             self.populate(self.WAIT)
         
-    def findCell(self, table=None, row=0, column=0) :
-        if table is not None :
-            table.setCurrentCell(row, column)
-
     #---- 生成表格 ----#
 
     # 生成: 所有员工表
