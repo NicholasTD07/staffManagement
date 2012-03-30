@@ -32,7 +32,11 @@ class StaffListDialog(QDialog,
                     "查看员工队列",
                     "当前队列为空,  自动退出.")
             return
+        # 载入: 员工
         self.staffs = staffs
+        # 初始化: 内部变量
+        self.waitPoses = {}
+        self.workPoses = {}
 
         # 生成: 所有员工表, 工作员工表, 等待员工表
         self.populateAll()
@@ -60,9 +64,25 @@ class StaffListDialog(QDialog,
                     "员工工号错误",
                     "没有此工号."
                     "\n请查询后重新输入.")
-        self.findCell(self.allTable, 0, Id-1)
-        self.findCell(self.workTable, 0, Id-1)
-        self.findCell(self.waitTable, 0, Id-1)
+        # 定位: 所有员工表
+        self.findCell(self.allTable, 0, Id - 1)
+        # 获得: 员工 及 工作类型
+        staff = self.staffs.getStaff(Id)
+        wType = staff.wType
+        time = staff.wTime
+        # 判断 工作类型
+        if wType in self.staffs.workTypes :
+            # 获得: 工作位置
+            workPos = self.workPoses[Id]
+            # 定位: 工作表
+            self.findCell(self.workTable, time, workPos - 1)
+            self.waitTable.setCurrentItem(None)
+        elif wType is self.staffs.WAIT :
+            # 获得: 等待位置
+            waitPos = self.waitPoses[Id]
+            # 定位: 等待表
+            self.findCell(self.waitTable, time, waitPos - 1)
+            self.workTable.setCurrentItem(None)
 
     # 双击: 所有员工表 #
     def on_allTabel_cellDoubleClicked(self, row, column) :
@@ -169,11 +189,13 @@ class StaffListDialog(QDialog,
     def populate(self, seq) :
         workSeqs = self.staffs.getWorkSeq()
         maxTime = self.staffs.getMaxTime()
-        # 选择: 最大值 及 (工作表 或 等待表)
+        # 选择: 序号表, 最大值 及 (工作表 或 等待表)
         if seq is self.WORK :
+            poses = self.workPoses
             maxPos = self.staffs.getMaxWorkPos()
             table = self.workTable
         elif seq is self.WAIT :
+            poses = self.waitPoses
             maxPos = self.staffs.getMaxWaitPos()
             table = self.waitTable
         else :
@@ -196,6 +218,7 @@ class StaffListDialog(QDialog,
         for row, workSeq in enumerate(workSeqs) :
             for (pos, Id) in workSeq.workPoses \
                 if seq is self.WORK else workSeq.waitPoses :
+                poses[Id] = pos
                 item = QTableWidgetItem(str(pos))
                 item.setData(Qt.UserRole, int(Id))
                 table.setItem(row, (pos - 1), item)

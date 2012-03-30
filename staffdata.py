@@ -62,6 +62,8 @@ class StaffContainer :
     WAIT = '等待'
     IDLE = '休息'
 
+    workTypes = [NOR, SEL, NAMED]
+
     def __init__(self) :
         self.__IDs = []
         self.__staffs = {}
@@ -512,8 +514,9 @@ class StaffContainer :
         wType = staff.wType
 
         # 2.判断工作状态,确定是否需要脱离工作队伍
-        if (wType is self.NOR or wType is self.SEL or
-            wType is self.NAMED ) :
+        #if (wType is self.NOR or wType is self.SEL or
+        #    wType is self.NAMED ) :
+        if wType in self.workTypes :
             self.leaveWork(Id)
             # 3.脱离工作队伍, 将等待序号设置为当前工作序号(原位等待)
             staff.waitPos = staff.workPos
