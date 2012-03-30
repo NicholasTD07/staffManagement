@@ -55,7 +55,7 @@ class StaffListDialog(QDialog,
     # 值改变: 员工工号输入框 #
     @pyqtSignature("int")
     def on_IdSpinBox_valueChanged(self, Id) :
-        if Id not in staffs.getStaffs() :
+        if Id not in self.staffs.getStaffs() :
             QMessageBox.warning(self,
                     "员工工号错误",
                     "没有此工号."
