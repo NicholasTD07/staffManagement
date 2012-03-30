@@ -87,38 +87,22 @@ class StaffListDialog(QDialog,
     # 双击: 所有员工表 #
     def on_allTabel_cellDoubleClicked(self, row, column) :
         item = self.allTable.item(0, column)
-        # 1. 判断: 该位置是否有员工
-        if item is None :
-            return
-        else :
-            Id = int(item.data(Qt.UserRole))
-        # 2. 获得: 员工实例
-        staff = self.staffs.getStaff(Id)
-        # 判断: 员工是否存在
-        if staff is not None :
-            form = updatestaffdialog.UpdateStaffDialog(
-                        self.staffs, staff, self)
-        else :
-            return
-        # 3. 弹出窗口并更新表格
-        if form.exec_() :
-            self.updateItem(column, Id)
+        self.updateStaff(item)
 
     # 双击: 工作员工表 #
     def on_workTable_cellDoubleClicked(self, row, column) :
-        self.cellDoubleClicked(self.WORK, row, column)
+        item = self.workTable.item(row, column)
+        self.updateStaff(item)
 
     # 双击: 等待员工表
     def on_waitTable_cellDoubleClicked(self, row, column) :
-        self.cellDoubleClicked(self.WAIT, row, column)
+        item = self.waitTable.item(row, column)
+        self.updateStaff(item)
 
     #---- 辅助函数 ----#
-
-    def cellDoubleClicked(self, seq, row, column) :
-        if seq is self.WORK :
-            item = self.workTable.item(row, column)
-        elif seq is self.WAIT :
-            item = self.waitTable.item(row, column)
+    
+    # 获得员工, 并弹出更新信息窗口 #
+    def updateStaff(self, item) :
         # 1. 判断: 该位置是否有员工
         if item is None :
             return
@@ -135,7 +119,7 @@ class StaffListDialog(QDialog,
         # 3. 弹出窗口并更新表格
         if form.exec_() :
             self.updateItem(column, Id)
-        
+
     def updateItem(self, column, Id) :
         staff = self.staffs.getStaff(Id)
         item = QTableWidgetItem(str(staff.Id))

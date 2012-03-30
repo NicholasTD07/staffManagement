@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_stafflistdialog.ui'
 #
-# Created: Thu Mar 29 21:04:34 2012
+# Created: Fri Mar 30 14:56:32 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -37,6 +37,7 @@ class Ui_StaffListDialog(object):
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout_2.addWidget(self.label_2)
         self.IdSpinBox = QtGui.QSpinBox(StaffListDialog)
+        self.IdSpinBox.setMinimum(1)
         self.IdSpinBox.setMaximum(399)
         self.IdSpinBox.setObjectName(_fromUtf8("IdSpinBox"))
         self.horizontalLayout_2.addWidget(self.IdSpinBox)

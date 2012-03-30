@@ -60,6 +60,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="IdSpinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
        <property name="maximum">
         <number>399</number>
        </property>
