@@ -140,6 +140,29 @@ class StaffListDialog(QDialog,
             self.populate(self.WORK)
             self.populate(self.WAIT)
         
+    def updateItem(self, Id) :
+        staff = self.staffs.getStaff(Id)
+        item = QTableWidgetItem(str(staff.Id))
+        item.setData(Qt.UserRole, int(Id))
+        self.allTable.setItem(0, column, item)
+        self.allTable.setItem(1, column,
+                QTableWidgetItem(str(staff.name)))
+        self.allTable.setItem(2, column,
+                QTableWidgetItem(str(staff.gender)))
+        self.allTable.setItem(3, column,
+                QTableWidgetItem(str(staff.wTime)))
+        self.allTable.setItem(4, column,
+                QTableWidgetItem(
+                "" if staff.waitPos is None else
+                    str(staff.waitPos)))
+        self.allTable.setItem(5, column,
+                QTableWidgetItem(
+                "" if staff.workPos is None else
+                    str(staff.workPos)))
+        item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
+        # 调整: 列的宽度
+        self.allTable.resizeColumnsToContents()
+
     #---- 生成表格 ----#
 
     # 生成: 所有员工表
