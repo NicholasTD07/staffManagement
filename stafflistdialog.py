@@ -102,9 +102,7 @@ class StaffListDialog(QDialog,
             return
         # 3. 弹出窗口并更新表格
         if form.exec_() :
-            self.populateAll()
-            self.populate(self.WORK)
-            self.populate(self.WAIT)
+            self.updateItem(column, Id)
 
     # 双击: 工作员工表 #
     def on_workTable_cellDoubleClicked(self, row, column) :
@@ -136,9 +134,7 @@ class StaffListDialog(QDialog,
             return
         # 3. 弹出窗口并更新表格
         if form.exec_() :
-            self.populateAll()
-            self.populate(self.WORK)
-            self.populate(self.WAIT)
+            self.updateItem(column, Id)
         
     def updateItem(self, column, Id) :
         staff = self.staffs.getStaff(Id)
