@@ -140,7 +140,7 @@ class StaffListDialog(QDialog,
             self.populate(self.WORK)
             self.populate(self.WAIT)
         
-    def updateItem(self, Id) :
+    def updateItem(self, column, Id) :
         staff = self.staffs.getStaff(Id)
         item = QTableWidgetItem(str(staff.Id))
         item.setData(Qt.UserRole, int(Id))
@@ -161,7 +161,8 @@ class StaffListDialog(QDialog,
                     str(staff.workPos)))
         item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
         # 调整: 列的宽度
-        self.allTable.resizeColumnsToContents()
+        # !!!---- 需要调用完 updateItem() 之后执行 ----!!! #
+        #self.allTable.resizeColumnsToContents()
 
     #---- 生成表格 ----#
 
