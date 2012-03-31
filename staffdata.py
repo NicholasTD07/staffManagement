@@ -67,7 +67,7 @@ class StaffContainer :
     def __init__(self) :
         self.__IDs = []
         self.__staffs = {}
-        self.__modStaffs = []
+        self.__modStaffs = set()
         self.__workSeqs = []
         self.__maxTime = 0
         self.__maxId = 0
@@ -493,17 +493,65 @@ class StaffContainer :
                 self.__maxId = Id
             # 3.设置员工工作类型为空闲
             self.__staffs[Id].wType = self.IDLE
+
         # 4.获得员工
         staff = self.__staffs[Id]
+
         # 5.更新员工信息
         if gender is not None :
             staff.gender = gender
         if name is not None :
             staff.name = name
+        self.log("\t\t工号为: {}的员工, 姓名:{}, 性别: {}."\
+            .format(Id, name, gender))
+
         # 6.将员工添加至 变动员工组
-        self.__modStaffs.append(Id)
+        self.__modStaffs.add(staff)
+
         # 7.设置容器状态为已改变
         self.__dirty = True
+
+        self.log("\t@@@---- 成功: 更新员工信息 ----@@@")
+
+    def deleteStaff(self, Id) :
+        self.log("\t删除员工操作: ")
+
+        # 1.判断员工是否存在
+        if Id not in self.__staffs :
+            return
+        
+        # 2.获得员工信息
+        staff = self.__staffs[Id]
+        time = staff.wTime
+        wType = staff.wType
+        self.log("\t\t员工工号为: {}, 工作类型为: {}, 队伍类型为: {}"\
+            .format(Id, wType, sType))
+
+        # 3.判断员工工作状态, 利用相应基本操作退出状态
+        if wType in self.workTypes :
+            self.leaveWork(Id)
+        elif wType is self.WAIT :
+            self.leaveWait(Id)
+        else :      # 员工处于休息状态, 可以直接移除
+            pass
+        
+        # 4.从 员工队列 中移除员工
+        del self.__staffs[Id]
+        self.log("\t\t从员工队列中移除工号为: {}的员工."\
+            .format(Id))
+
+        # 5.从 工号队列 中移除员工工号
+        self.__IDs.remove(Id)
+        self.log("\t\t从工号队列中移除工号为: {}的员工."\
+            .format(Id))
+
+        # 6.将员工加入 变动员工组
+        self.__modStaffs.add(Id)
+
+        # 7.操作完成, 设置 dirty
+        self.log("\t@@@---- 成功: 移除员工 ----@@@")
+        self.__dirty = True
+            
 
     def staffWait(self, Id) :
         self.log("\t{}号员工进入等待状态操作: ".format(Id))
@@ -561,7 +609,7 @@ class StaffContainer :
         .format(time))
 
         # 8.将员工序号加入 被更改员工队列
-        self.__modStaffs.append(Id)
+        self.__modStaffs.add(staff)
         self.log("\t\t员工进入等待状态操作已完成, 加入变动员工组")
 
         # 9.操作完成
@@ -607,7 +655,7 @@ class StaffContainer :
         .format(time))
 
         # 6.将员工序号加入 变动员工组
-        self.__modStaffs.append(Id)
+        self.__modStaffs.add(staff)
         self.log("\t\t员工进入工作状态操作已完成, 加入变动员工组")
 
         # 7.操作完成
