@@ -266,6 +266,7 @@ class StaffContainer :
                         .format(count))
 
     # 基本操作 #
+
     def updateMax(self, Id, time) :
         self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
         .format(Id, time))
@@ -433,6 +434,7 @@ class StaffContainer :
         staff.waitPos = None
             
     # 复合操作 #
+
     def updateStaff(self, Id, 
             gender=None, name=None) :
         self.log("\t更新员工操作: ")
@@ -622,6 +624,7 @@ class StaffContainer :
             self.__staffs[Id].wTime + 1, wType)
 
     # 批量操作 #
+
     def addStaffs(self, gender, *IDs) :
         for Id in IDs :
             self.updateStaff(Id,gender)
@@ -635,6 +638,7 @@ class StaffContainer :
             self.staffWork(Id, wType)
 
     # 调试 #
+
     def reportStaffs(self) :
         """汇报当前正在工作的员工情况."""
         print("含有{0}名员工.".format(len(S)))
