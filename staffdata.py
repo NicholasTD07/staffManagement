@@ -267,6 +267,18 @@ class StaffContainer :
 
     # 基本操作 #
 
+    def updateMaxWait(self) :
+        for workSeq in self.__workSeqs :
+            maxWaitPos = max(workSeq.waitPoses)
+            if maxWaitPos > self.__maxWaitPos :
+                self.__maxWaitPos = maxWaitPos
+
+    def updateMaxWork(self) :
+        for workSeq in self.__workSeqs :
+            maxWorkPos = max(workSeq.workPoses)
+            if maxWorkPos > self.__maxWorkPos :
+                self.__maxWorkPos = maxWorkPos
+
     def updateMax(self, Id, time) :
         self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
         .format(Id, time))
