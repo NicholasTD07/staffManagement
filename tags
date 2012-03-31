@@ -31,6 +31,8 @@ DayStuffDict	oldVersions/0.1.0/StuffClass3.py	/^    DayStuffDict = {}$/;"	v	clas
 DayStuffDict	oldVersions/0.1.0/StuffClass4.py	/^    DayStuffDict = {}$/;"	v	class:AllStuff
 DayStuffList	oldVersions/0.1.0/StuffClass.py	/^	DayStuffList = []$/;"	v	class:DayShift
 DayStuffList	oldVersions/0.1.0/StuffClass2.py	/^	DayStuffList = []$/;"	v	class:AllStuff
+DeleteStuffDialog	oldVersions/0.2.0/deletestuffdialog.py	/^        ui_deletestuffdialog.Ui_DeleteStuffDialog) :$/;"	c
+DeleteStuffDialog	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    DeleteStuffDialog = QtGui.QDialog()$/;"	v
 Details	oldVersions/0.1.0/StuffClass.py	/^	def Details(self):$/;"	m	class:AllStuff
 Details	oldVersions/0.1.0/StuffClass.py	/^	def Details(self):$/;"	m	class:DayShift
 Details	oldVersions/0.1.0/StuffClass.py	/^	def Details(self):$/;"	m	class:NightShift
@@ -103,15 +105,25 @@ NormalWorkList	oldVersions/0.1.0/StuffClass2.py	/^	NormalWorkList = {}$/;"	v	cla
 NormalWorkPOS	oldVersions/0.1.0/StuffClass2.py	/^	NormalWorkPOS = 1$/;"	v	class:WorkStatus
 NumberList	oldVersions/0.1.0/StuffClass.py	/^	NumberList = []$/;"	v	class:AllStuff
 QtCore	oldVersions/0.1.0/ui_addstuffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtCore	oldVersions/0.1.0/ui_updatestuffdlg.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtCore	oldVersions/0.2.0/ui_deletestuffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtCore	oldVersions/0.2.0/ui_mainwindow.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtCore	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtCore	oldVersions/0.2.0/ui_updatestuffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtCore	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtCore	ui_mainwindow.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtCore	ui_stafflistdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtCore	ui_updatestaffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtGui	oldVersions/0.1.0/ui_addstuffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtGui	oldVersions/0.1.0/ui_updatestuffdlg.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtGui	oldVersions/0.2.0/ui_deletestuffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtGui	oldVersions/0.2.0/ui_mainwindow.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtGui	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtGui	oldVersions/0.2.0/ui_updatestuffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtGui	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtGui	ui_mainwindow.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 QtGui	ui_stafflistdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
+QtGui	ui_updatestaffdialog.py	/^from PyQt4 import QtCore, QtGui$/;"	i
 Rect	oldVersions/0.2.0/workgraph.py	/^    Rect = QRectF(-40, -40, 40, 40)$/;"	v	class:StuffIcon
 Rect	workgraph.py	/^    Rect = QRectF(-40, -40, 40, 40)$/;"	v	class:StaffIcon
 Report	oldVersions/0.1.0/StuffClass2.py	/^	def Report():$/;"	m	class:WorkStatus
@@ -119,8 +131,12 @@ Report	oldVersions/0.1.0/StuffClass3.py	/^    def Report() :$/;"	m	class:WorkSta
 Report	oldVersions/0.1.0/StuffClass4.py	/^    def Report() :$/;"	m	class:WorkStatus
 S	oldVersions/0.1.0/stuffData_0.2.0.py	/^    S = StuffContainer()$/;"	v
 S	oldVersions/0.1.0/stuffData_0.2.1.py	/^    S = StuffContainer()$/;"	v
+S	oldVersions/0.2.0/deletestuffdialog.py	/^    S = stuffdata.StuffContainer()$/;"	v	class:DeleteStuffDialog
 S	oldVersions/0.2.0/stuffdata.py	/^    S = StuffContainer()$/;"	v
 S	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    S = stuffdata.StuffContainer()$/;"	v	class:StuffListDialog
+S	oldVersions/0.2.0/updatestuffdialog.py	/^    S = stuffdata.StuffContainer()$/;"	v	class:UpdateStuffDialog
+S	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    S = stuffdata.StuffContainer()$/;"	v	class:UpdateStuffDialog
+S	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    S = stuffdata.StuffContainer()$/;"	v
 S	staffdata.py	/^    S = StaffContainer()$/;"	v
 S	stafflistdialog.py	/^    S = staffdata.StaffContainer()$/;"	v	class:StaffListDialog
 SEL	oldVersions/0.1.0/stuffData_0.2.0.py	/^    SEL = 'selected'$/;"	v	class:StuffContainer
@@ -186,12 +202,25 @@ TimeSeq	staffdata.py	/^class TimeSeq :$/;"	c
 TimeSeq	stuffdata_0.3.0.py	/^class TimeSeq :$/;"	c
 TimeSequence	oldVersions/0.1.0/stuffData_0.2.1.py	/^class TimeSequence :$/;"	c
 TimeSequence	oldVersions/0.2.0/stuffdata.py	/^class TimeSequence :$/;"	c
+Ui_DeleteStuffDialog	oldVersions/0.2.0/ui_deletestuffdialog.py	/^class Ui_DeleteStuffDialog(object):$/;"	c
 Ui_MainWindow	oldVersions/0.2.0/ui_mainwindow.py	/^class Ui_MainWindow(object):$/;"	c
 Ui_MainWindow	ui_mainwindow.py	/^class Ui_MainWindow(object):$/;"	c
 Ui_StaffListDialog	ui_stafflistdialog.py	/^class Ui_StaffListDialog(object):$/;"	c
 Ui_StuffListDialog	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^class Ui_StuffListDialog(object):$/;"	c
+Ui_UpdateStaffDialog	ui_updatestaffdialog.py	/^class Ui_UpdateStaffDialog(object):$/;"	c
+Ui_UpdateStuff	oldVersions/0.1.0/ui_updatestuffdlg.py	/^class Ui_UpdateStuff(object):$/;"	c
 Ui_UpdateStuffDialog	oldVersions/0.1.0/ui_addstuffdialog.py	/^class Ui_UpdateStuffDialog(object):$/;"	c
+Ui_UpdateStuffDialog	oldVersions/0.2.0/ui_updatestuffdialog.py	/^class Ui_UpdateStuffDialog(object):$/;"	c
+Ui_UpdateStuffDialog	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^class Ui_UpdateStuffDialog(object):$/;"	c
+UpdateStaffDialog	ui_updatestaffdialog.py	/^    UpdateStaffDialog = QtGui.QDialog()$/;"	v
+UpdateStuff	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    UpdateStuff = QtGui.QDialog()$/;"	v
 UpdateStuffDialog	oldVersions/0.1.0/ui_addstuffdialog.py	/^    UpdateStuffDialog = QtGui.QDialog()$/;"	v
+UpdateStuffDialog	oldVersions/0.1.0/updatestuffdialog.py	/^        ui_updatestuffdialog.Ui_UpdateStuffDialog) :$/;"	c
+UpdateStuffDialog	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    UpdateStuffDialog = QtGui.QDialog()$/;"	v
+UpdateStuffDialog	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    UpdateStuffDialog = QtGui.QDialog()$/;"	v
+UpdateStuffDialog	oldVersions/0.2.0/updatestuffdialog.py	/^        ui_updatestuffdialog.Ui_UpdateStuffDialog) :$/;"	c
+UpdateStuffDialog	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^        ui_updatestuffdialog.Ui_UpdateStuffDialog) :$/;"	c
+UpdateStuffDialog	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^        ui_updatestuffdialog_idlineedit.Ui_UpdateStuffDialog) :$/;"	c
 WAIT	oldVersions/0.1.0/stuffData_0.2.0.py	/^    WAIT = 'wait'$/;"	v	class:StuffContainer
 WAIT	oldVersions/0.1.0/stuffData_0.2.1.py	/^    WAIT = 'wait'$/;"	v	class:StuffContainer
 WAIT	oldVersions/0.2.0/stuffdata.py	/^    WAIT = '等待'$/;"	v	class:StuffContainer
@@ -248,10 +277,15 @@ __init__	oldVersions/0.1.0/stuffData_0.2.0.py	/^    def __init__(self, Id, Gende
 __init__	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def __init__(self) :$/;"	m	class:StuffContainer
 __init__	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def __init__(self) :$/;"	m	class:TimeSequence
 __init__	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def __init__(self, Id, Gender='Male',name=None) :$/;"	m	class:Stuff
+__init__	oldVersions/0.1.0/updatestuffdialog.py	/^    def __init__(self, stuffs, stuff=None, parent=None) :$/;"	m	class:UpdateStuffDialog
+__init__	oldVersions/0.2.0/deletestuffdialog.py	/^    def __init__(self, stuffs, stuff=None, parent=None) :$/;"	m	class:DeleteStuffDialog
 __init__	oldVersions/0.2.0/stuffdata.py	/^    def __init__(self) :$/;"	m	class:StuffContainer
 __init__	oldVersions/0.2.0/stuffdata.py	/^    def __init__(self) :$/;"	m	class:TimeSequence
 __init__	oldVersions/0.2.0/stuffdata.py	/^    def __init__(self, Id, Gender=MALE,name=None) :$/;"	m	class:Stuff
 __init__	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    def __init__(self, stuffs=None, parent=None) :$/;"	m	class:StuffListDialog
+__init__	oldVersions/0.2.0/updatestuffdialog.py	/^    def __init__(self, stuffs, stuff=None, parent=None) :$/;"	m	class:UpdateStuffDialog
+__init__	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def __init__(self, stuffs, stuff=None, parent=None) :$/;"	m	class:UpdateStuffDialog
+__init__	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def __init__(self, stuffs, stuff=None, parent=None) :$/;"	m	class:UpdateStuffDialog
 __init__	oldVersions/0.2.0/workgraph.py	/^    def __init__(self, stuff) :$/;"	m	class:StuffIcon
 __init__	oldVersions/0.2.0/workgraph.py	/^    def __init__(self, stuffs, parent=None) :$/;"	m	class:WorkGraph
 __init__	staffdata.py	/^    def __init__(self) :$/;"	m	class:StaffContainer
@@ -277,21 +311,39 @@ __len__	stuffdata_0.3.0.py	/^    def __len__(self) :$/;"	m	class:StuffContainer	
 __version__	mainwidow.py	/^__version__ = "0.3.0"$/;"	v
 __version__	oldVersions/0.1.0/stuffData_0.2.0.py	/^    __version__ = "0.2.0"$/;"	v
 __version__	oldVersions/0.1.0/stuffData_0.2.1.py	/^__version__ = "0.2.1"$/;"	v
+__version__	oldVersions/0.2.0/deletestuffdialog.py	/^__version__="0.1.0"$/;"	v
 __version__	oldVersions/0.2.0/stuffdata.py	/^__version__ = "0.2.4"$/;"	v
 __version__	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^__version__ = "0.0.1"$/;"	v
+__version__	oldVersions/0.2.0/updatestuffdialog.py	/^__version__="0.2.0"$/;"	v
+__version__	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^__version__="0.1.0"$/;"	v
+__version__	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^__version__="0.2.0"$/;"	v
 __version__	staffdata.py	/^__version__ = "0.3.1"$/;"	v
 __version__	stafflistdialog.py	/^__version__ = "0.3.0"$/;"	v
 __version__	stuffdata_0.3.0.py	/^__version__ = "0.3.0"$/;"	v
 _fromUtf8	oldVersions/0.1.0/ui_addstuffdialog.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
 _fromUtf8	oldVersions/0.1.0/ui_addstuffdialog.py	/^    _fromUtf8 = lambda s: s$/;"	v
+_fromUtf8	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
+_fromUtf8	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    _fromUtf8 = lambda s: s$/;"	v
+_fromUtf8	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
+_fromUtf8	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    _fromUtf8 = lambda s: s$/;"	v
 _fromUtf8	oldVersions/0.2.0/ui_mainwindow.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
 _fromUtf8	oldVersions/0.2.0/ui_mainwindow.py	/^    _fromUtf8 = lambda s: s$/;"	v
 _fromUtf8	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
 _fromUtf8	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    _fromUtf8 = lambda s: s$/;"	v
+_fromUtf8	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
+_fromUtf8	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    _fromUtf8 = lambda s: s$/;"	v
+_fromUtf8	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
+_fromUtf8	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    _fromUtf8 = lambda s: s$/;"	v
 _fromUtf8	ui_mainwindow.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
 _fromUtf8	ui_mainwindow.py	/^    _fromUtf8 = lambda s: s$/;"	v
 _fromUtf8	ui_stafflistdialog.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
 _fromUtf8	ui_stafflistdialog.py	/^    _fromUtf8 = lambda s: s$/;"	v
+_fromUtf8	ui_updatestaffdialog.py	/^    _fromUtf8 = QtCore.QString.fromUtf8$/;"	v
+_fromUtf8	ui_updatestaffdialog.py	/^    _fromUtf8 = lambda s: s$/;"	v
+accept	oldVersions/0.2.0/deletestuffdialog.py	/^    def accept(self) :$/;"	m	class:DeleteStuffDialog
+accept	oldVersions/0.2.0/updatestuffdialog.py	/^    def accept(self) :$/;"	m	class:UpdateStuffDialog
+accept	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def accept(self) :$/;"	m	class:UpdateStuffDialog
+accept	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def accept(self) :$/;"	m	class:UpdateStuffDialog
 addSeq	oldVersions/0.1.0/stuffData_0.2.0.py	/^    def addSeq(self) :$/;"	m	class:StuffContainer
 addStaff	mainwidow.py	/^    def addStaff(self) :$/;"	m	class:MainWindow
 addStaffs	staffdata.py	/^    def addStaffs(self, gender, *IDs) :$/;"	m	class:StaffContainer
@@ -311,16 +363,28 @@ addWorkPoses	oldVersions/0.2.0/stuffdata.py	/^    def addWorkPoses(self, Id) :$/
 addWorkPoses	stuffdata_0.3.0.py	/^    def addWorkPoses(self, Id) :$/;"	m	class:StuffContainer
 app	mainwidow.py	/^    app = QApplication(sys.argv)$/;"	v	class:MainWindow
 app	oldVersions/0.1.0/ui_addstuffdialog.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
+app	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
+app	oldVersions/0.2.0/deletestuffdialog.py	/^    app = QApplication(sys.argv)$/;"	v	class:DeleteStuffDialog
 app	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    app = QApplication(sys.argv)$/;"	v	class:StuffListDialog
+app	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
 app	oldVersions/0.2.0/ui_mainwindow.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
 app	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
+app	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
+app	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
+app	oldVersions/0.2.0/updatestuffdialog.py	/^    app = QApplication(sys.argv)$/;"	v	class:UpdateStuffDialog
+app	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    app = QApplication(sys.argv)$/;"	v	class:UpdateStuffDialog
+app	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    app = QApplication(sys.argv)$/;"	v
 app	oldVersions/0.2.0/workgraph.py	/^    app = QApplication(sys.argv)$/;"	v
 app	stafflistdialog.py	/^    app = QApplication(sys.argv)$/;"	v	class:StaffListDialog
 app	ui_mainwindow.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
 app	ui_stafflistdialog.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
+app	ui_updatestaffdialog.py	/^    app = QtGui.QApplication(sys.argv)$/;"	v
 app	workgraph.py	/^    app = QApplication(sys.argv)$/;"	v
 boundingRect	oldVersions/0.2.0/workgraph.py	/^    def boundingRect(self) :$/;"	m	class:StuffIcon
 boundingRect	workgraph.py	/^    def boundingRect(self) :$/;"	m	class:StaffIcon
+checkAndWarn	oldVersions/0.2.0/updatestuffdialog.py	/^    def checkAndWarn(self, Id=None, wTime=0,$/;"	m	class:UpdateStuffDialog
+checkAndWarn	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def checkAndWarn(self, Id=None, wTime=0,$/;"	m	class:UpdateStuffDialog
+checkAndWarn	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def checkAndWarn(self, Id=None, wTime=0,$/;"	m	class:UpdateStuffDialog
 checkTable	mainwidow.py	/^    def checkTable(self) :$/;"	m	class:MainWindow
 checkWaitPos	stuffdata_0.3.0.py	/^    def checkWaitPos(self, time, waitPos) :$/;"	m	class:StuffContainer
 checkWorkPos	stuffdata_0.3.0.py	/^    def checkWorkPos(self, time, workPos) :$/;"	m	class:StuffContainer
@@ -337,6 +401,7 @@ createTime	staffdata.py	/^    createTime = time()$/;"	v
 delStuff	oldVersions/0.1.0/stuffData_0.2.0.py	/^    def delStuff(self, stuff) :$/;"	m	class:StuffContainer
 delStuff	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def delStuff(self, stuff) :$/;"	m	class:StuffContainer
 deleteStaff	mainwidow.py	/^    def deleteStaff(self) :$/;"	m	class:MainWindow
+deleteStaff	staffdata.py	/^    def deleteStaff(self, Id) :$/;"	m	class:StaffContainer
 deleteStuff	oldVersions/0.2.0/stuffdata.py	/^    def deleteStuff(self, Id) :$/;"	m	class:StuffContainer
 deleteStuff	stuffdata_0.3.0.py	/^    def deleteStuff(self, Id) :$/;"	m	class:StuffContainer
 endTime	oldVersions/0.1.0/StuffClass4.py	/^    endTime = time()$/;"	v
@@ -355,7 +420,11 @@ fileSave	mainwidow.py	/^    def fileSave(self) :$/;"	m	class:MainWindow
 fileSaveAs	mainwidow.py	/^    def fileSaveAs(self) :$/;"	m	class:MainWindow
 findTheStuff	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    def findTheStuff(self, table=None, row=0, column=0) :$/;"	m	class:StuffListDialog
 form	mainwidow.py	/^    form = MainWindow()$/;"	v	class:MainWindow
+form	oldVersions/0.2.0/deletestuffdialog.py	/^    form = DeleteStuffDialog(S, S.stuffId(8))$/;"	v	class:DeleteStuffDialog
 form	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    form = StuffListDialog(S)$/;"	v	class:StuffListDialog
+form	oldVersions/0.2.0/updatestuffdialog.py	/^    form = UpdateStuffDialog(S)$/;"	v	class:UpdateStuffDialog
+form	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    form = UpdateStuffDialog(S)$/;"	v	class:UpdateStuffDialog
+form	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    form = UpdateStuffDialog(S, S.stuffId(8))$/;"	v
 form	oldVersions/0.2.0/workgraph.py	/^    form = WorkGraph()$/;"	v
 form	stafflistdialog.py	/^    form = StaffListDialog(S)$/;"	v	class:StaffListDialog
 form	workgraph.py	/^    form = WorkGraph()$/;"	v
@@ -364,6 +433,9 @@ getFilename	oldVersions/0.1.0/stuffData_0.2.0.py	/^    def getFilename(self) :$/
 getFilename	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def getFilename(self) :$/;"	m	class:StuffContainer
 getFilename	oldVersions/0.2.0/stuffdata.py	/^    def getFilename(self) :$/;"	m	class:StuffContainer
 getFilename	staffdata.py	/^    def getFilename(self) :$/;"	m	class:StaffContainer
+getGender	oldVersions/0.2.0/updatestuffdialog.py	/^    def getGender(self) :$/;"	m	class:UpdateStuffDialog
+getGender	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def getGender(self) :$/;"	m	class:UpdateStuffDialog
+getGender	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def getGender(self) :$/;"	m	class:UpdateStuffDialog
 getIDs	oldVersions/0.2.0/stuffdata.py	/^    def getIDs(self) :$/;"	m	class:StuffContainer
 getIDs	staffdata.py	/^    def getIDs(self) :$/;"	m	class:StaffContainer
 getIDs	stuffdata_0.3.0.py	/^    def getIDs(self) :$/;"	m	class:StuffContainer
@@ -419,6 +491,9 @@ getWorkTime	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def getWorkTime(self, Id)
 getWorkTime	oldVersions/0.2.0/stuffdata.py	/^    def getWorkTime(self, Id) :$/;"	m	class:StuffContainer
 getWorkType	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def getWorkType(self, Id) :$/;"	m	class:StuffContainer
 getWorkType	oldVersions/0.2.0/stuffdata.py	/^    def getWorkType(self, Id) :$/;"	m	class:StuffContainer
+getWorkType	oldVersions/0.2.0/updatestuffdialog.py	/^    def getWorkType(self) :$/;"	m	class:UpdateStuffDialog
+getWorkType	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def getWorkType(self) :$/;"	m	class:UpdateStuffDialog
+getWorkType	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def getWorkType(self) :$/;"	m	class:UpdateStuffDialog
 goWork	oldVersions/0.2.0/stuffdata.py	/^    def goWork(self, Id) :$/;"	m	class:StuffContainer
 goWork	staffdata.py	/^    def goWork(self, Id, wType) :$/;"	m	class:StaffContainer
 hadID	oldVersions/0.1.0/ErrorClass.py	/^class hadID(Error) :$/;"	c
@@ -464,10 +539,16 @@ notWaiting	errorclass.py	/^class notWaiting(Error) :$/;"	c
 notWaiting	oldVersions/0.1.0/ErrorClass.py	/^class notWaiting(Error) :$/;"	c
 notWaiting	oldVersions/0.2.0/errorclass.py	/^class notWaiting(Error) :$/;"	c
 okToContinue	mainwidow.py	/^    def okToContinue(self) :$/;"	m	class:MainWindow
+on_IdSpinBox_valueChanged	oldVersions/0.2.0/deletestuffdialog.py	/^    def on_IdSpinBox_valueChanged(self, Id) :$/;"	m	class:DeleteStuffDialog
 on_IdSpinBox_valueChanged	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    def on_IdSpinBox_valueChanged(self, ID) :$/;"	m	class:StuffListDialog
 on_IdSpinBox_valueChanged	stafflistdialog.py	/^    def on_IdSpinBox_valueChanged(self, Id) :$/;"	m	class:StaffListDialog
 on_allStuffTable_cellDoubleClicked	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    def on_allStuffTable_cellDoubleClicked(self, row, column) :$/;"	m	class:StuffListDialog
 on_allTabel_cellDoubleClicked	stafflistdialog.py	/^    def on_allTabel_cellDoubleClicked(self, row, column) :$/;"	m	class:StaffListDialog
+on_wTypeComboBox_activated	oldVersions/0.2.0/updatestuffdialog.py	/^    def on_wTypeComboBox_activated(self, index) :$/;"	m	class:UpdateStuffDialog
+on_wTypeComboBox_activated	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def on_wTypeComboBox_activated(self, index) :$/;"	m	class:UpdateStuffDialog
+on_wTypeComboBox_currentIndexChanged	oldVersions/0.1.0/updatestuffdialog.py	/^    def on_wTypeComboBox_currentIndexChanged(self, text) :$/;"	m	class:UpdateStuffDialog
+on_wTypeComboBox_currentIndexChanged	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def on_wTypeComboBox_currentIndexChanged(self, index) :$/;"	m	class:UpdateStuffDialog
+on_waitPosSpinBox_	oldVersions/0.1.0/updatestuffdialog.py	/^    def on_waitPosSpinBox_$/;"	m	class:UpdateStuffDialog
 on_waitPosTable_cellDoubleClicked	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    def on_waitPosTable_cellDoubleClicked(self, row, column) :$/;"	m	class:StuffListDialog
 on_waitTable_cellDoubleClicked	stafflistdialog.py	/^    def on_waitTable_cellDoubleClicked(self, row, column) :$/;"	m	class:StaffListDialog
 on_workPosTable_cellDoubleClicked	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    def on_workPosTable_cellDoubleClicked(self, row, column) :$/;"	m	class:StuffListDialog
@@ -510,10 +591,15 @@ reportStuffs	oldVersions/0.1.0/stuffData_0.2.0.py	/^    def reportStuffs(self) :
 reportStuffs	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def reportStuffs(self) :$/;"	m	class:StuffContainer
 reportStuffs	oldVersions/0.2.0/stuffdata.py	/^    def reportStuffs(self) :$/;"	m	class:StuffContainer
 retranslateUi	oldVersions/0.1.0/ui_addstuffdialog.py	/^    def retranslateUi(self, UpdateStuffDialog):$/;"	m	class:Ui_UpdateStuffDialog
+retranslateUi	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    def retranslateUi(self, UpdateStuff):$/;"	m	class:Ui_UpdateStuff
+retranslateUi	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    def retranslateUi(self, DeleteStuffDialog):$/;"	m	class:Ui_DeleteStuffDialog
 retranslateUi	oldVersions/0.2.0/ui_mainwindow.py	/^    def retranslateUi(self, MainWindow):$/;"	m	class:Ui_MainWindow
 retranslateUi	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    def retranslateUi(self, StuffListDialog):$/;"	m	class:Ui_StuffListDialog
+retranslateUi	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    def retranslateUi(self, UpdateStuffDialog):$/;"	m	class:Ui_UpdateStuffDialog
+retranslateUi	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    def retranslateUi(self, UpdateStuffDialog):$/;"	m	class:Ui_UpdateStuffDialog
 retranslateUi	ui_mainwindow.py	/^    def retranslateUi(self, MainWindow):$/;"	m	class:Ui_MainWindow
 retranslateUi	ui_stafflistdialog.py	/^    def retranslateUi(self, StaffListDialog):$/;"	m	class:Ui_StaffListDialog
+retranslateUi	ui_updatestaffdialog.py	/^    def retranslateUi(self, UpdateStaffDialog):$/;"	m	class:Ui_UpdateStaffDialog
 save	oldVersions/0.2.0/stuffdata.py	/^    def save(self, fileName="") :$/;"	m	class:StuffContainer
 save	staffdata.py	/^    def save(self, fileName="") :$/;"	m	class:StaffContainer
 save	stuffdata_0.3.0.py	/^    def save(self, fileName="") :$/;"	m	class:StuffContainer
@@ -552,10 +638,15 @@ setWorkTime	oldVersions/0.2.0/stuffdata.py	/^    def setWorkTime(self, Id, wTime
 setWorkType	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def setWorkType(self, Id, wType) :$/;"	m	class:StuffContainer
 setWorkType	oldVersions/0.2.0/stuffdata.py	/^    def setWorkType(self, Id, wType) :$/;"	m	class:StuffContainer
 setupUi	oldVersions/0.1.0/ui_addstuffdialog.py	/^    def setupUi(self, UpdateStuffDialog):$/;"	m	class:Ui_UpdateStuffDialog
+setupUi	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    def setupUi(self, UpdateStuff):$/;"	m	class:Ui_UpdateStuff
+setupUi	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    def setupUi(self, DeleteStuffDialog):$/;"	m	class:Ui_DeleteStuffDialog
 setupUi	oldVersions/0.2.0/ui_mainwindow.py	/^    def setupUi(self, MainWindow):$/;"	m	class:Ui_MainWindow
 setupUi	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    def setupUi(self, StuffListDialog):$/;"	m	class:Ui_StuffListDialog
+setupUi	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    def setupUi(self, UpdateStuffDialog):$/;"	m	class:Ui_UpdateStuffDialog
+setupUi	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    def setupUi(self, UpdateStuffDialog):$/;"	m	class:Ui_UpdateStuffDialog
 setupUi	ui_mainwindow.py	/^    def setupUi(self, MainWindow):$/;"	m	class:Ui_MainWindow
 setupUi	ui_stafflistdialog.py	/^    def setupUi(self, StaffListDialog):$/;"	m	class:Ui_StaffListDialog
+setupUi	ui_updatestaffdialog.py	/^    def setupUi(self, UpdateStaffDialog):$/;"	m	class:Ui_UpdateStaffDialog
 staffJumpWork	staffdata.py	/^    def staffJumpWork(self, Id, time, wType=NOR) :$/;"	m	class:StaffContainer
 staffWait	staffdata.py	/^    def staffWait(self, Id) :$/;"	m	class:StaffContainer
 staffWork	staffdata.py	/^    def staffWork(self, Id, wType=NOR) :$/;"	m	class:StaffContainer
@@ -582,7 +673,11 @@ stuffWork	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def stuffWork(self, Id, wTy
 stuffWork	oldVersions/0.2.0/stuffdata.py	/^    def stuffWork(self, Id, wType=NOR) :$/;"	m	class:StuffContainer
 stuffWork	stuffdata_0.3.0.py	/^    def stuffWork(self, Id, wType=NOR) :$/;"	m	class:StuffContainer
 stuffWorkTime	oldVersions/0.1.0/StuffClass4.py	/^    stuffWorkTime = time()$/;"	v
+stuffdata	oldVersions/0.1.0/updatestuffdialog.py	/^import stuffdata$/;"	i
+stuffdata	oldVersions/0.2.0/deletestuffdialog.py	/^import stuffdata$/;"	i
 stuffdata	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^import stuffdata$/;"	i
+stuffdata	oldVersions/0.2.0/updatestuffdialog.py	/^import stuffdata$/;"	i
+stuffdata	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^import stuffdata$/;"	i
 stuffdata	oldVersions/0.2.0/workgraph.py	/^import stuffdata$/;"	i
 stuffsWait	oldVersions/0.1.0/stuffData_0.2.0.py	/^    def stuffsWait(self, *IDs) :$/;"	m	class:StuffContainer
 stuffsWait	oldVersions/0.1.0/stuffData_0.2.1.py	/^    def stuffsWait(self, *IDs) :$/;"	m	class:StuffContainer
@@ -593,15 +688,24 @@ stuffsWork	oldVersions/0.2.0/stuffdata.py	/^    def stuffsWork(self, wType=NOR, 
 sys	mainwidow.py	/^    import sys$/;"	i
 sys	mainwidow.py	/^import sys$/;"	i
 sys	oldVersions/0.1.0/ui_addstuffdialog.py	/^    import sys$/;"	i
+sys	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    import sys$/;"	i
+sys	oldVersions/0.2.0/deletestuffdialog.py	/^    import sys$/;"	i
 sys	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^    import sys$/;"	i
 sys	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^import sys$/;"	i
+sys	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    import sys$/;"	i
 sys	oldVersions/0.2.0/ui_mainwindow.py	/^    import sys$/;"	i
 sys	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    import sys$/;"	i
+sys	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    import sys$/;"	i
+sys	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    import sys$/;"	i
+sys	oldVersions/0.2.0/updatestuffdialog.py	/^    import sys$/;"	i
+sys	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    import sys$/;"	i
+sys	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    import sys$/;"	i
 sys	oldVersions/0.2.0/workgraph.py	/^import sys$/;"	i
 sys	stafflistdialog.py	/^    import sys$/;"	i
 sys	stafflistdialog.py	/^import sys$/;"	i
 sys	ui_mainwindow.py	/^    import sys$/;"	i
 sys	ui_stafflistdialog.py	/^    import sys$/;"	i
+sys	ui_updatestaffdialog.py	/^    import sys$/;"	i
 sys	workgraph.py	/^import sys$/;"	i
 tell	oldVersions/0.2.0/stuffdata.py	/^    def tell(self, Id) :$/;"	m	class:StuffContainer
 tell	staffdata.py	/^    def tell(self) :$/;"	m	class:Staff
@@ -612,18 +716,33 @@ time	oldVersions/0.1.0/StuffClass4.py	/^from time import time $/;"	i
 time	oldVersions/0.2.0/stuffdata.py	/^from time import time$/;"	i
 time	staffdata.py	/^from time import time$/;"	i
 ui	oldVersions/0.1.0/ui_addstuffdialog.py	/^    ui = Ui_UpdateStuffDialog()$/;"	v
+ui	oldVersions/0.1.0/ui_updatestuffdlg.py	/^    ui = Ui_UpdateStuff()$/;"	v
+ui	oldVersions/0.2.0/ui_deletestuffdialog.py	/^    ui = Ui_DeleteStuffDialog()$/;"	v
 ui	oldVersions/0.2.0/ui_mainwindow.py	/^    ui = Ui_MainWindow()$/;"	v
 ui	oldVersions/0.2.0/ui_stufflistdialog_tabwidget.py	/^    ui = Ui_StuffListDialog()$/;"	v
+ui	oldVersions/0.2.0/ui_updatestuffdialog.py	/^    ui = Ui_UpdateStuffDialog()$/;"	v
+ui	oldVersions/0.2.0/ui_updatestuffdialog_idlineedit.py	/^    ui = Ui_UpdateStuffDialog()$/;"	v
 ui	ui_mainwindow.py	/^    ui = Ui_MainWindow()$/;"	v
 ui	ui_stafflistdialog.py	/^    ui = Ui_StaffListDialog()$/;"	v
+ui	ui_updatestaffdialog.py	/^    ui = Ui_UpdateStaffDialog()$/;"	v
+ui_deletestuffdialog	oldVersions/0.2.0/deletestuffdialog.py	/^import ui_deletestuffdialog$/;"	i
 ui_mainwindow	mainwidow.py	/^import ui_mainwindow$/;"	i
 ui_stafflistdialog	stafflistdialog.py	/^import ui_stafflistdialog$/;"	i
 ui_stufflistdialog_tabwidget	oldVersions/0.2.0/stufflistdialog_tabwidget.py	/^import ui_stufflistdialog_tabwidget$/;"	i
+ui_updatestuffdialog	oldVersions/0.1.0/updatestuffdialog.py	/^import ui_updatestuffdialog$/;"	i
+ui_updatestuffdialog	oldVersions/0.2.0/updatestuffdialog.py	/^import ui_updatestuffdialog$/;"	i
+ui_updatestuffdialog	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^import ui_updatestuffdialog$/;"	i
+ui_updatestuffdialog_idlineedit	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^import ui_updatestuffdialog_idlineedit$/;"	i
 update	oldVersions/0.2.0/workgraph.py	/^    def update(self) :$/;"	m	class:StuffIcon
 update	oldVersions/0.2.0/workgraph.py	/^    def update(self, stuff) :$/;"	m	class:WorkGraph
 update	workgraph.py	/^    def update(self) :$/;"	m	class:StaffIcon
 update	workgraph.py	/^    def update(self, staff) :$/;"	m	class:WorkGraph
+updateDialog	oldVersions/0.1.0/updatestuffdialog.py	/^    def updateDialog(self,text) :$/;"	m	class:UpdateStuffDialog
+updateDialog	oldVersions/0.2.0/updatestuffdialog.py	/^    def updateDialog(self, index=None, text=None) :$/;"	m	class:UpdateStuffDialog
+updateDialog	oldVersions/0.2.0/updatestuffdialog_0.1.0.py	/^    def updateDialog(self, index) :$/;"	m	class:UpdateStuffDialog
+updateDialog	oldVersions/0.2.0/updatestuffdialog_idlineedit.py	/^    def updateDialog(self, index=None, text=None) :$/;"	m	class:UpdateStuffDialog
 updateItem	stafflistdialog.py	/^    def updateItem(self, column, Id) :$/;"	m	class:StaffListDialog
+updateLabels	oldVersions/0.2.0/deletestuffdialog.py	/^    def updateLabels(self, stuff) :$/;"	m	class:DeleteStuffDialog
 updateMax	staffdata.py	/^    def updateMax(self, Id, time) :$/;"	m	class:StaffContainer
 updateMaxId	staffdata.py	/^    def updateMaxId(self, Id) :$/;"	m	class:StaffContainer
 updateMaxId	stuffdata_0.3.0.py	/^    def updateMaxId(self, Id) :$/;"	m	class:StuffContainer
@@ -635,8 +754,10 @@ updateMaxSeq	stuffdata_0.3.0.py	/^    def updateMaxSeq(self, time) :$/;"	m	class
 updateMaxSeqByTime	oldVersions/0.2.0/stuffdata.py	/^    def updateMaxSeqByTime(self, wTime) :$/;"	m	class:StuffContainer
 updateMaxTime	staffdata.py	/^    def updateMaxTime(self, time) :$/;"	m	class:StaffContainer
 updateMaxTime	stuffdata_0.3.0.py	/^    def updateMaxTime(self, time) :$/;"	m	class:StuffContainer
+updateMaxWait	staffdata.py	/^    def updateMaxWait(self) :$/;"	m	class:StaffContainer
 updateMaxWaitPos	staffdata.py	/^    def updateMaxWaitPos(self, waitPos) :$/;"	m	class:StaffContainer
 updateMaxWaitPos	stuffdata_0.3.0.py	/^    def updateMaxWaitPos(self, waitPos) :$/;"	m	class:StuffContainer
+updateMaxWork	staffdata.py	/^    def updateMaxWork(self) :$/;"	m	class:StaffContainer
 updateMaxWorkPos	staffdata.py	/^    def updateMaxWorkPos(self, workPos) :$/;"	m	class:StaffContainer
 updateMaxWorkPos	stuffdata_0.3.0.py	/^    def updateMaxWorkPos(self, workPos) :$/;"	m	class:StuffContainer
 updateStaff	staffdata.py	/^    def updateStaff(self, Id, $/;"	m	class:StaffContainer
