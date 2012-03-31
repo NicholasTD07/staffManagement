@@ -265,51 +265,6 @@ class StaffContainer :
         self.log("\t更新时间队列: 自动增加了{}列时间队列"\
                         .format(count))
 
-    #-- 返回及设置属性 --#
-
-    # 返回队列 #
-
-    #def getTimeSeq(self, time) ;
-    #    return self.__workSeqs[time]
-
-    #def getNSeq(self, time) :
-    #    return self.__workSeqs[time].nSeq
-
-    #def getSSeq(self, time) :
-    #    return self.__workSeqs[time].sSeq
-
-    #def getWSeq(self, time) :
-    #    return self.__workSeqs[time].wSeq
-
-    # 返回及设置位置 #
-
-    #def getNPos(self, time) :
-    #    return self.__workSeqs[time].nPos
-
-    #def getSPos(self, time) :
-    #    return self.__workSeqs[time].sPos
-
-    #def getWPos(self, time) :
-    #    return self.__workSeqs[time].wPos
-
-    #def setNPos(self, time, nPos) :
-    #    self.__workSeqs[time].nPos = nPos
-
-    #def setSPos(self, time, sPos) :
-    #    self.__workSeqs[time].sPos = sPos
-
-    #def setWPos(self, time, wPos) :
-    #    self.__workSeqs[time].wPos = wPos
-
-    #def incNPos(self, time) :
-    #    self.__workSeqs[time].nPos += 1
-
-    #def incSPos(self, time) :
-    #    self.__workSeqs[time].sPos += 1
-
-    #def incWPos(self, time) :
-    #    self.__workSeqs[time].wPos += 1
-
     # 基本操作 #
     def leaveWork(self, Id) :
         self.log("\t\t{}号员工脱离工作状态操作: ".format(Id))
