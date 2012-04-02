@@ -96,7 +96,10 @@ class StaffContainer :
         return self.__IDs
 
     def getStaff(self, Id) :
-        return self.__staffs[Id]
+        if Id in self.__staffs :
+            return self.__staffs[Id]
+        else :
+            return False
 
     def getStaffs(self) :
         return self.__staffs
@@ -524,6 +527,7 @@ class StaffContainer :
         staff = self.__staffs[Id]
         time = staff.wTime
         wType = staff.wType
+        sType = staff.sType
         self.log("\t\t员工工号为: {}, 工作类型为: {}, 队伍类型为: {}"\
             .format(Id, wType, sType))
 
