@@ -28,7 +28,7 @@ class Staff :
         print("""我是{}号员工, 我叫{}, {}.处于第{}时间队列内.
 我的工作类型是: {}, 队伍类型是: {}. 我的等待序号: {}, 工作序号: {}."""\
         .format(self.Id, self.name, self.gender, self.wTime,
-            self.wType, self.sType, self.waitPos, self.workPos))
+            self.wType))
 
 class TimeSeq :
     """包含不同工作次数的员工"""
