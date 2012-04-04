@@ -16,13 +16,10 @@ DEBUG = True
 class Staff :
     """包含员工的详细信息"""
 
-    def __init__(self, Id, gender='男', name=None) :
+    def __init__(self, Id, gender='男', name="") :
         self.Id = Id
         self.gender = gender
-        if name is not None :
-            self.name = name
-        else :
-            self.name = ""
+        self.name = name
         self.waitPos = None
         self.workPos = None
         self.wTime = 0
