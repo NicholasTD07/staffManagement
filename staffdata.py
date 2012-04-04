@@ -359,6 +359,15 @@ class StaffContainer :
         self.log("\t@@@---- 成功: 移除员工 ----@@@")
         self.__dirty = True
             
+    def staffWait(self, Id) :
+        self.log("\t{}号员工等待操作:".format(Id))
+
+        # 1. 获得员工信息
+        staff = self.__staffs[Id]
+        wType = staff.wType
+
+        # 2. 判断员工当前状态
+        if wType in self.workTypes :
 
     # 批量操作 #
 
