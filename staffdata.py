@@ -282,6 +282,63 @@ class StaffContainer :
             self.log("\t\t@@@----序列最大工作次数保持: {}次----@@@"\
             .format(time))
 
+    def norWork(self, Id) :
+        self.log("\t\t{}员工正常上班操作:".format(Id))
+
+        # 1. 获得员工基本信息
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+        wType = staff.wType
+
+        # 2. 判断员工当前状态是否为等待状态
+        if wType is not self.WAIT :
+            self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
+            return
+
+        # 3. 使员工脱离工作队列
+        self.__workSeqs[wTime].nSeq.remove(staff)
+        self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
+
+        # 4. 更新工作次数
+        staff.wTime += 1
+        wTime = staff.wTime
+        self.updateMax(wTime)
+
+        # 5. 更新状态
+        staff.wType = self.NOR
+        self.log("\t\t员工当前工作次数: {}, 工作状态: {}"\
+            .format(staff.wTime, staff.wType))
+
+        # 6. 员工按照序列正常工作序号, 进入序列
+        # 6.1 取得当前序列正常工作序号
+        nPos = self.__workSeqs[wTime].nPos
+        # 6.2 检查当前序列长度
+        checked = False
+        while len(self.__workSeqs[wTime].nSeq) < nPos :
+            self.__workSeqs[wTime].nSeq.append(None)
+            if not checked :
+                self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
+                checked = True
+        # 6.3 判断工作位置状态
+        inPos = self.__workSeqs[wTime].nSeq[nPos]
+        if inPos is None :
+            self.__workSeqs[wTime].nSeq[nPos] = staff
+        elif isinstance(inPos, staff) and inPos.wType is self.SEL :
+            self.__workSeqs[wTime].nSeq.insert(nPos, staff)
+        else :
+            self.log("\t\t!!!----错误: 插入员工时出现未知错误.----!!!")
+            return
+
+        # 7. 更新队列工作序号
+        self.__workSeqs[wTime].nPos += 1
+        
+        # 8. 加入变动员工组
+        self.__modStaffs.append(staff)
+
+        # 9. 操作完成, 设置文件改动
+        self.log("\t\t@@@---- 成功: 员工正常上班操作 ----@@@")
+        self.__dirty = True
+
     # 复合操作 #
 
     def updateStaff(self, Id, 
