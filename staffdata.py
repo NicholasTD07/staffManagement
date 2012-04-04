@@ -23,11 +23,8 @@ class Staff :
             self.name = name
         else :
             self.name = ""
-        self.waitPos = None
-        self.workPos = None
         self.wTime = 0
         self.wType = StaffContainer.IDLE
-        self.sType = None
 
 
     def tell(self) :
@@ -44,10 +41,7 @@ class TimeSeq :
         self.sPos = 1
         self.wPos = 1
         self.nSeq = {}
-        self.sSeq = {}
         self.wSeq = {}
-        self.waitPoses = []
-        self.workPoses = []
 
 
 class StaffContainer :
@@ -59,7 +53,6 @@ class StaffContainer :
     NOR = '排钟'
     NAMED = '点钟'
     SEL = '选钟'
-    WAIT = '等待'
     IDLE = '休息'
 
     workTypes = [NOR, SEL, NAMED]
@@ -112,14 +105,6 @@ class StaffContainer :
 
     def getMaxTime(self) :
         return self.__maxTime
-
-    def updateMaxTime(self, time) :
-        self.log("\t更新最大工作次数:\t")
-        if time > self.__maxTime :
-            self.__maxTime = time
-            self.log("更新为: {}!".format(time))
-        else :
-            self.log("保持不变: {}.".format(self.__maxTime))
 
     def getMaxId(self) :
         return self.__maxId
@@ -270,49 +255,6 @@ class StaffContainer :
 
     # 基本操作 #
 
-    def updateMaxWait(self) :
-        self.log("\t\t更新员工队列最大等待位置操作 : ")
-
-        # 获得当前值
-        old = self.__maxWaitPos
-
-        for workSeq in self.__workSeqs :
-            maxWaitPos = max(workSeq.waitPoses)
-            if maxWaitPos > self.__maxWaitPos :
-                self.__maxWaitPos = maxWaitPos
-
-        # 获得最新值
-        new = self.__maxWaitPos
-
-        if new is not old :
-            self.log("\t\t@@@----最大等待位置更新为: {} ----@@@"\
-                .format(new))
-        else :
-            self.log("\t\t@@@----最大等待位置保持为: {} ----@@@"\
-                .format(old))
-
-    def updateMaxWork(self) :
-        self.log("\t\t更新员工队列最大工作位置操作 : ")
-
-        # 获得当前值
-        old = self.__maxWorkPos
-
-        for workSeq in self.__workSeqs :
-            maxWorkPos = max(workSeq.workPoses)
-            if maxWorkPos > self.__maxWorkPos :
-                self.__maxWorkPos = maxWorkPos
-        
-        # 获得最新值
-        new = self.__maxWorkPos
-
-        if new is not old :
-            self.log("\t\t@@@----最大工作位置更新为: {} ----@@@"\
-                .format(new))
-        else :
-            self.log("\t\t@@@----最大工作位置保持为: {} ----@@@"\
-                .format(old))
-            
-
     def updateMax(self, Id, time) :
         self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
         .format(Id, time))
@@ -344,141 +286,6 @@ class StaffContainer :
             self.log("\t\t@@@----序列最大工作次数保持: {}次----@@@"\
             .format(time))
 
-    def leaveWork(self, Id) :
-        self.log("\t\t{}号员工脱离工作状态操作: ".format(Id))
-
-        # 1.取得员工基本信息
-        staff = self.__staffs[Id]
-        time = staff.wTime
-        wType = staff.wType
-        sType = staff.sType
-        workPos = staff.workPos
-        self.log(
-        "\t\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
-                     .format(workPos, time, wType, sType))
-
-        # 2.脱离workPoses序列
-        self.__workSeqs[time].workPoses.remove( (workPos, Id) )
-        self.log("\t\t\t工号:{}, 脱离第{}次工作位置序列."\
-                     .format(workPos, time))
-
-        # 3.脱离workSeqs[time]
-        if sType is self.NOR :
-            # test only #
-            for staff in self.__workSeqs[time].nSeq.values() :
-                print(staff.Id, staff.workPos)
-            self.__workSeqs[time].nSeq.pop(workPos)
-            self.log("\t\t\t脱离NOR工作队伍.")
-        elif sType is self.SEL :
-            self.__workSeqs[time].sSeq.pop(workPos)
-            self.log("\t\t\t脱离SEL工作队伍.")
-        else :
-            self.log("\t\t!!!---- 错误: 员工队伍类型有误----!!!")
-            return
-
-        # 4.操作完成.
-        self.log("\t\t@@@---- 成功: 员工脱离工作状态! ----@@@")
-
-    def leaveWait(self, Id) :
-        self.log("\t\t{}号员工脱离等待状态操作: ".format(Id))
-
-        # 1.取得员工基本信息
-        staff = self.__staffs[Id]
-        time = staff.wTime
-        wType = staff.wType
-        sType = staff.sType
-        waitPos = staff.waitPos
-        self.log(
-        "\t\t\t工作位置:{}, 工作次数:{}, 工作类型:{}, 队伍类型:{}"\
-                     .format(waitPos, time, wType, sType))
-
-        # 2.脱离workSeq[time]
-        if sType is not self.WAIT :
-            self.log("\t\t!!!---- 错误: 员工队伍类型有误----!!!")
-            raise errorclass.wrongType("员工队伍类型有误.")
-        self.__workSeqs[time].wSeq.pop(waitPos)
-
-        # 3.脱离waitPoses序列
-        self.__workSeqs[time].waitPoses.remove( (waitPos, Id) )
-        self.log("\t\t\t工号:{}, 脱离第{}次等待位置序列."\
-                     .format(waitPos, time))
-
-        # 4.操作完成
-        self.log("\t\t@@@---- 成功: 员工脱离等待状态! ----@@@")
-
-    def goWork(self, Id, wType) :
-        self.log("\t\t{}号员工goWork操作.".format(Id))
-
-        # 1.获得员工基本信息
-        staff = self.__staffs[Id]
-        time = staff.wTime
-
-        # 2.设定员工工作类型
-        staff.wType = wType
-
-        # 3.设定员工工作序号, 并更新序列中的序号
-        # 4.加入对应工作队列
-        # 5.设定员工队列类型
-
-        if wType is self.NOR :
-            # 3.设定员工工作序号, 并更新序列中的序号
-            nPos = self.__workSeqs[time].nPos
-            staff.workPos = nPos 
-            self.log("\t\t\t工作序号已设置为当前序列正常工作号: {}"\
-                .format(nPos))
-            self.__workSeqs[time].nPos += 1
-            self.log("\t\t\t当前序列正常工作序号更新为 {}"\
-                .format(self.__workSeqs[time].nPos))
-            # 4.加入对应工作队列
-            self.__workSeqs[time].nSeq[nPos] = staff
-            # 5.设定员工队列类型
-            staff.sType = self.NOR
-        elif wType is self.SEL :
-            # 3.设定员工工作序号, 并更新序列中的序号
-            waitPos = staff.waitPos
-            staff.workPos = waitPos
-            self.log("\t\t\t工作序号已设置为员工等待序号: {}"\
-                .format(waitPos))
-            self.__workSeqs[time].sPos = waitPos + 1
-            self.log("\t\t\t当前序列选钟等待序号更新为 {}"\
-                .format(self.__workSeqs[time].sPos))
-            # 4.加入对应工作队列
-            self.__workSeqs[time].sSeq[waitPos] = staff
-            # 5.设定员工队列类型
-            staff.sType = self.SEL
-        elif wType is self.NAMED :
-            if self.__workSeqs[time].sSeq :
-                # 3.设定员工工作序号, 并更新序列中的序号
-                sPos = self.__workSeqs[time].sPos
-                staff.workPos = sPos
-                self.log("\t\t\t工作序号已设置为当前序列选钟序号: {}"\
-                    .format(sPos))
-                self.__workSeqs[time].sPos += 1
-                self.log("\t\t\t当前序列选钟序号更新为 {}"\
-                    .format(self.__workSeqs[time].sPos))
-                # 4.加入对应工作队列
-                self.__workSeqs[time].sSeq[sPos] = staff
-                # 5.设定员工队列类型
-                staff.sType = self.SEL
-            else :
-                # 3.设定员工工作序号, 并更新序列中的序号
-                nPos = self.__workSeqs[time].nPos
-                staff.workPos = nPos 
-                self.log("\t\t\t工作序号已设置为当前序列正常工作号:{}"\
-                    .format(nPos))
-                self.__workSeqs[time].nPos += 1
-                self.log("\t\t\t当前序列正常工作序号更新为 {}"\
-                    .format(self.__workSeqs[time].nPos))
-                # 4.加入对应工作队列
-                self.__workSeqs[time].nSeq[nPos] = staff
-                # 5.设定员工队列类型
-                staff.sType = self.NOR
-        else :
-            raise errorclass.wrongType("员工下一次工作类型有误.")
-
-        # 6.清除等待序号
-        staff.waitPos = None
-            
     # 复合操作 #
 
     def updateStaff(self, Id, 
