@@ -36,9 +36,7 @@ class TimeSeq :
     def __init__(self) :
         self.nPos = 1
         self.sPos = 1
-        self.wPos = 1
-        self.nSeq = {}
-        self.wSeq = {}
+        self.nSeq = []
 
 
 class StaffContainer :
