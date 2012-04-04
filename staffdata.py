@@ -48,6 +48,7 @@ class StaffContainer :
     NOR = '排钟'
     NAMED = '点钟'
     SEL = '选钟'
+    WAIT = '等待'
     IDLE = '休息'
 
     workTypes = [NOR, SEL, NAMED]
