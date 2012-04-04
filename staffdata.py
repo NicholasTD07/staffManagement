@@ -367,7 +367,12 @@ class StaffContainer :
         wType = staff.wType
 
         # 2. 判断员工当前状态
-        if wType in self.workTypes :
+        if wType is self.WAIT :
+            self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@"
+            return
+        else :
+            staff.wType = self.WAIT
+            self.log("\t@@@----成功: 员工等待操作----@@@")
 
     # 批量操作 #
 
