@@ -16,13 +16,10 @@ DEBUG = True
 class Staff :
     """包含员工的详细信息"""
 
-    def __init__(self, Id, gender='男', name=None) :
+    def __init__(self, Id, gender='男', name="") :
         self.Id = Id
         self.gender = gender
-        if name is not None :
-            self.name = name
-        else :
-            self.name = ""
+        self.name = name
         self.wTime = 0
         self.wType = StaffContainer.IDLE
 
@@ -524,6 +521,7 @@ class StaffContainer :
                     .format(workSeq.wPos))
                 for staff in workSeq.wSeq.values() :
                     print(
+                    :q
                     "员工工号: {0} 等待号码: {1} 上班次数:{2}"\
                     .format(staff.Id,
                     staff.waitPos, staff.wTime))
