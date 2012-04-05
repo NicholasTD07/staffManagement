@@ -382,10 +382,14 @@ class StaffContainer :
         if not self.__workSeqs[wTime].selected :
             self.__workSeqs[wTime].selected = True
 
-        # 7. 加入变动员工组
+        # 7. 判断是否需要更新 nPos
+        if pos < self.__workSeqs[wTime].nPos :
+            self.__workSeqs[wTime].nPos += 1
+
+        # 8. 加入变动员工组
         self.__modStaffs.append(staff)
         
-        # 8. 操作完成, 设置文件改动
+        # 9. 操作完成, 设置文件改动
         self.log("\t\t@@@---- 成功: 员工选钟上班操作 ----@@@")
         self.__dirty = True
 
