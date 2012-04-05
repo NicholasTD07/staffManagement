@@ -427,9 +427,18 @@ class StaffContainer :
         if wType is self.WAIT :
             self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@"
             return
-        else :
+        elif wType in self.workTypes :
             staff.wType = self.WAIT
-            self.log("\t@@@----成功: 员工等待操作----@@@")
+        elif wType is self.IDLE :
+            staff.wType = self.WAIT
+            self.__workSeqs[0].nSeq.append(staff)
+
+        # 3. 加入变动员工组
+        self.__modStaffs.append(staff)
+
+        # 4. 操作成功
+        self.log("\t@@@----成功: 员工等待操作----@@@")
+        self.__dirty = True
 
     # 批量操作 #
 
