@@ -339,6 +339,52 @@ class StaffContainer :
         self.log("\t\t@@@---- 成功: 员工正常上班操作 ----@@@")
         self.__dirty = True
 
+    def selWork(self, Id) :
+        self.log("\t\t{}号员工选钟上班工作:".format(Id))
+
+        # 1. 获得员工基本信息
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+        wType = staff.wType
+
+        # 2. 判断员工当前状态是否为等待状态
+        if wType is not self.WAIT :
+            self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
+            return
+
+        # 3. 提取当前工作序号, 使员工脱离工作队列
+        pos = self.__workSeqs[wTime].index(staff)
+        self.__workSeqs[wTime].nSeq.remove(staff)
+        self.log("\t\t员工脱离第{}次工作队列, 工作序号: {}."\
+            .format(wTime, pos))
+
+        # 4. 更新工作次数
+        staff.wTime += 1
+        wTime = staff.wTime
+        self.updateMax(wTime)
+
+        # 5. 员工按照上次序列工作序号, 进入序列
+        # 5.1 已取得当前工作序号
+        # 5.2 检查当前序列长度
+        while len(self.__workSeqs[wTime].nSeq) < pos :
+            self.__workSeqs[wTime].nSeq.append(None)
+            if not checked :
+                self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
+                checked = True
+        # 5.3 判断工作位置状态, 插入队伍
+        inPos = self.__workSeqs[wTime].nSeq[pos]
+        if inPos is None :
+            self.__workSeqs[wTime].nSeq[pos] = staff
+        else :
+            self.__workSeqs[wTime].nSeq.insert(pos, staff)
+
+        # 6. 加入变动员工组
+        self.__modStaffs.append(staff)
+        
+        # 7. 操作完成, 设置文件改动
+        self.log("\t\t@@@---- 成功: 员工选钟上班操作 ----@@@")
+        self.__dirty = True
+
     # 复合操作 #
 
     def updateStaff(self, Id, 
