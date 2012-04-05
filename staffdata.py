@@ -379,9 +379,11 @@ class StaffContainer :
         else :
             self.__workSeqs[wTime].nSeq.insert(pos, staff)
 
-        # 6. 更新 selected 状态
+        # 6. 更新 selected 状态, 更新 sPos
         if not self.__workSeqs[wTime].selected :
             self.__workSeqs[wTime].selected = True
+        if pos + 1 > self.workSeq[wTime].sPos :
+            self.__workSeqs[wTime].sPos = pos + 1
 
         # 7. 判断是否需要更新 nPos
         if pos < self.__workSeqs[wTime].nPos :
