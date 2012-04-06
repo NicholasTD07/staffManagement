@@ -387,8 +387,11 @@ class StaffContainer :
         # 7. 更新 selected 状态, 更新 sPos
         if not self.__workSeqs[wTime].selected :
             self.__workSeqs[wTime].selected = True
-        if pos + 1 > self.workSeq[wTime].sPos :
+        sPos = self.workSeq[wTime].sPos 
+        if pos + 1 > sPos :
             self.__workSeqs[wTime].sPos = pos + 1
+        elif pos < sPos :
+            self.__workSeqs[wTime].sPos += 1
 
         # 8. 判断是否需要更新 nPos
         if pos < self.__workSeqs[wTime].nPos :
