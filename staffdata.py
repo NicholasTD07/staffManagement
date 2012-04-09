@@ -22,6 +22,7 @@ class Staff :
         self.name = name
         self.wTime = 0
         self.wType = StaffContainer.IDLE
+        self.sType = StaffContainer.IDLE
 
 
     def tell(self) :
@@ -34,8 +35,8 @@ class TimeSeq :
     """包含不同工作次数的员工"""
 
     def __init__(self) :
-        self.nPos = 1
-        self.sPos = 1
+        self.nPos = [0]
+        self.sPos = [1]
         self.selected = False
         self.nSeq = []
 
@@ -309,12 +310,13 @@ class StaffContainer :
 
         # 5. 更新状态
         staff.wType = self.NOR
+        staff.sType = self.NOR
         self.log("\t\t员工当前工作次数: {}, 工作状态: {}"\
             .format(staff.wTime, staff.wType))
 
         # 6. 员工按照序列正常工作序号, 进入序列
         # 6.1 取得当前序列正常工作序号
-        nPos = self.__workSeqs[wTime].nPos
+        nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
         # 6.2 检查当前序列长度
         checked = False
         while len(self.__workSeqs[wTime].nSeq) <= nPos :
@@ -333,7 +335,7 @@ class StaffContainer :
             return
 
         # 7. 更新队列工作序号
-        self.__workSeqs[wTime].nPos += 1
+        self.__workSeqs[wTime].nPos.append(nPos)
         
         # 8. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -370,6 +372,7 @@ class StaffContainer :
 
         # 5. 更新状态
         staff.wType = self.SEL
+        staff.sType = self.SEL
         self.log("\t\t员工当前工作次数: {}, 工作状态: {}"\
             .format(staff.wTime, staff.wType))
 
@@ -392,15 +395,16 @@ class StaffContainer :
         # 7. 更新 selected 状态, 更新 sPos
         if not self.__workSeqs[wTime].selected :
             self.__workSeqs[wTime].selected = True
-        sPos = self.__workSeqs[wTime].sPos 
+        sPos = max(self.__workSeqs[wTime].sPos)
         if pos + 1 > sPos :
-            self.__workSeqs[wTime].sPos = pos + 1
+            self.__workSeqs[wTime].sPos.append(pos + 1)
         elif pos < sPos :
-            self.__workSeqs[wTime].sPos += 1
+            self.__workSeqs[wTime].sPos.append(sPos + 1)
 
         # 8. 判断是否需要更新 nPos
-        if pos < self.__workSeqs[wTime].nPos :
-            self.__workSeqs[wTime].nPos += 1
+        nPos = max(self.__workSeqs[wTime].nPos)
+        if pos < nPos :
+            self.__workSeqs[wTime].nPos.append(nPos + 1)
 
         # 9. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -440,8 +444,8 @@ class StaffContainer :
 
         # 6. 员工按照序列正常工作序号进入序列
         # 6.1 取得当前序列正常工作序号
-        nPos = self.__workSeqs[wTime].nPos
-        sPos = self.__workSeqs[wTime].sPos
+        nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
+        sPos = ( max(self.__workSeqs[wTime].sPos) + 1 )
         # 6.2 判断 checked 状态
         if self.__workSeqs[wTime].selected : # 有选钟, 放在队列末尾
             # 6.3 检查序列长度
@@ -459,7 +463,8 @@ class StaffContainer :
                     self.__workSeqs[wTime].\
                     nSeq[sPos] = staff
                     self.__workSeqs[wTime].\
-                    sPos += 1
+                    sPos.append(sPos + 1)
+                    staff.sType = self.SEL
                 else :
                     self.log("员工工作位置非空.退出.")
                     raise Exception
@@ -481,11 +486,15 @@ class StaffContainer :
                     self.log("\t\t员工正常上点钟!")
                     self.__workSeqs[wTime].\
                     nSeq[nPos] = staff
+                    self.__workSeqs[wTime].\
+                    nPos.append(nPos + 1)
+                    staff.sType = self.NOR
                 else :
                     self.log("员工工作位置异常.退出.")
                     raise Exception
-                self.__workSeqs[wTime].\
-                nPos += 1
+            else :
+                self.log("员工上一个位置非空或者不是NOR.退出.")
+                raise Exception
 
         # 7. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -576,7 +585,9 @@ class StaffContainer :
 
         # 1. 获得员工信息
         staff = self.__staffs[Id]
+        wTime = staff.wTime
         wType = staff.wType
+        sType = staff.sType
 
         # 2. 判断员工当前状态
         if wType is self.WAIT :
@@ -584,14 +595,23 @@ class StaffContainer :
             return
         elif wType in self.workTypes :
             staff.wType = self.WAIT
+            pos = self.__workSeqs[wTime].nSeq.index(staff)
         elif wType is self.IDLE :
             staff.wType = self.WAIT
             self.__workSeqs[0].nSeq.append(staff)
 
-        # 3. 加入变动员工组
+        # 3. 更新 nPos, sPos
+        if sType is self.NOR :
+            self.__workSeqs[wTime].nPos.remove( pos )
+        elif sType is self.SEL :
+            self.__workSeqs[wTime].sPos.remove( pos )
+        else :
+            self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
+            
+        # 4. 加入变动员工组
         self.__modStaffs.add(staff)
 
-        # 4. 操作成功
+        # 5. 操作成功
         self.log("\t@@@----成功: 员工等待操作----@@@")
         self.__dirty = True
 
@@ -630,8 +650,8 @@ class StaffContainer :
         print()
         for workSeq in self.__workSeqs :
             nSeq = workSeq.nSeq
-            nPos = workSeq.nPos
-            sPos = workSeq.sPos
+            nPos = max(workSeq.nPos)
+            sPos = max(workSeq.sPos)
             selected = workSeq.selected
             wTime = self.__workSeqs.index(workSeq)
             print("第{}次时间序列, nPos = {}, sPos = {}, {}选钟工作员工.".format(wTime, nPos, sPos, "有" if selected else "没有"))
@@ -711,8 +731,8 @@ if __name__ == '__main__' :
     S.staffWork(5, S.NOR)
     S.reportStaffs()
     # 测试 多个员工同一位置选钟 2号
-    #S.staffWait(5) # 5 在第3次时间队列
-    #S.staffWork(5, S.NOR)
-    #S.staffWork(6) # 6 在第2次时间队列
-    #S.reportStaffs()
+    S.staffWait(5) # 5 在第3次时间队列
+    S.staffWork(5, S.NOR)
+    S.staffWork(6) # 6 在第2次时间队列
+    S.reportStaffs()
 
