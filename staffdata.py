@@ -297,7 +297,9 @@ class StaffContainer :
             return
 
         # 3. 使员工脱离工作队列
+        pos = self.__workSeqs[wTime].nSeq.index(staff)
         self.__workSeqs[wTime].nSeq.remove(staff)
+        self.__workSeqs[wTime].nSeq.insert(pos, None)
         self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 4. 更新工作次数
@@ -357,6 +359,7 @@ class StaffContainer :
         # 3.1 判断员工工作状态
         pos = self.__workSeqs[wTime].nSeq.index(staff)
         self.__workSeqs[wTime].nSeq.remove(staff)
+        self.__workSeqs[wTime].nSeq.insert(pos, None)
         self.log("\t\t员工脱离第{}次工作队列, 工作序号: {}."\
             .format(wTime, pos))
 
@@ -420,7 +423,9 @@ class StaffContainer :
             return
 
         # 3. 使员工脱离工作队列
+        pos = self.__workSeqs[wTime].nSeq.index(staff)
         self.__workSeqs[wTime].nSeq.remove(staff)
+        self.__workSeqs[wTime].nSeq.insert(pos, None)
         self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 4. 更新工作次数
