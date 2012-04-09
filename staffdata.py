@@ -354,6 +354,7 @@ class StaffContainer :
             return
 
         # 3. 提取当前工作序号, 使员工脱离工作队列
+        # 3.1 判断员工工作状态
         pos = self.__workSeqs[wTime].nSeq.index(staff)
         self.__workSeqs[wTime].nSeq.remove(staff)
         self.log("\t\t员工脱离第{}次工作队列, 工作序号: {}."\
@@ -659,44 +660,53 @@ class StaffContainer :
 
 if __name__ == '__main__' :
     
+#    S = StaffContainer()
+#    S.log("\nAGAIN")
+#
+#
+#    startTime = time()
+#    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
+#    createTime = time()
+#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    #S.reportStaffs()
+#    S.staffsWork(S.NOR, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    staffWorkTime = time()
+#
+#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    staffWork2Time = time()
+#    #S.reportStaffs()
+#    endTime = time()
+#    print("""创建员工时间 {0} \n
+#员工第一次工作时间 {1}\n员工第二次工作时间 {2}
+#报告时间 {3}"""\
+#        .format((createTime - startTime),
+#            (staffWorkTime - createTime),
+#            (staffWork2Time - staffWorkTime),
+#            (endTime - staffWorkTime)))
+#    print("员工工号: {}".format(S.getIDs()))
+#
+#    S.staffsWork(S.NOR, 4, 5, 6)
+#    S.staffsWork(S.NAMED, 7, 8)
+#    S.getStaffs()[1].tell()
+#    S.staffsWork(S.SEL, 1, 2, 3)
+#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    S.staffsWork(S.NAMED, 5, 6)
+#    S.staffsWork(S.SEL, 9)
+#    #S.reportStaffs()
+#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+#    #S.reportStaffs()
+#
+#    S.save("/home/thedevil/test.qpc")
+#    S.load("/home/thedevil/test.qpc")
+
     S = StaffContainer()
-    S.log("\nAGAIN")
-
-
-    startTime = time()
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
-    createTime = time()
+    # 测试 等待操作
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    #S.reportStaffs()
-    S.staffsWork(S.NOR,1, 2, 3, 4, 5, 6, 7, 8, 9)
-    staffWorkTime = time()
-
+    # 测试 全部正常工作
+    S.staffsWork(S.NOR, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    # 测试 全部选钟工作
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    staffWork2Time = time()
-    #S.reportStaffs()
-    endTime = time()
-    print("""创建员工时间 {0} \n
-员工第一次工作时间 {1}\n员工第二次工作时间 {2}
-报告时间 {3}"""\
-        .format((createTime - startTime),
-            (staffWorkTime - createTime),
-            (staffWork2Time - staffWorkTime),
-            (endTime - staffWorkTime)))
-    print("员工工号: {}".format(S.getIDs()))
-
-
-    S.staffsWork(S.NOR, 4, 5, 6)
-    S.staffsWork(S.NAMED, 7, 8)
-    S.getStaffs()[1].tell()
-    S.staffsWork(S.SEL, 1, 2, 3)
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.staffsWork(S.NAMED, 5, 6)
-    S.staffsWork(S.SEL, 9)
-    #S.reportStaffs()
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    #S.reportStaffs()
-
-    S.save("/home/thedevil/test.qpc")
-    S.load("/home/thedevil/test.qpc")
