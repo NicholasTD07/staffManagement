@@ -627,41 +627,23 @@ class StaffContainer :
     # 调试 #
 
     def reportStaffs(self) :
-        """汇报当前正在工作的员工情况."""
-        print("含有{0}名员工.".format(len(S)))
+        print()
         for workSeq in self.__workSeqs :
-            if 1 :
-                print("第{0}次工作队列 \t"\
-                    .format(self.__workSeqs.index(workSeq)))
-                print()
-                print("正常上班序列")
-                print("当前上班班号: {0}"\
-                    .format(workSeq.nPos))
-                for staff in workSeq.nSeq.values() :
-                    print(
-                    "员工工号: {0} 上班号码: {1} 上班次数:{2}"\
-                    .format(staff.Id,
-                    staff.workPos, staff.wTime))
-                print()
-                print("选钟后上班序列")
-                print("当前上班班号: {0}"\
-                    .format(workSeq.sPos))
-                for staff in workSeq.sSeq.values() :
-                    print(
-                    "员工工号: {0} 上班号码: {1} 上班次数:{2}"\
-                    .format(staff.Id,
-                    staff.workPos, staff.wTime))
-                print()
-                print("等待员工")
-                print("当前等待班号: {0}"\
-                    .format(workSeq.wPos))
-                for staff in workSeq.wSeq.values() :
-                    print(
-                    "员工工号: {0} 等待号码: {1} 上班次数:{2}"\
-                    .format(staff.Id,
-                    staff.waitPos, staff.wTime))
-        print("\n END ")
-        print("最大工作次数: {0}".format(S.getMaxTime()))
+            nSeq = workSeq.nSeq
+            nPos = workSeq.nPos
+            sPos = workSeq.sPos
+            selected = workSeq.selected
+            wTime = self.__workSeqs.index(workSeq)
+            print("第{}次时间序列, nPos = {}, sPos = {}, {}选钟工作员工.".format(wTime, nPos, sPos, "有" if selected else "没有"))
+            staffs = []
+            for staff in nSeq :
+                if staff is None :
+                    staffs.append("空  ")
+                else :
+                    staffs.append("{}  ".format(staff.Id))
+            msg = "".join(["员工序号: {}".format(Id) for Id in staffs])
+            print(msg)
+            print()
 
 if __name__ == '__main__' :
     
@@ -719,4 +701,3 @@ if __name__ == '__main__' :
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWork(S.NOR, 1, 3, 4)
     S.staffsWork(S.SEL, 2)
-
