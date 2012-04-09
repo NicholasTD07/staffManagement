@@ -574,7 +574,6 @@ class StaffContainer :
 
         # 2. 判断员工当前状态
         if wType is self.WAIT :
-            # WTF
             self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@")
             return
         elif wType in self.workTypes :
