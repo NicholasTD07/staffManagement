@@ -586,6 +586,21 @@ class StaffContainer :
         self.log("\t@@@----成功: 员工等待操作----@@@")
         self.__dirty = True
 
+    def staffWork(self, Id, wType=NOR) :
+        self.log("\t{}员工{}工作操作:".format(Id, wType))
+
+        if wType is self.NOR :
+            self.norWork(Id)
+        elif wType is self.SEL :
+            self.selWork(Id)
+        elif wType is self.NAMED :
+            self.namedWork(Id)
+        else :
+            raise Exception
+
+        self.log("\t@@@----成功: 员工成功操作----@@@")
+        self.__dirty = True
+
     # 批量操作 #
 
     def addStaffs(self, gender, *IDs) :
