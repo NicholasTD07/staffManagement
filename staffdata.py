@@ -732,7 +732,10 @@ if __name__ == '__main__' :
     S.reportStaffs()
     # 测试 多个员工同一位置选钟 2号
     S.staffWait(5) # 5 在第3次时间队列
-    S.staffWork(5, S.NOR)
+    S.staffWork(5, S.SEL)
     S.staffWork(6) # 6 在第2次时间队列
     S.reportStaffs()
-
+    S.staffWait(6)
+    S.staffWork(6, S.SEL)
+    S.reportStaffs()
+    # 6号 插在 5号 前面. 通过!
