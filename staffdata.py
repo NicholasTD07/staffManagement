@@ -701,3 +701,18 @@ if __name__ == '__main__' :
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWork(S.NOR, 1, 3, 4)
     S.staffsWork(S.SEL, 2)
+    # 此时 1,2,3,4 处于第3次工作队列.
+    #      5 至 9 都留在第2次工作队列处于 等待状态
+    # 测试 reportStaffs()
+    S.reportStaffs()
+    # 测试 上述(选钟插在正常之间)情形之后, 正常工作
+    #S.staffsWork(S.NOR, 5)
+    # 测试 staffWork(Id, wType)
+    S.staffWork(5, S.NOR)
+    S.reportStaffs()
+    # 测试 多个员工同一位置选钟 2号
+    #S.staffWait(5) # 5 在第3次时间队列
+    #S.staffWork(5, S.NOR)
+    #S.staffWork(6) # 6 在第2次时间队列
+    #S.reportStaffs()
+
