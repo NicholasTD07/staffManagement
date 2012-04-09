@@ -26,7 +26,7 @@ class Staff :
 
     def tell(self) :
         print("""我是{}号员工, 我叫{}, {}.处于第{}时间队列内.
-我的工作类型是: {}, 队伍类型是: {}. 我的等待序号: {}, 工作序号: {}."""\
+我的工作类型是: {}."""\
         .format(self.Id, self.name, self.gender, self.wTime,
             self.wType))
 
@@ -247,7 +247,7 @@ class StaffContainer :
         while len(self.__workSeqs) < ( time + 1 ) :
             self.__workSeqs.append(TimeSeq())
             count += 1
-        self.log("\t更新时间队列: 自动增加了{}列时间队列"\
+            self.log("\t更新时间队列: 自动增加了{}列时间队列"\
                         .format(count))
 
     # 基本操作 #
@@ -303,7 +303,7 @@ class StaffContainer :
         # 4. 更新工作次数
         staff.wTime += 1
         wTime = staff.wTime
-        self.updateMax(wTime)
+        self.updateMaxSeq(wTime)
 
         # 5. 更新状态
         staff.wType = self.NOR
@@ -315,7 +315,7 @@ class StaffContainer :
         nPos = self.__workSeqs[wTime].nPos
         # 6.2 检查当前序列长度
         checked = False
-        while len(self.__workSeqs[wTime].nSeq) < nPos :
+        while len(self.__workSeqs[wTime].nSeq) <= nPos :
             self.__workSeqs[wTime].nSeq.append(None)
             if not checked :
                 self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
@@ -354,7 +354,7 @@ class StaffContainer :
             return
 
         # 3. 提取当前工作序号, 使员工脱离工作队列
-        pos = self.__workSeqs[wTime].index(staff)
+        pos = self.__workSeqs[wTime].nSeq.index(staff)
         self.__workSeqs[wTime].nSeq.remove(staff)
         self.log("\t\t员工脱离第{}次工作队列, 工作序号: {}."\
             .format(wTime, pos))
@@ -362,7 +362,7 @@ class StaffContainer :
         # 4. 更新工作次数
         staff.wTime += 1
         wTime = staff.wTime
-        self.updateMax(wTime)
+        self.updateMaxSeq(wTime)
 
         # 5. 更新状态
         staff.wType = self.SEL
@@ -372,7 +372,8 @@ class StaffContainer :
         # 6. 员工按照上次序列工作序号, 进入序列
         # 6.1 已取得当前工作序号
         # 6.2 检查当前序列长度
-        while len(self.__workSeqs[wTime].nSeq) < pos :
+        checked = False
+        while len(self.__workSeqs[wTime].nSeq) <= pos :
             self.__workSeqs[wTime].nSeq.append(None)
             if not checked :
                 self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
@@ -387,7 +388,7 @@ class StaffContainer :
         # 7. 更新 selected 状态, 更新 sPos
         if not self.__workSeqs[wTime].selected :
             self.__workSeqs[wTime].selected = True
-        sPos = self.workSeq[wTime].sPos 
+        sPos = self.__workSeqs[wTime].sPos 
         if pos + 1 > sPos :
             self.__workSeqs[wTime].sPos = pos + 1
         elif pos < sPos :
@@ -410,6 +411,7 @@ class StaffContainer :
         # 1. 获得员工基本信息
         staff = self.__staffs[Id]
         wTime = staff.wTime
+        wType = staff.wType
 
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
@@ -423,7 +425,7 @@ class StaffContainer :
         # 4. 更新工作次数
         staff.wTime += 1
         wTime = staff.wTime
-        self.updateMax(wTime)
+        self.updateMaxSeq(wTime)
 
         # 5. 更新状态
         staff.wType = self.NAMED
@@ -437,7 +439,8 @@ class StaffContainer :
         # 6.2 判断 checked 状态
         if self.__workSeqs[wTime].selected : # 有选钟, 放在队列末尾
             # 6.3 检查序列长度
-            while len(self.__workSeqs[wTime].nSeq) < sPos :
+            checked = False
+            while len(self.__workSeqs[wTime].nSeq) <= sPos :
                 self.__workSeqs[wTime].nSeq.append(None)
                 if not checked :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
@@ -459,13 +462,14 @@ class StaffContainer :
                 raise Exception
         else :  # 无选钟插在中间
             # 6.3 检查序列长度
-            while len(self.__workSeqs[wTime].nSeq) < nPos :
+            checked = False
+            while len(self.__workSeqs[wTime].nSeq) <= nPos :
                 self.__workSeqs[wTime].nSeq.append(None)
                 if not checked :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                     checked = True
-            if self.__workSeqs[wTime].\
-            nSeq[nPos-1].wType == self.NOR :
+            inPos = self.__workSeqs[wTime].nSeq[nPos-1]
+            if inPos is None or (isinstance(inPos, Staff) and inPos.wType == self.NOR) :
                 inPos = self.__workSeqs[wTime].nSeq[nPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
@@ -571,7 +575,7 @@ class StaffContainer :
         # 2. 判断员工当前状态
         if wType is self.WAIT :
             # WTF
-            #self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@"
+            self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@")
             return
         elif wType in self.workTypes :
             staff.wType = self.WAIT
@@ -598,7 +602,7 @@ class StaffContainer :
         else :
             raise Exception
 
-        self.log("\t@@@----成功: 员工成功操作----@@@")
+        self.log("\t@@@----成功: 员工上班操作----@@@")
         self.__dirty = True
 
     # 批量操作 #
@@ -688,6 +692,7 @@ if __name__ == '__main__' :
     S.staffsWork(S.NAMED, 7, 8)
     S.getStaffs()[1].tell()
     S.staffsWork(S.SEL, 1, 2, 3)
+    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWork(S.NAMED, 5, 6)
     S.staffsWork(S.SEL, 9)
     #S.reportStaffs()
