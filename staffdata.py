@@ -715,3 +715,8 @@ if __name__ == '__main__' :
     # 测试 全部选钟工作
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    # 测试 1N, 3N, 4N, 2S(应在 1,3 之间)
+    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.staffsWork(S.NOR, 1, 3, 4)
+    S.staffsWork(S.SEL, 2)
+
