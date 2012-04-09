@@ -334,7 +334,7 @@ class StaffContainer :
         self.__workSeqs[wTime].nPos += 1
         
         # 8. 加入变动员工组
-        self.__modStaffs.append(staff)
+        self.__modStaffs.add(staff)
 
         # 9. 操作完成, 设置文件改动
         self.log("\t\t@@@---- 成功: 员工正常上班操作 ----@@@")
@@ -398,13 +398,91 @@ class StaffContainer :
             self.__workSeqs[wTime].nPos += 1
 
         # 9. 加入变动员工组
-        self.__modStaffs.append(staff)
+        self.__modStaffs.add(staff)
         
         # 10. 操作完成, 设置文件改动
         self.log("\t\t@@@---- 成功: 员工选钟上班操作 ----@@@")
         self.__dirty = True
 
     def namedWork(self, Id) :
+        self.log("\t\t{}号员工点钟上班工作:".format(Id))
+
+        # 1. 获得员工基本信息
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+
+        # 2. 判断员工当前状态是否为等待状态
+        if wType is not self.WAIT :
+            self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
+            return
+
+        # 3. 使员工脱离工作队列
+        self.__workSeqs[wTime].nSeq.remove(staff)
+        self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
+
+        # 4. 更新工作次数
+        staff.wTime += 1
+        wTime = staff.wTime
+        self.updateMax(wTime)
+
+        # 5. 更新状态
+        staff.wType = self.NAMED
+        self.log("\t\t员工当前工作次数: {}, 工作状态: {}"\
+            .format(staff.wTime, staff.wType))
+
+        # 6. 员工按照序列正常工作序号进入序列
+        # 6.1 取得当前序列正常工作序号
+        nPos = self.__workSeqs[wTime].nPos
+        sPos = self.__workSeqs[wTime].sPos
+        # 6.2 判断 checked 状态
+        if self.__workSeqs[wTime].selected : # 有选钟, 放在队列末尾
+            # 6.3 检查序列长度
+            while len(self.__workSeqs[wTime].nSeq) < sPos :
+                self.__workSeqs[wTime].nSeq.append(None)
+                if not checked :
+                    self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
+                    checked = True
+            if self.__workSeqs[wTime].\
+            nSeq[sPos-1].wType == self.SEL :
+                inPos = self.__workSeqs[wTime].nSeq[sPos]
+                if inPos is None :
+                    self.log("\t\t员工正常上点钟!")
+                    self.__workSeqs[wTime].\
+                    nSeq[sPos] = staff
+                    self.__workSeqs[wTime].\
+                    sPos += 1
+                else :
+                    self.log("员工工作位置非空.退出.")
+                    raise Exception
+            else :
+                self.log("员工上一个位置并非SEL.退出.")
+                raise Exception
+        else :  # 无选钟插在中间
+            # 6.3 检查序列长度
+            while len(self.__workSeqs[wTime].nSeq) < nPos :
+                self.__workSeqs[wTime].nSeq.append(None)
+                if not checked :
+                    self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
+                    checked = True
+            if self.__workSeqs[wTime].\
+            nSeq[nPos-1].wType == self.NOR :
+                inPos = self.__workSeqs[wTime].nSeq[nPos]
+                if inPos is None :
+                    self.log("\t\t员工正常上点钟!")
+                    self.__workSeqs[wTime].\
+                    nSeq[nPos] = staff
+                else :
+                    self.log("员工工作位置异常.退出.")
+                    raise Exception
+                self.__workSeqs[wTime].\
+                nPos += 1
+
+        # 7. 加入变动员工组
+        self.__modStaffs.add(staff)
+
+        # 8. 操作完成, 设置文件改动
+        self.log("\t\t@@@---- 成功: 员工点钟上班操作 ----@@@")
+        self.__dirty = True
 
     # 复合操作 #
 
@@ -492,7 +570,8 @@ class StaffContainer :
 
         # 2. 判断员工当前状态
         if wType is self.WAIT :
-            self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@"
+            # WTF
+            #self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@"
             return
         elif wType in self.workTypes :
             staff.wType = self.WAIT
@@ -501,7 +580,7 @@ class StaffContainer :
             self.__workSeqs[0].nSeq.append(staff)
 
         # 3. 加入变动员工组
-        self.__modStaffs.append(staff)
+        self.__modStaffs.add(staff)
 
         # 4. 操作成功
         self.log("\t@@@----成功: 员工等待操作----@@@")
@@ -554,7 +633,6 @@ class StaffContainer :
                     .format(workSeq.wPos))
                 for staff in workSeq.wSeq.values() :
                     print(
-                    :q
                     "员工工号: {0} 等待号码: {1} 上班次数:{2}"\
                     .format(staff.Id,
                     staff.waitPos, staff.wTime))
@@ -571,7 +649,7 @@ if __name__ == '__main__' :
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
     createTime = time()
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.reportStaffs()
+    #S.reportStaffs()
     S.staffsWork(S.NOR,1, 2, 3, 4, 5, 6, 7, 8, 9)
     staffWorkTime = time()
 
@@ -579,7 +657,7 @@ if __name__ == '__main__' :
     S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     staffWork2Time = time()
-    S.reportStaffs()
+    #S.reportStaffs()
     endTime = time()
     print("""创建员工时间 {0} \n
 员工第一次工作时间 {1}\n员工第二次工作时间 {2}
@@ -597,9 +675,9 @@ if __name__ == '__main__' :
     S.staffsWork(S.SEL, 1, 2, 3)
     S.staffsWork(S.NAMED, 5, 6)
     S.staffsWork(S.SEL, 9)
-    S.reportStaffs()
+    #S.reportStaffs()
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.reportStaffs()
+    #S.reportStaffs()
 
     S.save("/home/thedevil/test.qpc")
     S.load("/home/thedevil/test.qpc")
