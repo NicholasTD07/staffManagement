@@ -604,7 +604,7 @@ class StaffContainer :
         if sType is self.NOR :
             self.__workSeqs[wTime].nPos.remove( pos )
         elif sType is self.SEL :
-            self.__workSeqs[wTime].sPos.remove( pos )
+            self.__workSeqs[wTime].sPos.remove( pos + 1 )
         else :
             self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
             
@@ -650,8 +650,10 @@ class StaffContainer :
         print()
         for workSeq in self.__workSeqs :
             nSeq = workSeq.nSeq
-            nPos = max(workSeq.nPos)
-            sPos = max(workSeq.sPos)
+            #nPos = max(workSeq.nPos)
+            #sPos = max(workSeq.sPos)
+            nPos = (workSeq.nPos)
+            sPos = (workSeq.sPos)
             selected = workSeq.selected
             wTime = self.__workSeqs.index(workSeq)
             print("第{}次时间序列, nPos = {}, sPos = {}, {}选钟工作员工.".format(wTime, nPos, sPos, "有" if selected else "没有"))
@@ -739,3 +741,12 @@ if __name__ == '__main__' :
     S.staffWork(6, S.SEL)
     S.reportStaffs()
     # 6号 插在 5号 前面. 通过!
+    # 测试 4空 6,5, 正常工作状态
+    #S.staffsWait(1,2,3,4) # !!! 有问题, 第三次的 nPos 没有恢复为1
+    # 因为2号为选钟上班. 逻辑错误.
+    S.staffsWait(1,2)
+    #S.staffsWork(S.NOR, 1, 2, 3, 4) # 测试通过
+    S.reportStaffs()
+    ## 测试 1N, 2N, 3N, 4N, 6S, 5S 之后 正常工作的情况
+    #S.staffsWork(S.NOR, 7,8,9)
+    #S.reportStaffs()
