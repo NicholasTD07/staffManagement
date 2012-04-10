@@ -402,9 +402,12 @@ class StaffContainer :
             self.__workSeqs[wTime].sPos.append(sPos + 1)
 
         # 8. 判断是否需要更新 nPos
-        nPos = max(self.__workSeqs[wTime].nPos)
-        if pos < nPos :
-            self.__workSeqs[wTime].nPos.append(nPos + 1)
+        nPos = self.__workSeqs[wTime].nPos
+        #nPos = max(self.__workSeqs[wTime].nPos)
+        if pos < max(nPos) :
+            if pos in nPos :
+                self.__workSeqs[wTime].nPos.remove( pos )
+            self.__workSeqs[wTime].nPos.append(max(nPos)+1)
 
         # 9. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -722,6 +725,7 @@ if __name__ == '__main__' :
     # 测试 1N, 3N, 4N, 2S(应在 1,3 之间)
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
     S.staffsWork(S.NOR, 1, 3, 4)
+    S.reportStaffs()
     S.staffsWork(S.SEL, 2)
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
@@ -742,11 +746,13 @@ if __name__ == '__main__' :
     S.reportStaffs()
     # 6号 插在 5号 前面. 通过!
     # 测试 4空 6,5, 正常工作状态
-    #S.staffsWait(1,2,3,4) # !!! 有问题, 第三次的 nPos 没有恢复为1
-    # 因为2号为选钟上班. 逻辑错误.
-    S.staffsWait(1,2)
-    #S.staffsWork(S.NOR, 1, 2, 3, 4) # 测试通过
+    S.staffsWait(1,2,3,4)
+    # !!! 有问题, 第三次的 nPos 没有恢复为1
+    # @@@ 问题修复
     S.reportStaffs()
-    ## 测试 1N, 2N, 3N, 4N, 6S, 5S 之后 正常工作的情况
-    #S.staffsWork(S.NOR, 7,8,9)
-    #S.reportStaffs()
+    # 因为2号为选钟上班. 逻辑错误.
+    S.staffsWork(S.NOR, 1, 2, 3, 4) # 测试通过
+    S.reportStaffs()
+    ### 测试 1N, 2N, 3N, 4N, 6S, 5S 之后 正常工作的情况
+    ##S.staffsWork(S.NOR, 7,8,9)
+    ##S.reportStaffs()
