@@ -295,7 +295,7 @@ class StaffContainer :
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            return
+            raise Exception
 
         # 3. 使员工脱离工作队列
         pos = self.__workSeqs[wTime].nSeq.index(staff)
@@ -328,11 +328,13 @@ class StaffContainer :
         inPos = self.__workSeqs[wTime].nSeq[nPos]
         if inPos is None :
             self.__workSeqs[wTime].nSeq[nPos] = staff
-        elif isinstance(inPos, staff) and inPos.wType is self.SEL :
+            self.log("\t\t员工工作位置为空, 正常上班.")
+        elif isinstance(inPos, Staff) and inPos.wType is self.SEL :
             self.__workSeqs[wTime].nSeq.insert(nPos, staff)
+            self.log("\t\t员工工作位置非空为选钟员工, 插队上班.")
         else :
             self.log("\t\t!!!----错误: 插入员工时出现未知错误.----!!!")
-            return
+            raise Exception
 
         # 7. 更新队列工作序号
         self.__workSeqs[wTime].nPos.append(nPos)
@@ -355,7 +357,7 @@ class StaffContainer :
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            return
+            raise Exception
 
         # 3. 提取当前工作序号, 使员工脱离工作队列
         # 3.1 判断员工工作状态
@@ -427,7 +429,7 @@ class StaffContainer :
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            return
+            raise Exception
 
         # 3. 使员工脱离工作队列
         pos = self.__workSeqs[wTime].nSeq.index(staff)
@@ -751,8 +753,12 @@ if __name__ == '__main__' :
     # @@@ 问题修复
     S.reportStaffs()
     # 因为2号为选钟上班. 逻辑错误.
-    S.staffsWork(S.NOR, 1, 2, 3, 4) # 测试通过
+    S.staffsWork(S.NOR, 1, 2, 3, 4)
+    S.reportStaffs() # 测试通过
+    # 测试 1N, 2N, 3N, 4N, 6S, 5S 之后 正常工作的情况
+    S.staffsWork(S.NOR, 7,8,9)
     S.reportStaffs()
-    ### 测试 1N, 2N, 3N, 4N, 6S, 5S 之后 正常工作的情况
-    ##S.staffsWork(S.NOR, 7,8,9)
-    ##S.reportStaffs()
+    S.staffsWait(7,8,9)
+    S.reportStaffs()
+    S.staffsWork(S.NOR, 7,8,9)
+    S.reportStaffs()
