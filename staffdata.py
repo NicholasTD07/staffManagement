@@ -338,6 +338,14 @@ class StaffContainer :
 
         # 7. 更新队列工作序号
         self.__workSeqs[wTime].nPos.append(nPos)
+
+        # 8. 判断是否需要更新 nPos
+        sPos = self.__workSeqs[wTime].sPos
+        if nPos < max(sPos) :
+            if nPos in sPos :
+                ix = sPos.index(nPos)
+                self.__workSeqs[wTime].sPos = \
+                    sPos[0:ix-1]+[i+1 for i in sPos if i>= nPos]
         
         # 8. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -408,8 +416,11 @@ class StaffContainer :
         #nPos = max(self.__workSeqs[wTime].nPos)
         if pos < max(nPos) :
             if pos in nPos :
-                self.__workSeqs[wTime].nPos.remove( pos )
-            self.__workSeqs[wTime].nPos.append(max(nPos)+1)
+                ix = nPos.index(pos)
+                #self.__workSeqs[wTime].nPos.remove( pos )
+                self.__workSeqs[wTime].nPos = \
+                    nPos[0:ix-1] + [i+1 for i in nPos if i>= pos]
+            #self.__workSeqs[wTime].nPos.append(max(nPos)+1)
 
         # 9. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -601,6 +612,7 @@ class StaffContainer :
         elif wType in self.workTypes :
             staff.wType = self.WAIT
             pos = self.__workSeqs[wTime].nSeq.index(staff)
+            self.log("\t\t员工当前位置: {}.".format(pos))
         elif wType is self.IDLE :
             staff.wType = self.WAIT
             self.__workSeqs[0].nSeq.append(staff)
@@ -716,6 +728,7 @@ if __name__ == '__main__' :
 #    S.load("/home/thedevil/test.qpc")
 
     S = StaffContainer()
+    S.clear()
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
     # 测试 等待操作
     S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
@@ -762,3 +775,5 @@ if __name__ == '__main__' :
     S.reportStaffs()
     S.staffsWork(S.NOR, 7,8,9)
     S.reportStaffs()
+    # 全部进入等待状态
+    S.staffsWait(1,2,3,4,5,6,7,8,9)

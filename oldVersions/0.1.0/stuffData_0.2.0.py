@@ -75,10 +75,8 @@ class StuffContainer :
 
     def __init__(self) :
         self.__fileName = ""
-        self.__stuffs = {}
+        self.__staffs = {}
         self.__workSeqs = []
-        self.__dayShift = {}
-        self.__nightShift = {}
         self.__maxSeq = 0
         self.addSeq()
         self.__dirty = False
