@@ -620,13 +620,13 @@ class StaffContainer :
             staff.wType = self.WAIT
             self.__workSeqs[0].nSeq.append(staff)
 
-        # 3. 更新 nPos, sPos
-        if sType is self.NOR :
-            self.__workSeqs[wTime].nPos.remove( pos )
-        elif sType is self.SEL :
-            self.__workSeqs[wTime].sPos.remove( pos + 1 )
-        else :
-            self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
+        ## 3. 更新 nPos, sPos
+        #if sType is self.NOR :
+        #    self.__workSeqs[wTime].nPos.remove( pos + 1 )
+        #elif sType is self.SEL :
+        #    self.__workSeqs[wTime].sPos.remove( pos + 1 )
+        #else :
+        #    self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
             
         # 4. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -637,6 +637,23 @@ class StaffContainer :
 
     def staffWork(self, Id, wType=NOR) :
         self.log("\t{}员工{}工作操作:".format(Id, wType))
+
+        # 1. 获得员工信息
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+        t_wType = staff.wType
+        sType = staff.sType
+
+        # 2. 更新 nPos, sPos
+        pos = self.__workSeqs[wTime].nSeq.index(staff)
+        if sType is self.NOR :
+            self.__workSeqs[wTime].nPos.remove( pos + 1 )
+            self.log("\t移除员工 nPos : {}.".format( pos + 1 ))
+        elif sType is self.SEL :
+            self.__workSeqs[wTime].sPos.remove( pos + 1 )
+            self.log("\t移除员工 sPos : {}.".format( pos + 1 ))
+        else :
+            self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
 
         if wType is self.NOR :
             self.norWork(Id)
@@ -747,7 +764,9 @@ if __name__ == '__main__' :
     # 测试 多个员工同一位置选钟 2号
     S.staffsWork(S.NOR, 1)
     S.staffsWait(1)
+    S.reportStaffs()
     S.staffsWork(S.NOR, 2)
+    S.reportStaffs()
     S.staffsWait(2)
     S.staffsWork(S.SEL, 2)
     S.reportStaffs()
