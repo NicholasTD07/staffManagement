@@ -331,14 +331,15 @@ class StaffContainer :
             raise Exception
 
         # 7. 更新队列工作序号
-        if nPos + 1 not in self.__workSeqs[wTime].nPos :
+        #if nPos + 1 not in self.__workSeqs[wTime].nPos :
+        if True :
             self.__workSeqs[wTime].nPos.append(nPos + 1)
         self.log("\t\t向第{}次时间队列添加 nPos :　{}."\
             .format(wTime, nPos + 1))
 
         # 8. 判断是否需要更新 sPos
         sPos = self.__workSeqs[wTime].sPos
-        if nPos < max(sPos) :
+        if nPos <= max(sPos) :
             self.log("\t\t更新 sPos.未更新的 sPos: {}"\
                 .format(sPos))
             self.__workSeqs[wTime].sPos = \
@@ -404,12 +405,17 @@ class StaffContainer :
 
         # 7. 更新 selected 状态, 更新 sPos
         sPos = self.__workSeqs[wTime].sPos
-        if pos < max(sPos) :
-            if pos in sPos :
-                self.__workSeqs[wTime].sPos = \
-                    [i for i in sPos if i < pos] \
-                        + [i+1 for i in sPos if i>= pos]
-        if pos + 1 not in sPos :
+        if pos <= max(sPos) :
+            self.log("\t\t更新 sPos.未更新的 sPos: {}"\
+                .format(sPos))
+            self.__workSeqs[wTime].sPos = \
+                [i for i in sPos if i < pos] \
+                    + [i+1 for i in sPos if i>= pos]
+            sPos = self.__workSeqs[wTime].sPos
+            self.log("\t\t更新 sPos.未更新的 sPos: {}"\
+                .format(sPos))
+        #if pos + 1 not in sPos :
+        if True :
             self.__workSeqs[wTime].sPos.append( pos + 1)
         self.log("\t\t向第{}次时间队列添加 sPos :　{}."\
             .format(wTime, pos + 1))
