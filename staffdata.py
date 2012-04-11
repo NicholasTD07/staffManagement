@@ -331,8 +331,7 @@ class StaffContainer :
             raise Exception
 
         # 7. 更新队列工作序号
-        #if nPos + 1 not in self.__workSeqs[wTime].nPos :
-        if True :
+        if nPos + 1 not in self.__workSeqs[wTime].nPos :
             self.__workSeqs[wTime].nPos.append(nPos + 1)
         self.log("\t\t向第{}次时间队列添加 nPos :　{}."\
             .format(wTime, nPos + 1))
@@ -414,8 +413,7 @@ class StaffContainer :
             sPos = self.__workSeqs[wTime].sPos
             self.log("\t\t更新 sPos.未更新的 sPos: {}"\
                 .format(sPos))
-        #if pos + 1 not in sPos :
-        if True :
+        if pos + 1 not in sPos :
             self.__workSeqs[wTime].sPos.append( pos + 1)
         self.log("\t\t向第{}次时间队列添加 sPos :　{}."\
             .format(wTime, pos + 1))
