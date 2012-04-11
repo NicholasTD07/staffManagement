@@ -62,8 +62,6 @@ class StaffContainer :
         self.__workSeqs = []
         self.__maxTime = 0
         self.__maxId = 0
-        self.__maxWorkPos = 0
-        self.__maxWaitPos = 0
         self.__fileName = ""
         self.__dirty = False
         self.addTimeSeq()
@@ -114,28 +112,6 @@ class StaffContainer :
             self.log("更新为: {}!".format(Id))
         else :
             self.log("保持不变: {}.".format(self.__maxId))
-
-    def getMaxWorkPos(self) :
-        return self.__maxWorkPos
-
-    def updateMaxWorkPos(self, workPos) :
-        self.log("\t更新最大工作位置: \t")
-        if workPos and workPos > self.__maxWorkPos :
-            self.__maxWorkPos = workPos
-            self.log("更新为: {}!".format(waitPos))
-        else :
-            self.log("保持不变: {}.".format(self.__maxWaitPos))
-
-    def getMaxWaitPos(self) :
-        return self.__maxWaitPos
-
-    def updateMaxWaitPos(self, waitPos) :
-        self.log("\t更新最大等待位置: \t")
-        if waitPos and waitPos > self.__maxWaitPos :
-            self.__maxWaitPos = waitPos
-            self.log("更新为: {}!".format(waitPos))
-        else :
-            self.log("保持不变: {}.".format(self.__maxWaitPos))
 
     def getFilename(self) :
         return self.__fileName
