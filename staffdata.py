@@ -79,6 +79,19 @@ class StaffContainer :
 
     #---- 容器的简单函数 ----#
 
+    def clear(self, clearFilename=True) :
+        self.__IDs = []
+        self.__staffs = {}
+        self.__modStaffs = set()
+        self.__workSeqs = []
+        self.__maxTime = 0
+        self.__maxId = 0
+        if clearFilename :
+            self.__fileName = ""
+        self.addTimeSeq()
+
+        self.__dirty = True
+
     #-- 返回及设置属性 --#
 
     def getIDs(self) :
