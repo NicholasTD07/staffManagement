@@ -47,6 +47,12 @@
         list_new = list_org[0:index(pos)]+[ i+1 for i in list if i>pos]
 
 
+2012-04-11
     问题:
         员工选钟工作时, 无论是否为插入正常工作序列都会更新selected.
         只有当员工不是插入正常工作序列时才更新selected.
+
+            17:06
+    问题:
+        当员工等待时, pos 不能正常降低.
+
