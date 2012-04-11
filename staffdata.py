@@ -37,7 +37,7 @@ class TimeSeq :
 
     def __init__(self) :
         self.nPos = [0]
-        self.sPos = [1]
+        self.sPos = [0]
         self.selected = False
         self.nSeq = []
 
@@ -310,7 +310,7 @@ class StaffContainer :
 
         # 6. 员工按照序列正常工作序号, 进入序列
         # 6.1 取得当前序列正常工作序号
-        nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
+        nPos = max(self.__workSeqs[wTime].nPos)
         # 6.2 检查当前序列长度
         checked = False
         while len(self.__workSeqs[wTime].nSeq) <= nPos :
@@ -331,15 +331,20 @@ class StaffContainer :
             raise Exception
 
         # 7. 更新队列工作序号
-        self.__workSeqs[wTime].nPos.append(nPos)
+        self.__workSeqs[wTime].nPos.append(nPos + 1)
+        self.log("\t\t向第{}次时间队列添加 nPos :　{}."\
+            .format(wTime, nPos + 1))
 
-        # 8. 判断是否需要更新 nPos
+        # 8. 判断是否需要更新 sPos
         sPos = self.__workSeqs[wTime].sPos
         if nPos < max(sPos) :
-            if nPos in sPos :
-                ix = sPos.index(nPos)
-                self.__workSeqs[wTime].sPos = \
-                    sPos[0:ix-1]+[i+1 for i in sPos if i>= nPos]
+            self.log("\t\t更新 sPos.未更新的 sPos: {}"\
+                .format(sPos))
+            self.__workSeqs[wTime].sPos = \
+                [i for i in sPos if i<nPos] + [i+1 for i in sPos if i>= nPos]
+            sPos = self.__workSeqs[wTime].sPos
+            self.log("\t\t更新 sPos.更新后的 sPos: {}"\
+                .format(sPos))
         
         # 8. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -397,24 +402,25 @@ class StaffContainer :
             self.__workSeqs[wTime].nSeq.insert(pos, staff)
 
         # 7. 更新 selected 状态, 更新 sPos
-        if not self.__workSeqs[wTime].selected :
-            self.__workSeqs[wTime].selected = True
-        sPos = max(self.__workSeqs[wTime].sPos)
-        if pos + 1 > sPos :
-            self.__workSeqs[wTime].sPos.append(pos + 1)
-        elif pos < sPos :
-            self.__workSeqs[wTime].sPos.append(sPos + 1)
+        sPos = self.__workSeqs[wTime].sPos
+        if pos < max(sPos) :
+            if pos in sPos :
+                self.__workSeqs[wTime].sPos = \
+                    [i for i in sPos if i < pos] \
+                        + [i+1 for i in sPos if i>= pos]
+        self.__workSeqs[wTime].sPos.append( pos + 1)
+        self.log("\t\t向第{}次时间队列添加 sPos :　{}."\
+            .format(wTime, pos + 1))
 
         # 8. 判断是否需要更新 nPos
         nPos = self.__workSeqs[wTime].nPos
-        #nPos = max(self.__workSeqs[wTime].nPos)
         if pos < max(nPos) :
-            if pos in nPos :
-                ix = nPos.index(pos)
-                #self.__workSeqs[wTime].nPos.remove( pos )
-                self.__workSeqs[wTime].nPos = \
-                    nPos[0:ix-1] + [i+1 for i in nPos if i>= pos]
-            #self.__workSeqs[wTime].nPos.append(max(nPos)+1)
+            self.__workSeqs[wTime].nPos = [i for i in nPos if i < pos] \
+                + [i+1 for i in nPos if i >= pos]
+        else :
+            if not self.__workSeqs[wTime].selected :
+                self.__workSeqs[wTime].selected = True
+
 
         # 9. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -454,10 +460,13 @@ class StaffContainer :
 
         # 6. 员工按照序列正常工作序号进入序列
         # 6.1 取得当前序列正常工作序号
-        nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
-        sPos = ( max(self.__workSeqs[wTime].sPos) + 1 )
+        #nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
+        #sPos = ( max(self.__workSeqs[wTime].sPos) + 1 )
+        nPos = ( max(self.__workSeqs[wTime].nPos) )
+        sPos = ( max(self.__workSeqs[wTime].sPos) )
         # 6.2 判断 checked 状态
         if self.__workSeqs[wTime].selected : # 有选钟, 放在队列末尾
+            self.log("\t\t有员工被选钟.且并非为插入正常工作序列中.")
             # 6.3 检查序列长度
             checked = False
             while len(self.__workSeqs[wTime].nSeq) <= sPos :
@@ -667,7 +676,7 @@ class StaffContainer :
             sPos = (workSeq.sPos)
             selected = workSeq.selected
             wTime = self.__workSeqs.index(workSeq)
-            print("第{}次时间序列, nPos = {}, sPos = {}, {}选钟工作员工.".format(wTime, nPos, sPos, "有" if selected else "没有"))
+            print("第{}次时间序列, nPos = {}, sPos = {}, {}选钟工作员工(非插入工作队列).".format(wTime, nPos, sPos, "有" if selected else "没有"))
             staffs = []
             for staff in nSeq :
                 if staff is None :
@@ -706,11 +715,46 @@ if __name__ == '__main__' :
     # 重建测试环境
     S.clear()
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.reportStaffs()
     S.staffsWait(1,2,3,4,5,6,7,8,9)
     # 测试 1N, 3N, 4N, 2S(应在 1,3 之间)
-    S.staffsWork(S.NOR, 1,3,4,5,6,7,8,9)
+    S.staffsWork(S.NOR, 1,3,4,5,6,7,9)
     S.reportStaffs()
     S.staffsWork(S.SEL, 2)
+    S.reportStaffs()
+    S.staffsWork(S.NAMED, 8)
+    S.reportStaffs()
+
+    # 重建测试环境
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.reportStaffs()
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
+    # 测试 1N, 2S, 3S, 4N, 5N
+    S.staffsWork(S.NOR, 1,4,5,6,7,8,9)
+    S.reportStaffs()
+    S.staffsWork(S.SEL, 2,3)
+    S.reportStaffs()
+
+    # 重建测试环境
+    print()
+    print()
+    print()
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.reportStaffs()
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
+    # 测试 多个员工同一位置选钟 2号
+    S.staffsWork(S.NOR, 1)
+    S.staffsWait(1)
+    S.staffsWork(S.NOR, 2)
+    S.staffsWait(2)
+    S.staffsWork(S.SEL, 2)
+    S.reportStaffs()
+    S.staffsWork(S.NOR, 3)
+    S.staffsWait(3)
+    S.reportStaffs()
+    S.staffsWork(S.SEL, 3)
     S.reportStaffs()
 
 
@@ -719,7 +763,6 @@ if __name__ == '__main__' :
     # 测试 reportStaffs()
     # 测试 上述(选钟插在正常之间)情形之后, 正常工作
     # 测试 staffWork(Id, wType)
-    # 测试 多个员工同一位置选钟 2号
     # 6号 插在 5号 前面. 通过!
     # 测试 4空 6,5, 正常工作状态
     # !!! 有问题, 第三次的 nPos 没有恢复为1
