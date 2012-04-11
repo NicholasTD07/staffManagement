@@ -11,6 +11,7 @@ __version__ = "0.3.1"
 
 
 DEBUG = True
+PRINT = True
 
 
 class Staff :
@@ -80,6 +81,7 @@ class StaffContainer :
     #---- 容器的简单函数 ----#
 
     def clear(self, clearFilename=True) :
+        self.log("\t清除容器操作: ")
         self.__IDs = []
         self.__staffs = {}
         self.__modStaffs = set()
@@ -88,9 +90,11 @@ class StaffContainer :
         self.__maxId = 0
         if clearFilename :
             self.__fileName = ""
+            self.log("\t清除文件名.")
         self.addTimeSeq()
 
         self.__dirty = True
+        self.log("\t@@@---成功: 清除容器---@@@")
 
     #-- 返回及设置属性 --#
 
@@ -145,7 +149,8 @@ class StaffContainer :
 
     def log(self, msg) :
         if DEBUG :
-            print(msg)
+            if PRINT :
+                print(msg)
             logfile = "./log.txt"
             try :
                 log = open(logfile, "a")
@@ -674,95 +679,51 @@ class StaffContainer :
             print()
 
 if __name__ == '__main__' :
-    
-#    S = StaffContainer()
-#    S.log("\nAGAIN")
-#
-#
-#    startTime = time()
-#    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
-#    createTime = time()
-#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    #S.reportStaffs()
-#    S.staffsWork(S.NOR, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    staffWorkTime = time()
-#
-#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    staffWork2Time = time()
-#    #S.reportStaffs()
-#    endTime = time()
-#    print("""创建员工时间 {0} \n
-#员工第一次工作时间 {1}\n员工第二次工作时间 {2}
-#报告时间 {3}"""\
-#        .format((createTime - startTime),
-#            (staffWorkTime - createTime),
-#            (staffWork2Time - staffWorkTime),
-#            (endTime - staffWorkTime)))
-#    print("员工工号: {}".format(S.getIDs()))
-#
-#    S.staffsWork(S.NOR, 4, 5, 6)
-#    S.staffsWork(S.NAMED, 7, 8)
-#    S.getStaffs()[1].tell()
-#    S.staffsWork(S.SEL, 1, 2, 3)
-#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    S.staffsWork(S.NAMED, 5, 6)
-#    S.staffsWork(S.SEL, 9)
-#    #S.reportStaffs()
-#    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-#    #S.reportStaffs()
-#
-#    S.save("/home/thedevil/test.qpc")
-#    S.load("/home/thedevil/test.qpc")
 
+    # 容器初始化
     S = StaffContainer()
+    # 清除容器
     S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9)
-    # 测试 等待操作
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    # 添加员工
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    # 全部等待
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
+    # 汇报情况
+    S.reportStaffs()
+    
     # 测试 全部正常工作
-    S.staffsWork(S.NOR, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.staffsWork(S.NOR, 1,2,3,4,5,6,7,8,9)
+    S.reportStaffs()
+
+    # 重建测试环境
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
     # 测试 全部选钟工作
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.staffsWork(S.SEL, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    S.staffsWork(S.SEL, 1,2,3,4,5,6,7,8,9)
+    S.reportStaffs()
+
+    # 重建测试环境
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
     # 测试 1N, 3N, 4N, 2S(应在 1,3 之间)
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    S.staffsWork(S.NOR, 1, 3, 4)
+    S.staffsWork(S.NOR, 1,3,4,5,6,7,8,9)
     S.reportStaffs()
     S.staffsWork(S.SEL, 2)
+    S.reportStaffs()
+
+
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
     # 测试 reportStaffs()
-    S.reportStaffs()
     # 测试 上述(选钟插在正常之间)情形之后, 正常工作
-    #S.staffsWork(S.NOR, 5)
     # 测试 staffWork(Id, wType)
-    S.staffWork(5, S.NOR)
-    S.reportStaffs()
     # 测试 多个员工同一位置选钟 2号
-    S.staffWait(5) # 5 在第3次时间队列
-    S.staffWork(5, S.SEL)
-    S.staffWork(6) # 6 在第2次时间队列
-    S.reportStaffs()
-    S.staffWait(6)
-    S.staffWork(6, S.SEL)
-    S.reportStaffs()
     # 6号 插在 5号 前面. 通过!
     # 测试 4空 6,5, 正常工作状态
-    S.staffsWait(1,2,3,4)
     # !!! 有问题, 第三次的 nPos 没有恢复为1
     # @@@ 问题修复
-    S.reportStaffs()
     # 因为2号为选钟上班. 逻辑错误.
-    S.staffsWork(S.NOR, 1, 2, 3, 4)
-    S.reportStaffs() # 测试通过
     # 测试 1N, 2N, 3N, 4N, 6S, 5S 之后 正常工作的情况
-    S.staffsWork(S.NOR, 7,8,9)
-    S.reportStaffs()
-    S.staffsWait(7,8,9)
-    S.reportStaffs()
-    S.staffsWork(S.NOR, 7,8,9)
-    S.reportStaffs()
     # 全部进入等待状态
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
