@@ -4,7 +4,7 @@
 from os import path
 from time import time
 import pickle
-import errorclass
+from errorclass import *
 
 
 __version__ = "0.3.1"
@@ -289,7 +289,7 @@ class StaffContainer :
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            raise Exception
+            raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
 
         # 3. 使员工脱离工作队列
         pos = self.__workSeqs[wTime].nSeq.index(staff)
@@ -328,7 +328,7 @@ class StaffContainer :
             self.log("\t\t员工工作位置非空为选钟员工, 插队上班.")
         else :
             self.log("\t\t!!!----错误: 插入员工时出现未知错误.----!!!")
-            raise Exception
+            raise norWork("!!!----错误: 插入员工时出现未知错误.----!!!")
 
         # 7. 更新队列工作序号
         if nPos + 1 not in self.__workSeqs[wTime].nPos :
@@ -365,7 +365,7 @@ class StaffContainer :
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            raise Exception
+            raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
 
         # 3. 提取当前工作序号, 使员工脱离工作队列
         # 3.1 判断员工工作状态
@@ -446,7 +446,7 @@ class StaffContainer :
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            raise Exception
+            raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
 
         # 3. 使员工脱离工作队列
         pos = self.__workSeqs[wTime].nSeq.index(staff)
@@ -491,11 +491,12 @@ class StaffContainer :
                     sPos.append(sPos + 1)
                     staff.sType = self.SEL
                 else :
-                    self.log("员工工作位置非空.退出.")
-                    raise Exception
+                    self.log("\t\t员工工作位置非空.退出.")
+                    raise namedWrong("员工工作位置非空.退出.")
             else :
-                self.log("员工上一个位置并非SEL.退出.")
-                raise Exception
+                self.log("\t\t员工上一个位置并非SEL.退出.")
+                raise namedWrong("员工上一个位置并非SEL.退出.")
+
         else :  # 无选钟插在中间
             # 6.3 检查序列长度
             checked = False
@@ -516,10 +517,11 @@ class StaffContainer :
                     staff.sType = self.NOR
                 else :
                     self.log("员工工作位置异常.退出.")
-                    raise Exception
+                    raise namedWrong("员工工作位置异常.退出.")
+
             else :
                 self.log("员工上一个位置非空或者不是NOR.退出.")
-                raise Exception
+                raise namedWrong("员工上一个位置非空或者不是NOR.退出.")
 
         # 7. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -668,7 +670,7 @@ class StaffContainer :
         elif wType is self.NAMED :
             self.namedWork(Id)
         else :
-            raise Exception
+            raise workWrong("需要工作的工作类型错误.")
 
         self.log("\t@@@----成功: 员工上班操作----@@@")
         self.__dirty = True
