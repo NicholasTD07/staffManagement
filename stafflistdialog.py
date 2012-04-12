@@ -64,6 +64,7 @@ class StaffListDialog(QDialog,
                     "员工工号错误",
                     "没有此工号."
                     "\n请查询后重新输入.")
+            return
         # 定位: 所有员工表
         self.allTable.setCurrentCell(0, Id - 1)
         # 获得: 员工 及 工作类型
