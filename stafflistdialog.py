@@ -134,12 +134,12 @@ class StaffListDialog(QDialog,
                 QTableWidgetItem(str(staff.wTime)))
         self.allTable.setItem(4, column,
                 QTableWidgetItem(
-                "" if staff.waitPos is None else
-                    str(staff.waitPos)))
+                "" if staff.Id in self.waitPoses else
+                    str(self.waitPoses[Id])))
         self.allTable.setItem(5, column,
                 QTableWidgetItem(
-                "" if staff.workPos is None else
-                    str(staff.workPos)))
+                "" if staff.Id in self.workPoses else
+                    str(self.workPoses[Id])))
         item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
         # 调整: 列的宽度
         # !!!---- 需要调用完 updateItem() 之后执行 ----!!! #

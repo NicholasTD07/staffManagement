@@ -122,6 +122,14 @@ class StaffContainer :
     def getMaxId(self) :
         return self.__maxId
 
+    def getMaxWorkPos(self) :
+        maxWorkPos = 0
+        for workSeq in self.__workSeqs :
+            maxNPos = max(nPos)
+            if  maxNPos > maxWorkPos :
+                maxWorkPos = maxNPos
+        return maxNPos
+
     def updateMaxId(self, Id) :
         self.log("\t更新最大工号:\t")
         if Id > self.__maxId :
