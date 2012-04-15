@@ -66,7 +66,8 @@ class StaffListDialog(QDialog,
         self.allTable.setCurrentCell(0, Id - 1)
 
     # 双击: 所有员工表 #
-    def on_allTabel_cellDoubleClicked(self, row, column) :
+    #@pyqtSignature("int,int")
+    def on_allTable_cellDoubleClicked(self, row, column) :
         print("检测到双击所有员工表")
         item = self.allTable.item(0, column)
         self.updateStaff(item)
