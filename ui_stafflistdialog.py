@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_stafflistdialog.ui'
 #
-# Created: Sun Apr 15 11:19:13 2012
+# Created: Sun Apr 15 12:40:12 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,16 +44,16 @@ class Ui_StaffListDialog(object):
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.TabWidget = QtGui.QTabWidget(StaffListDialog)
         self.TabWidget.setObjectName(_fromUtf8("TabWidget"))
-        self.allStuffTab = QtGui.QWidget()
-        self.allStuffTab.setObjectName(_fromUtf8("allStuffTab"))
-        self.horizontalLayout = QtGui.QHBoxLayout(self.allStuffTab)
+        self.allStaffTab = QtGui.QWidget()
+        self.allStaffTab.setObjectName(_fromUtf8("allStaffTab"))
+        self.horizontalLayout = QtGui.QHBoxLayout(self.allStaffTab)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.allTable = QtGui.QTableWidget(self.allStuffTab)
+        self.allTable = QtGui.QTableWidget(self.allStaffTab)
         self.allTable.setObjectName(_fromUtf8("allTable"))
         self.allTable.setColumnCount(0)
         self.allTable.setRowCount(0)
         self.horizontalLayout.addWidget(self.allTable)
-        self.TabWidget.addTab(self.allStuffTab, _fromUtf8(""))
+        self.TabWidget.addTab(self.allStaffTab, _fromUtf8(""))
         self.verticalLayout.addWidget(self.TabWidget)
         self.buttonBox = QtGui.QDialogButtonBox(StaffListDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -75,7 +75,7 @@ class Ui_StaffListDialog(object):
         self.label.setText(QtGui.QApplication.translate("StaffListDialog", "查看工作队列:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setToolTip(QtGui.QApplication.translate("StaffListDialog", "在表中快速定位该名员工", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("StaffListDialog", "员工工号:", None, QtGui.QApplication.UnicodeUTF8))
-        self.TabWidget.setTabText(self.TabWidget.indexOf(self.allStuffTab), QtGui.QApplication.translate("StaffListDialog", "所有员工", None, QtGui.QApplication.UnicodeUTF8))
+        self.TabWidget.setTabText(self.TabWidget.indexOf(self.allStaffTab), QtGui.QApplication.translate("StaffListDialog", "所有员工", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":

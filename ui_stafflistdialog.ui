@@ -75,7 +75,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="allStuffTab">
+     <widget class="QWidget" name="allStaffTab">
       <attribute name="title">
        <string>所有员工</string>
       </attribute>

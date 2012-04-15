@@ -12,7 +12,7 @@ from PyQt4.QtGui import *
 # 调用 #
 import staffdata
 import ui_stafflistdialog
-###import updatestaffdialog
+import updatestaffdialog
 
 __version__ = "0.3.0"
 
@@ -67,6 +67,7 @@ class StaffListDialog(QDialog,
 
     # 双击: 所有员工表 #
     def on_allTabel_cellDoubleClicked(self, row, column) :
+        print("检测到双击所有员工表")
         item = self.allTable.item(0, column)
         self.updateStaff(item)
 

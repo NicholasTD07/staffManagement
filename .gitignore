@@ -3,3 +3,4 @@
 test*
 log.txt
 tags
+*.pyc
