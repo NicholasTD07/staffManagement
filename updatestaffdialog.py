@@ -97,7 +97,6 @@ class UpdateStaffDialog(QDialog,
                 "工号: {}".format(Id))
         self.staffs.updateStaff(Id=Id,gender=gender,
                             name=name)
-        self.staffs.tell(Id)
         QDialog.accept(self)
 
     #---- 辅助函数 ----#
