@@ -39,7 +39,7 @@ class TimeSeq :
         self.nPos = [0]
         self.sPos = [0]
         self.selected = False
-        self.nSeq = []
+        self.nSeq = [None]
 
 
 class StaffContainer :
@@ -481,6 +481,8 @@ class StaffContainer :
         # 6.2 判断 checked 状态
         if self.__workSeqs[wTime].selected : # 有选钟, 放在队列末尾
             self.log("\t\t有员工被选钟.且并非为插入正常工作序列中.")
+            self.log("\t\t员工工作位置 sPos: {}."\
+                .format(sPos))
             # 6.3 检查序列长度
             checked = False
             while len(self.__workSeqs[wTime].nSeq) <= sPos :
@@ -506,6 +508,9 @@ class StaffContainer :
                 raise namedWrong("员工上一个位置并非SEL.退出.")
 
         else :  # 无选钟插在中间
+            self.log("\t\t无员工被选钟.")
+            self.log("\t\t员工工作位置 nPos: {}."\
+                .format(nPos))
             # 6.3 检查序列长度
             checked = False
             while len(self.__workSeqs[wTime].nSeq) <= nPos :
@@ -816,6 +821,7 @@ if __name__ == '__main__' :
     S.staffsWait(1,2,3,4,5,6,7,8,9)
     # 测试 有选钟情况下的点钟.
     S.staffsWork(S.SEL, 1,2,3)
+    S.reportStaffs()
     S.staffsWork(S.NAMED, 4)
     S.reportStaffs()
     # 此时 1,2,3,4 处于第3次工作队列.
