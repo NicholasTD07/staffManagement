@@ -85,40 +85,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="workPosTab">
-      <attribute name="title">
-       <string>工作序号</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>提示:下表序号是员工所在队列中所排序号(不是员工工号).</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTableWidget" name="workTable"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="waitPosTab">
-      <attribute name="title">
-       <string>等待序号</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>提示:下表序号是员工所在队列中所排序号(不是员工工号).</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTableWidget" name="waitTable"/>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
    <item>
@@ -136,8 +102,6 @@
  <tabstops>
   <tabstop>IdSpinBox</tabstop>
   <tabstop>allTable</tabstop>
-  <tabstop>workTable</tabstop>
-  <tabstop>waitTable</tabstop>
   <tabstop>buttonBox</tabstop>
   <tabstop>TabWidget</tabstop>
  </tabstops>

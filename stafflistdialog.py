@@ -32,16 +32,13 @@ class StaffListDialog(QDialog,
                     "查看员工队列",
                     "当前队列为空,  自动退出.")
             return
-        # 载入: 员工
+        # 载入: 员工, 员工序列
         self.staffs = staffs
-        # 初始化: 内部变量
-        self.waitPoses = {}
-        self.workPoses = {}
+        self.workSeqs = staffs.getWorkSeq()
+        self.workTypes = staffs.workTypes
 
         # 生成: 所有员工表, 工作员工表, 等待员工表
         self.populateAll()
-        self.populate(self.WORK)
-        self.populate(self.WAIT)
         self.buttonBox.button(QDialogButtonBox.Close).setText(
                 "退出")
 
@@ -67,37 +64,10 @@ class StaffListDialog(QDialog,
             return
         # 定位: 所有员工表
         self.allTable.setCurrentCell(0, Id - 1)
-        # 获得: 员工 及 工作类型
-        staff = self.staffs.getStaff(Id)
-        wType = staff.wType
-        time = staff.wTime
-        # 判断 工作类型
-        if wType in self.staffs.workTypes :
-            # 获得: 工作位置
-            workPos = self.workPoses[Id]
-            # 定位: 工作表
-            self.workTable.setCurrentCell(time, workPos - 1)
-            self.waitTable.setCurrentItem(None)
-        elif wType is self.staffs.WAIT :
-            # 获得: 等待位置
-            waitPos = self.waitPoses[Id]
-            # 定位: 等待表
-            self.waitTable.setCurrentCell(time, waitPos - 1)
-            self.workTable.setCurrentItem(None)
 
     # 双击: 所有员工表 #
     def on_allTabel_cellDoubleClicked(self, row, column) :
         item = self.allTable.item(0, column)
-        self.updateStaff(item)
-
-    # 双击: 工作员工表 #
-    def on_workTable_cellDoubleClicked(self, row, column) :
-        item = self.workTable.item(row, column)
-        self.updateStaff(item)
-
-    # 双击: 等待员工表
-    def on_waitTable_cellDoubleClicked(self, row, column) :
-        item = self.waitTable.item(row, column)
         self.updateStaff(item)
 
     #---- 辅助函数 ----#
@@ -123,6 +93,9 @@ class StaffListDialog(QDialog,
 
     def updateItem(self, column, Id) :
         staff = self.staffs.getStaff(Id)
+        wTime = staff.wTime
+        nSeq = self.workSeqs[wTime].nSeq
+        pos = nSeq.index(staff)
         item = QTableWidgetItem(str(staff.Id))
         item.setData(Qt.UserRole, int(Id))
         self.allTable.setItem(0, column, item)
@@ -134,12 +107,12 @@ class StaffListDialog(QDialog,
                 QTableWidgetItem(str(staff.wTime)))
         self.allTable.setItem(4, column,
                 QTableWidgetItem(
-                "" if staff.Id in self.waitPoses else
-                    str(self.waitPoses[Id])))
+                "" if staff.wType in self.workTypes else
+                    str(pos)))
         self.allTable.setItem(5, column,
                 QTableWidgetItem(
-                "" if staff.Id in self.workPoses else
-                    str(self.workPoses[Id])))
+                "" if staff.wType not in self.workTypes else
+                    str(pos)))
         item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
         # 调整: 列的宽度
         # !!!---- 需要调用完 updateItem() 之后执行 ----!!! #
@@ -169,45 +142,45 @@ class StaffListDialog(QDialog,
         self.allTable.resizeColumnsToContents()
     
     # 生成: 工作表 或者 等待表
-    def populate(self, seq) :
-        workSeqs = self.staffs.getWorkSeq()
-        maxTime = self.staffs.getMaxTime()
-        # 选择: 序号表, 最大值 及 (工作表 或 等待表)
-        if seq is self.WORK :
-            poses = self.workPoses
-            maxPos = self.staffs.getMaxWorkPos()
-            table = self.workTable
-        elif seq is self.WAIT :
-            poses = self.waitPoses
-            maxPos = self.staffs.getMaxWaitPos()
-            table = self.waitTable
-        else :
-            return 
-        # 生成: 表头
-        vHeads = range( maxTime + 1 )
-        heads = range( 1, maxPos + 1 )
-        heads = [ "序号:{}".format(head) for head in heads ]
-        # 清除: 已有内容
-        table.clear()
-        # 初始化: 设置
-        table.setSortingEnabled(False)
-        table.setRowCount(len(vHeads))
-        table.setColumnCount(len(heads))
-        # 设置: 表头
-        table.setHorizontalHeaderLabels(heads)
-        table.setVerticalHeaderLabels(
-                [ "工作次数".format(i) for i in vHeads])
-        # 设置: 内容
-        for row, workSeq in enumerate(workSeqs) :
-            for (pos, Id) in workSeq.workPoses \
-                if seq is self.WORK else workSeq.waitPoses :
-                poses[Id] = pos
-                item = QTableWidgetItem(str(pos))
-                item.setData(Qt.UserRole, int(Id))
-                table.setItem(row, (pos - 1), item)
-                item.setTextAlignment(
-                        Qt.AlignRight|Qt.AlignVCenter)
-        table.resizeColumnsToContents()
+    #def populate(self, seq) :
+    #    workSeqs = self.staffs.getWorkSeq()
+    #    maxTime = self.staffs.getMaxTime()
+    #    # 选择: 序号表, 最大值 及 (工作表 或 等待表)
+    #    if seq is self.WORK :
+    #        poses = self.workPoses
+    #        maxPos = self.staffs.getMaxWorkPos()
+    #        table = self.workTable
+    #    elif seq is self.WAIT :
+    #        poses = self.waitPoses
+    #        maxPos = self.staffs.getMaxWaitPos()
+    #        table = self.waitTable
+    #    else :
+    #        return 
+    #    # 生成: 表头
+    #    vHeads = range( maxTime + 1 )
+    #    heads = range( 1, maxPos + 1 )
+    #    heads = [ "序号:{}".format(head) for head in heads ]
+    #    # 清除: 已有内容
+    #    table.clear()
+    #    # 初始化: 设置
+    #    table.setSortingEnabled(False)
+    #    table.setRowCount(len(vHeads))
+    #    table.setColumnCount(len(heads))
+    #    # 设置: 表头
+    #    table.setHorizontalHeaderLabels(heads)
+    #    table.setVerticalHeaderLabels(
+    #            [ "工作次数".format(i) for i in vHeads])
+    #    # 设置: 内容
+    #    for row, workSeq in enumerate(workSeqs) :
+    #        for (pos, Id) in workSeq.workPoses \
+    #            if seq is self.WORK else workSeq.waitPoses :
+    #            poses[Id] = pos
+    #            item = QTableWidgetItem(str(pos))
+    #            item.setData(Qt.UserRole, int(Id))
+    #            table.setItem(row, (pos - 1), item)
+    #            item.setTextAlignment(
+    #                    Qt.AlignRight|Qt.AlignVCenter)
+    #    table.resizeColumnsToContents()
 
 
 if __name__ == '__main__' :

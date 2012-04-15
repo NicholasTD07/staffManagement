@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_stafflistdialog.ui'
 #
-# Created: Fri Mar 30 14:56:32 2012
+# Created: Sun Apr 15 11:19:13 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -54,32 +54,6 @@ class Ui_StaffListDialog(object):
         self.allTable.setRowCount(0)
         self.horizontalLayout.addWidget(self.allTable)
         self.TabWidget.addTab(self.allStuffTab, _fromUtf8(""))
-        self.workPosTab = QtGui.QWidget()
-        self.workPosTab.setObjectName(_fromUtf8("workPosTab"))
-        self.verticalLayout_2 = QtGui.QVBoxLayout(self.workPosTab)
-        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.label_3 = QtGui.QLabel(self.workPosTab)
-        self.label_3.setObjectName(_fromUtf8("label_3"))
-        self.verticalLayout_2.addWidget(self.label_3)
-        self.workTable = QtGui.QTableWidget(self.workPosTab)
-        self.workTable.setObjectName(_fromUtf8("workTable"))
-        self.workTable.setColumnCount(0)
-        self.workTable.setRowCount(0)
-        self.verticalLayout_2.addWidget(self.workTable)
-        self.TabWidget.addTab(self.workPosTab, _fromUtf8(""))
-        self.waitPosTab = QtGui.QWidget()
-        self.waitPosTab.setObjectName(_fromUtf8("waitPosTab"))
-        self.verticalLayout_3 = QtGui.QVBoxLayout(self.waitPosTab)
-        self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
-        self.label_4 = QtGui.QLabel(self.waitPosTab)
-        self.label_4.setObjectName(_fromUtf8("label_4"))
-        self.verticalLayout_3.addWidget(self.label_4)
-        self.waitTable = QtGui.QTableWidget(self.waitPosTab)
-        self.waitTable.setObjectName(_fromUtf8("waitTable"))
-        self.waitTable.setColumnCount(0)
-        self.waitTable.setRowCount(0)
-        self.verticalLayout_3.addWidget(self.waitTable)
-        self.TabWidget.addTab(self.waitPosTab, _fromUtf8(""))
         self.verticalLayout.addWidget(self.TabWidget)
         self.buttonBox = QtGui.QDialogButtonBox(StaffListDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -93,9 +67,7 @@ class Ui_StaffListDialog(object):
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), StaffListDialog.reject)
         QtCore.QMetaObject.connectSlotsByName(StaffListDialog)
         StaffListDialog.setTabOrder(self.IdSpinBox, self.allTable)
-        StaffListDialog.setTabOrder(self.allTable, self.workTable)
-        StaffListDialog.setTabOrder(self.workTable, self.waitTable)
-        StaffListDialog.setTabOrder(self.waitTable, self.buttonBox)
+        StaffListDialog.setTabOrder(self.allTable, self.buttonBox)
         StaffListDialog.setTabOrder(self.buttonBox, self.TabWidget)
 
     def retranslateUi(self, StaffListDialog):
@@ -104,10 +76,6 @@ class Ui_StaffListDialog(object):
         self.label_2.setToolTip(QtGui.QApplication.translate("StaffListDialog", "在表中快速定位该名员工", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("StaffListDialog", "员工工号:", None, QtGui.QApplication.UnicodeUTF8))
         self.TabWidget.setTabText(self.TabWidget.indexOf(self.allStuffTab), QtGui.QApplication.translate("StaffListDialog", "所有员工", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("StaffListDialog", "提示:下表序号是员工所在队列中所排序号(不是员工工号).", None, QtGui.QApplication.UnicodeUTF8))
-        self.TabWidget.setTabText(self.TabWidget.indexOf(self.workPosTab), QtGui.QApplication.translate("StaffListDialog", "工作序号", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("StaffListDialog", "提示:下表序号是员工所在队列中所排序号(不是员工工号).", None, QtGui.QApplication.UnicodeUTF8))
-        self.TabWidget.setTabText(self.TabWidget.indexOf(self.waitPosTab), QtGui.QApplication.translate("StaffListDialog", "等待序号", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":
