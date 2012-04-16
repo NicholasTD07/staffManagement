@@ -10,7 +10,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 # 引用 #
-#import staffdata
+import staffdata
 
 # 错误 #
 from errorclass import *
@@ -26,8 +26,12 @@ class StaffIcon(QGraphicsItem) :
     Rect = QRectF(-40, -40, 40, 40)
 
     def __init__(self, staffs, staff) :
-        QGraphicsItem.__init__()
+        super(StaffIcon, self).__init__()
+        print("初始化 员工图标.员工序号: {}".format(staff.Id))
         self.staffs = staffs
+        self.staff = staff
+        self.Id = staff.Id
+        self.StaffNum = QGraphicsSimpleTextItem("{}".format(self.Id), self)
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
         self.putInPlace()
@@ -36,7 +40,8 @@ class StaffIcon(QGraphicsItem) :
         return StaffIcon.Rect
 
     def paint(self, painter, option, widget=None):
-        painter.setPen(Qt.NoPen)
+        #painter.setPen(Qt.NoPen)
+        print("员工图标 绘图.")
         painter.setBrush(QBrush(self.color))
         painter.drawRect(StaffIcon.Rect)
 
@@ -45,28 +50,38 @@ class StaffIcon(QGraphicsItem) :
         QGraphicsItem.update(self, StaffIcon.Rect)
         
     def putInPlace(self) :
-        if staff.wType is staffs.WAIT :
-            self.color = WaitColor
+        print("员工图标 放置位置.")
+        staff = self.staff
+        if staff.wType is self.staffs.WAIT :
+            self.color = self.WaitColor
         elif staff.wType is self.workTypes :
-            self.color = WorkColor
+            self.color = self.WorkColor
         else :
             raise wrongType("类型错误, 不予画图.")
         self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
         self.wTime = self.staff.wTime
         x = (self.wPos * 40)
         y = (self.wTime * 40)
-        self.position = QPoint(x, y)
+        self.position = QPointF(x, y)
         self.setPos(self.position)
-        
 
 
+class StaffNum(QGraphicsSimpleTextItem) :
+
+    def __init__(self, Id, parent) :
+        super(StaffNum, self).__init__(parent)
+        self.setText("{}".format(Id))
+
+    def boundingRect(self) :
+        return QRectF(0, 0, 0, 0)
+
+    
 class WorkGraph(QWidget) :
     
-    SceneWidth = 2000
-    SceneHeight = 800
+    SceneWidth = 1024
+    SceneHeight = 600
     
     def __init__(self, staffs, parent=None) :
-        #QWidget.__init__(parent)
         super(WorkGraph, self).__init__(parent)
         self.staffs = staffs
 
@@ -104,10 +119,27 @@ class WorkGraph(QWidget) :
         # 2.add
         pass
 
-if __name__ is '__main__' :
+if __name__ == '__main__' :
     app = QApplication(sys.argv)
-    form = WorkGraph()
+
+    S = staffdata.StaffContainer()
+    # 重建测试环境
+    print()
+    print()
+    print()
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.reportStaffs()
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
+    # 测试 有选钟情况下的点钟.
+    S.staffsWork(S.SEL, 1,2,3)
+    S.reportStaffs()
+    S.staffsWork(S.NAMED, 4)
+    S.reportStaffs()
+    # 测试存入文件
+
+    form = WorkGraph(S)
     rect = QApplication.desktop().availableGeometry()
     form.resize(int(rect.width() * 0.75), int(rect.height() * 0.9))
     form.show()
-    app.exec_()
+    sys.exit(app.exec_())
