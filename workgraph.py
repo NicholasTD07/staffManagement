@@ -2,12 +2,18 @@
 # File Info :
 #   主窗口图表
 
-
+# 系统 #
 import sys
+
+# PyQt #
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import staffdata
 
+# 引用 #
+#import staffdata
+
+# 错误 #
+from errorclass import *
 
 class StaffIcon(QGraphicsItem) :
     
@@ -19,9 +25,11 @@ class StaffIcon(QGraphicsItem) :
 
     Rect = QRectF(-40, -40, 40, 40)
 
-    def __init__(self, staff) :
+    def __init__(self, staffs, staff) :
         QGraphicsItem.__init__()
-        self.staff = staff
+        self.staffs = staffs
+        self.workSeqs = staffs.getWorkSeq()
+        self.workTypes = staffs.workTypes
         self.putInPlace()
 
     def boundingRect(self) :
@@ -37,19 +45,14 @@ class StaffIcon(QGraphicsItem) :
         QGraphicsItem.update(self, StaffIcon.Rect)
         
     def putInPlace(self) :
-        if staff.wType is staffdata.StaffContainer.WAIT :
+        if staff.wType is staffs.WAIT :
             self.color = WaitColor
-            self.wPos = self.staff.waitPos
-            self.wTime = self.staff.wTime
-        elif staff.wType is (staffdata.StaffContainer.SEL or
-                                staffdata.StaffContainer.NOR or 
-                                staffdata.StaffContainer.NAMED ) :
+        elif staff.wType is self.workTypes :
             self.color = WorkColor
-            self.wPos = self.staff.workPos
-            self.wTime = self.staff.wTime
-
         else :
-            return
+            raise wrongType("类型错误, 不予画图.")
+        self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
+        self.wTime = self.staff.wTime
         x = (self.wPos * 40)
         y = (self.wTime * 40)
         self.position = QPoint(x, y)
@@ -70,8 +73,8 @@ class WorkGraph(QWidget) :
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0,
-                                self.SceneWidth, self.SceneHeight)
-        #self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)
+                        self.SceneWidth, self.SceneHeight)
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
@@ -81,14 +84,19 @@ class WorkGraph(QWidget) :
         layout.addWidget(self.view)
         self.setLayout(layout)
 
-        #self.populate()
+        self.populate()
+
+        self.view.show()
 
     def clear(self) :
         pass
 
     def populate(self) :
         for staff in self.staffs :
-            staffIcon = StaffIcon(staff)
+            try :
+                staffIcon = StaffIcon(self.staffs, staff)
+            except wrongType :
+                continue
             self.scene.addItem(staffIcon)
 
     def update(self, staff) :
@@ -103,5 +111,3 @@ if __name__ is '__main__' :
     form.resize(int(rect.width() * 0.75), int(rect.height() * 0.9))
     form.show()
     app.exec_()
-
-

@@ -70,12 +70,12 @@ class StaffListDialog(QDialog,
     def on_allTable_cellDoubleClicked(self, row, column) :
         print("检测到双击所有员工表")
         item = self.allTable.item(0, column)
-        self.updateStaff(item)
+        self.updateStaff(item, column)
 
     #---- 辅助函数 ----#
     
     # 获得员工, 并弹出更新信息窗口 #
-    def updateStaff(self, item) :
+    def updateStaff(self, item, column) :
         # 1. 判断: 该位置是否有员工
         if item is None :
             return
@@ -84,7 +84,7 @@ class StaffListDialog(QDialog,
         # 2. 获得: 员工实例
         staff = self.staffs.getStaff(Id)
         # 3. 判断: 员工是否存在
-        if staff is not None :
+        if staff :
             form = updatestaffdialog.UpdateStaffDialog(
                         self.staffs, staff, self)
         else :
@@ -95,6 +95,9 @@ class StaffListDialog(QDialog,
 
     def updateItem(self, column, Id) :
         staff = self.staffs.getStaff(Id)
+        if staff.wType == \
+            self.staffs.IDLE :
+            return
         wTime = staff.wTime
         nSeq = self.workSeqs[wTime].nSeq
         pos = nSeq.index(staff)

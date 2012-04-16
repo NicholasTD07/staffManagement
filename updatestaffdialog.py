@@ -2,10 +2,16 @@
 # File Info : 
 #   The UpdateStaffDialog class defined in this file.
 
+# PyQt #
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
+# 引用#
 import staffdata
 import ui_updatestaffdialog
+
+# 正则 #
+import re
 
 
 __version__="0.2.0"
@@ -46,8 +52,8 @@ class UpdateStaffDialog(QDialog,
                 self.posNameLabel.setText("{}位置".format(wType))
                 self.posLabel.setText("{}".format(pos))
             else :
-                self.posNameLabel.setText()
-                self.posLabel.setText()
+                self.posNameLabel.setText("")
+                self.posLabel.setText("")
                 print("员工工作类型: {}".format(wType))
             self.buttonBox.button(QDialogButtonBox.Ok).setText(
                                     "确认修改(&A)")
@@ -57,6 +63,10 @@ class UpdateStaffDialog(QDialog,
             self.nameLineEdit.setFocus()
         else :
             self.IdLineEdit.setFocus()
+            self.posNameLabel.setText("")
+            self.posLabel.setText("")
+            self.wTimeLabel.setText("无")
+            self.wTypeLabel.setText("无")
 
     # 重定义: 确定键 #
 
@@ -66,9 +76,12 @@ class UpdateStaffDialog(QDialog,
         gender = self.getGender()
         if self.staff is None :
             print("添加模式")
+            p = re.compile(r'\D*')
+            rawdata = self.IdLineEdit.text()
             IDs = [ int(i) for i
-                in self.IdLineEdit.text().split() ]
-            if self.checkAndWarn(Id=IDs) :
+                in p.sub(" ", rawdata) if i.isalnum() ]
+            print("输入的员工序号: {}".format(IDs))
+            if self.checkAndWarn(IDs=IDs) :
                 print("已有员工工号,提示!")
                 QMessageBox.warning(self,
                         "员工工号错误",
@@ -83,11 +96,13 @@ class UpdateStaffDialog(QDialog,
                     print("没有该工号")
                     self.staffs.updateStaff(Id)
                     print("新建成功!")
-                    self.staffs.tell(Id)
             QMessageBox.information(self,
                 "操作成功!",
                 "员工添加成功!\t\n"
-                "工号: {}".format(self.IdLineEdit.text()))
+                "工号: {}\n姓名: {}\n性别: {}"\
+                    .format(self.IdLineEdit.text(),
+                        self.nameLineEdit.text(),
+                        self.genderComboBox.currentText()))
         else :
             Id = self.staff.Id
             name = self.nameLineEdit.text()
@@ -132,8 +147,8 @@ if __name__ == "__main__":
     S.staffsWork(S.NAMED, 3)
 
     app = QApplication(sys.argv)
-    form = UpdateStaffDialog(S, S.getStaff(3))
-    #form = UpdateStaffDialog(S)
+    #form = UpdateStaffDialog(S, S.getStaff(3))
+    form = UpdateStaffDialog(S)
     form.show()
     sys.exit(app.exec_())
 

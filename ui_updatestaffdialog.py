@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_updatestaffdialog.ui'
 #
-# Created: Sun Apr 15 12:35:24 2012
+# Created: Mon Apr 16 09:19:13 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -46,10 +46,10 @@ class Ui_UpdateStaffDialog(object):
         self.genderComboBox.addItem(_fromUtf8(""))
         self.gridLayout.addWidget(self.genderComboBox, 3, 1, 1, 1)
         self.IdLineEdit = QtGui.QLineEdit(UpdateStaffDialog)
+        self.IdLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.IdLineEdit.setObjectName(_fromUtf8("IdLineEdit"))
         self.gridLayout.addWidget(self.IdLineEdit, 1, 1, 1, 1)
         self.gridLayout.setColumnStretch(0, 5)
-        self.gridLayout.setColumnStretch(1, 4)
         self.verticalLayout.addLayout(self.gridLayout)
         self.line = QtGui.QFrame(UpdateStaffDialog)
         self.line.setFrameShape(QtGui.QFrame.HLine)
@@ -107,6 +107,7 @@ class Ui_UpdateStaffDialog(object):
         self.label_3.setText(QtGui.QApplication.translate("UpdateStaffDialog", "性别:", None, QtGui.QApplication.UnicodeUTF8))
         self.genderComboBox.setItemText(0, QtGui.QApplication.translate("UpdateStaffDialog", "男", None, QtGui.QApplication.UnicodeUTF8))
         self.genderComboBox.setItemText(1, QtGui.QApplication.translate("UpdateStaffDialog", "女", None, QtGui.QApplication.UnicodeUTF8))
+        self.IdLineEdit.setToolTip(QtGui.QApplication.translate("UpdateStaffDialog", "可用空格分隔多个员工工号, 方便批量创建员工.", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("UpdateStaffDialog", "员工工作状态:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("UpdateStaffDialog", "工作次数:", None, QtGui.QApplication.UnicodeUTF8))
         self.wTimeLabel.setText(QtGui.QApplication.translate("UpdateStaffDialog", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))

@@ -1,9 +1,15 @@
 #!/usr/bin/python3
 # File Name : staffData.py
 
-from os import path
-from time import time
+# 文件 #
 import pickle
+
+from os import path
+
+# 时间 #
+from time import time
+
+# 错误 #
 from errorclass import *
 
 
@@ -185,16 +191,16 @@ class StaffContainer :
 
     def savePickle(self) :
         error = None
-        theFile = None
+        fh = None
         try :
-            theFile = open(self.__fileName, "wb")
+            fh = open(self.__fileName, "wb")
             pickle.dump(self, fh)
         except EnvironmentError as e :
             error = "\t保存文件: 失败. 错误: {}".format(e)
             self.log(error)
         finally :
-            if theFile is not None :
-                theFile.close()
+            if fh is not None :
+                fh.close()
             if error is not None :
                 return False, error
             msg = "\t保存文件: 成功!"
@@ -213,24 +219,25 @@ class StaffContainer :
 
     def loadPickle(self) :
         error = None
-        theFile = None
+        fh = None
         staffs = None
         try :
-            theFile = open(self.__fileName, "rb")
+            fh = open(self.__fileName, "rb")
             self.clear(False)
-            staffs = pickle.load(theFile)
-        except EnvironmentError as e :
+            staffs = pickle.load(fh)
+            print("{}".format("no" if staffs is None else "YES"))
+        except Exception as e :
             error = "\t读取文件: 失败. 错误: {}".format(e)
             self.log(error)
         finally :
-            if theFile is not None :
-                theFile.close()
+            if fh is not None :
+                fh.close()
             if error is not None :
-                return False, error
-            self.dirty = False
-            msg = "\t读取文件: 成功!"
+                return False, error, StaffContainer()
+            self.__dirty = False
+            msg = "\t读取文件: 成功!\n staffs: {}".format(staffs)
             self.log(msg)
-            return (True, msg, staffs)
+            return True, msg, staffs
 
     #------------------#
 
@@ -824,6 +831,9 @@ if __name__ == '__main__' :
     S.reportStaffs()
     S.staffsWork(S.NAMED, 4)
     S.reportStaffs()
+    # 测试存入文件
+    S.save("test.qpc")
+    S.load("test.qpc")
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
     # 测试 reportStaffs()

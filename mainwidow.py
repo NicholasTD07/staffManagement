@@ -11,9 +11,9 @@ from PyQt4.QtGui import *
 
 # 调用 #
 import staffdata
-#import updatestaffdialog
+import updatestaffdialog
 import stafflistdialog
-#import deletestaffdialog
+import deletestaffdialog
 import workgraph
 
 # 主窗口 UI #
@@ -145,6 +145,11 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
                                     self.staffs.fileFormats()))
         if fileName :
             ok, msg, staffs = self.staffs.load(fileName)
+            if not ok :
+                QMessageBox.information(self,
+                            "读取文件: 失败.",
+                            "读取文件出现异常错误:\n {}\n"\
+                                .format(msg))
             self.staffs = staffs
             self.staffs.setDirty(False)
             self.statusBar().showMessage(msg, 5000)
@@ -177,7 +182,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
 
     # 添加员工 #
     def addStaff(self) :
-        form = updatestaffdialog_idlineedit.UpdateStaffDialog(
+        form = updatestaffdialog.UpdateStaffDialog(
                     self.staffs, None, self)
         if form.exec_() :
             #self.updateSOMETHING()
