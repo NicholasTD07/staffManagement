@@ -15,6 +15,7 @@ import staffdata
 # 错误 #
 from errorclass import *
 
+
 class StaffIcon(QGraphicsItem) :
     
     red, green, blue = 0, 0, 255
@@ -23,7 +24,7 @@ class StaffIcon(QGraphicsItem) :
     red, green, blue = 0, 255, 0 
     WaitColor = QColor(red, green, blue)
 
-    Rect = QRectF(-40, -40, 40, 40)
+    Rect = QRectF(0, 0, 40, 40)
 
     def __init__(self, staffs, staff) :
         super(StaffIcon, self).__init__()
@@ -31,10 +32,13 @@ class StaffIcon(QGraphicsItem) :
         self.staffs = staffs
         self.staff = staff
         self.Id = staff.Id
-        self.StaffNum = QGraphicsSimpleTextItem("{}".format(self.Id), self)
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
         self.putInPlace()
+        self.StaffNum = QGraphicsTextItem("{}"\
+                .format(self.Id), self)
+        self.StaffNum.setTextWidth(10)
+        self.StaffNum.setFont(QFont("Times", 20))
 
     def boundingRect(self) :
         return StaffIcon.Rect
@@ -66,16 +70,7 @@ class StaffIcon(QGraphicsItem) :
         self.setPos(self.position)
 
 
-class StaffNum(QGraphicsSimpleTextItem) :
 
-    def __init__(self, Id, parent) :
-        super(StaffNum, self).__init__(parent)
-        self.setText("{}".format(Id))
-
-    def boundingRect(self) :
-        return QRectF(0, 0, 0, 0)
-
-    
 class WorkGraph(QWidget) :
     
     SceneWidth = 1024
