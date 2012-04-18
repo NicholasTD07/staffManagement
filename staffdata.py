@@ -681,7 +681,8 @@ class StaffContainer :
             self.__workSeqs[wTime].sPos.remove( pos )
             self.log("\t移除员工 sPos : {}.".format( pos ))
         else :
-            self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
+            self.log("\t@@@--员工处于空闲态({}), 无 pos, 无操作."\
+            .format(sType))
 
         if wType is self.NOR :
             self.norWork(Id)
