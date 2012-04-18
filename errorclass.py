@@ -9,6 +9,10 @@ class noID(Error) :
     """没有输入员工ID"""
     pass
 
+class notFoundInGroup(Error) :
+    """员工组内没找到员工"""
+    pass
+
 class noThisStuff(Error) :
     """__stuffs 中没有此名员工Id"""
     pass

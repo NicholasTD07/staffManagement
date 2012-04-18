@@ -64,6 +64,8 @@ class StaffContainer :
 
     def __init__(self) :
         self.__IDs = []
+        self.__unGrpIDs = []
+        self.__groups = [ [] ] * 10
         self.__staffs = {}
         self.__modStaffs = set()
         self.__workSeqs = []
@@ -106,6 +108,9 @@ class StaffContainer :
 
     def getIDs(self) :
         return self.__IDs
+
+    def getUngrpStaff(self) :
+        return self.__unGrpIDs
 
     def getStaff(self, Id) :
         if Id in self.__staffs :
@@ -262,9 +267,32 @@ class StaffContainer :
 
     # 基本操作 #
 
+    def groupStaff(self, Id, grpNum) :
+        self.log("\t\t{}号员工分组(第{}组)操作:"\
+            .format(Id, grpNum))
+
+        # 1. 将员工序号从 未分组员工中弹出
+        if Id in self.__unGrpIDs :
+            self.__unGrpIDs.remove(Id)
+        else :
+            msg = "!!!----分组失败: 员工不在未分组员工中."
+            self.log(msg)
+            raise notFoundInGroup(msg)
+
+        # 2. 将员工序号插入分组
+        # 2.1 检测分组是否存在 并且 更新分组
+        while len(self.__groups) < (grpNum + 1) :
+            self.__groups.append([])
+        # 2.2 将员工放入分组
+        self.__groups[grpNum].append(Id)
+        self.log("\t\t员工进入第{}组分组.".format(grpNum))
+        
+        # 3. 操作完成
+        self.log("\t\t@@@----成功: 员工进入分组.----@@@")
+
     def updateMax(self, Id, time) :
         self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
-        .format(Id, time))
+            .format(Id, time))
 
         # 1.取得员工基本信息
         staff = self.__staffs[Id]
@@ -562,6 +590,8 @@ class StaffContainer :
             self.__staffs[Id] = Staff(Id)
             self.__IDs.append(Id)
             self.__IDs.sort()
+            self.__unGrpIDs.append(Id)
+            self.__unGrpIDs.sort()
             # 2.判断员工工号是否为最大值
             if Id > self.__maxId :
                 self.__maxId = Id
@@ -620,10 +650,27 @@ class StaffContainer :
         self.log("\t\t从工号队列中移除工号为: {}的员工."\
             .format(Id))
 
-        # 6.将员工加入 变动员工组
+        # 6.从 工号队列 中移除员工工号
+        if Id in self.__unGrpIDs :
+            self.__unGrpIDs.remove(Id)
+            found = True
+        else :
+            found = False
+            for group in self.__groups :
+                if Id in group :
+                    found = True
+                    group.remove(Id)
+        if not found :
+            msg = "!!!----员工组内未找到员工.----!!!"
+            self.log(msg)
+            raise notFoundInGroup(msg)
+        self.log("\t\t从员工组中移除工号为: {}的员工."\
+            .format(Id))
+
+        # 7.将员工加入 变动员工组
         self.__modStaffs.add(Id)
 
-        # 7.操作完成, 设置 dirty
+        # 8.操作完成, 设置 dirty
         self.log("\t@@@---- 成功: 移除员工 ----@@@")
         self.__dirty = True
             
