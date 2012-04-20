@@ -112,6 +112,9 @@ class StaffContainer :
     def getUngrpStaff(self) :
         return self.__unGrpIDs
 
+    def getGroups(self) :
+        return self.__groups
+
     def getStaff(self, Id) :
         if Id in self.__staffs :
             return self.__staffs[Id]
