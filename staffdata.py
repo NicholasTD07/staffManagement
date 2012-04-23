@@ -286,8 +286,9 @@ class StaffContainer :
         # 2.1 检测分组是否存在 并且 更新分组
         while len(self.__groups) < (grpNum + 1) :
             self.__groups.append([])
-        # 2.2 将员工放入分组
+        # 2.2 将员工放入分组, 并且使员工处于等待状态.
         self.__groups[grpNum].append(Id)
+        self.staffWait(Id)
         self.log("\t\t员工进入第{}组分组.".format(grpNum))
         
         # 3. 操作完成
