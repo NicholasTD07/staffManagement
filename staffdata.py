@@ -66,6 +66,7 @@ class StaffContainer :
         self.__IDs = []
         self.__unGrpIDs = []
         self.__groups = [ [] ] * 3
+        self.__workGroup = None
         self.__staffs = {}
         self.__modStaffs = set()
         self.__workSeqs = []
