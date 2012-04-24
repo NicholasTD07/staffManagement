@@ -116,6 +116,12 @@ class StaffContainer :
     def getGroups(self) :
         return self.__groups
 
+    def getWorkGroup(self) :
+        return self.__workGroup
+
+    def setWorkGroup(self, workGroup) :
+        self.__workGroup = workGroup
+
     def getStaff(self, Id) :
         if Id in self.__staffs :
             return self.__staffs[Id]
