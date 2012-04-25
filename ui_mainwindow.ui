@@ -43,6 +43,7 @@
     <addaction name="deleteStaffAction"/>
     <addaction name="separator"/>
     <addaction name="checkTableAction"/>
+    <addaction name="groupStaffAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="staffMenu"/>
@@ -134,6 +135,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="groupStaffAction">
+   <property name="text">
+    <string>员工分组</string>
    </property>
   </action>
  </widget>

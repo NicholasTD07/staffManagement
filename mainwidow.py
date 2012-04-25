@@ -15,6 +15,7 @@ import updatestaffdialog
 import stafflistdialog
 import deletestaffdialog
 import workgraph
+import groupstaffdialog
 
 # 主窗口 UI #
 import ui_mainwindow
@@ -38,6 +39,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         self.connectSlot(self.fileSaveAsAction, self.fileSaveAs)
         self.connectSlot(self.fileQuitAction, self.close)
         self.connectSlot(self.addStaffAction, self.addStaff)
+        self.connectSlot(self.groupStaffAction, self.groupStaff)
         self.connectSlot(self.deleteStaffAction,
                 self.deleteStaff)
         self.connectSlot(self.checkTableAction,
@@ -201,6 +203,14 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         form = stafflistdialog.StaffListDialog(
                     self.staffs, self)
         if form.exec_() :
+            #self.updateSOMETHING()
+            pass
+
+    # 员工分组 #
+    def groupStaff(self) :
+        form = groupStaffdialog.GroupStaffDialog(
+                self.staffs, self)
+        if form.exec() :
             #self.updateSOMETHING()
             pass
 

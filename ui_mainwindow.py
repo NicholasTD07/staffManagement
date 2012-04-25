@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_mainwindow.ui'
 #
-# Created: Thu Mar 29 21:20:38 2012
+# Created: Wed Apr 25 17:13:23 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -51,6 +51,8 @@ class Ui_MainWindow(object):
         self.fileSaveAsAction.setObjectName(_fromUtf8("fileSaveAsAction"))
         self.deleteStaffAction = QtGui.QAction(MainWindow)
         self.deleteStaffAction.setObjectName(_fromUtf8("deleteStaffAction"))
+        self.groupStaffAction = QtGui.QAction(MainWindow)
+        self.groupStaffAction.setObjectName(_fromUtf8("groupStaffAction"))
         self.fileMenu.addAction(self.fileNewAction)
         self.fileMenu.addAction(self.fileOpenAction)
         self.fileMenu.addSeparator()
@@ -62,6 +64,7 @@ class Ui_MainWindow(object):
         self.staffMenu.addAction(self.deleteStaffAction)
         self.staffMenu.addSeparator()
         self.staffMenu.addAction(self.checkTableAction)
+        self.staffMenu.addAction(self.groupStaffAction)
         self.menubar.addAction(self.fileMenu.menuAction())
         self.menubar.addAction(self.staffMenu.menuAction())
         self.toolBar.addAction(self.fileOpenAction)
@@ -98,6 +101,7 @@ class Ui_MainWindow(object):
         self.fileSaveAsAction.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+A", None, QtGui.QApplication.UnicodeUTF8))
         self.deleteStaffAction.setText(QtGui.QApplication.translate("MainWindow", "删除员工(&D)", None, QtGui.QApplication.UnicodeUTF8))
         self.deleteStaffAction.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+D", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupStaffAction.setText(QtGui.QApplication.translate("MainWindow", "员工分组", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":
