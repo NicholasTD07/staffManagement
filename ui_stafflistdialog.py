@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_stafflistdialog.ui'
 #
-# Created: Sun Apr 15 12:40:12 2012
+# Created: Wed Apr 25 23:40:19 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,13 +17,13 @@ except AttributeError:
 class Ui_StaffListDialog(object):
     def setupUi(self, StaffListDialog):
         StaffListDialog.setObjectName(_fromUtf8("StaffListDialog"))
-        StaffListDialog.resize(565, 346)
+        StaffListDialog.resize(600, 370)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(StaffListDialog.sizePolicy().hasHeightForWidth())
         StaffListDialog.setSizePolicy(sizePolicy)
-        StaffListDialog.setMinimumSize(QtCore.QSize(565, 346))
+        StaffListDialog.setMinimumSize(QtCore.QSize(600, 370))
         self.verticalLayout = QtGui.QVBoxLayout(StaffListDialog)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.horizontalLayout_2 = QtGui.QHBoxLayout()

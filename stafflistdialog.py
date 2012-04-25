@@ -93,58 +93,70 @@ class StaffListDialog(QDialog,
         if form.exec_() :
             self.updateItem(column, Id)
 
-    def updateItem(self, column, Id) :
-        staff = self.staffs.getStaff(Id)
-        if staff.wType == \
-            self.staffs.IDLE :
-            return
-        wTime = staff.wTime
-        nSeq = self.workSeqs[wTime].nSeq
-        pos = nSeq.index(staff)
-        item = QTableWidgetItem(str(staff.Id))
-        item.setData(Qt.UserRole, int(Id))
-        self.allTable.setItem(0, column, item)
-        self.allTable.setItem(1, column,
-                QTableWidgetItem(str(staff.name)))
-        self.allTable.setItem(2, column,
-                QTableWidgetItem(str(staff.gender)))
-        self.allTable.setItem(3, column,
-                QTableWidgetItem(str(staff.wTime)))
-        self.allTable.setItem(4, column,
-                QTableWidgetItem(
-                "" if staff.wType in self.workTypes else
-                    str(pos)))
-        self.allTable.setItem(5, column,
-                QTableWidgetItem(
-                "" if staff.wType not in self.workTypes else
-                    str(pos)))
-        item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-        # 调整: 列的宽度
-        # !!!---- 需要调用完 updateItem() 之后执行 ----!!! #
-        #self.allTable.resizeColumnsToContents()
-
     #---- 生成表格 ----#
 
     # 生成: 所有员工表
     def populateAll(self) :
-        IDs = self.staffs.getIDs()
-        # 生成: 表头
-        heads = [str(i) for i in IDs]
-        vHeads = ["员工工号", "姓名", "性别",
-                        "工作次数", "等待位置", "工作位置"]
+        # 初始化局部变量 #
+        staffs = self.staffs
+        workSeqs = self.workSeqs
+        IDs = staffs.getIDs()
+        getStaff = staffs.getStaff
+        IDLE = staffs.IDLE
+        WAIT = staffs.WAIT
+        workTypes = staffs.workTypes
+        allTable = self.allTable
+        setItem = allTable.setItem
+        # 表头 #
+        heads = [ str(i) for i in IDs ]
+        vHeads = [ "员工工号", "姓名", "性别", "工作次数",
+                "工作类型", "等待位置", "工作位置" ]
         # 清除: 已有内容
-        self.allTable.clear()
+        allTable.clear()
         # 初始化: 设置 
-        self.allTable.setSortingEnabled(False)
-        self.allTable.setRowCount(len(vHeads))
-        self.allTable.setColumnCount(len(heads))
+        allTable.setSortingEnabled(False)
+        allTable.setRowCount(len(vHeads))
+        allTable.setColumnCount(len(heads))
         # 设置: 表头
-        self.allTable.setVerticalHeaderLabels(vHeads)
+        allTable.setVerticalHeaderLabels(vHeads)
         # 设置: 内容
         for column, Id in enumerate(IDs) :
-            self.updateItem(column, Id)
+            # 初始化循环内部变量 #
+            staff = getStaff(Id)
+            wTime = staff.wTime
+            wType = staff.wType
+            nSeq = workSeqs[wTime].nSeq
+            if wType == IDLE :
+                waitPos = None
+                workPos = None
+            elif wType in workTypes :
+                waitPos = None
+                workPos = nSeq.index(staff)
+            else :
+                waitPos = nSeq.index(staff)
+                workPos = None
+            item = QTableWidgetItem(str(staff.Id))
+            item.setData(Qt.UserRole, int(Id))
+            setItem(0, column, item)
+            setItem(1, column,
+                   QTableWidgetItem(str(staff.name)))
+            setItem(2, column,
+                   QTableWidgetItem(str(staff.gender)))
+            setItem(3, column,
+                   QTableWidgetItem(str(staff.wTime)))
+            setItem(4, column,
+                    QTableWidgetItem(str(staff.wType)))
+            # 等待位置 #
+            setItem(5, column,
+                    QTableWidgetItem(
+                        "" if waitPos is None else str(waitPos)))
+            # 工作位置 #
+            setItem(6, column,
+                    QTableWidgetItem(
+                        "" if workPos is None else str(workPos)))
+            item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
         # 调整: 列的宽度
-        self.allTable.resizeColumnsToContents()
+        allTable.resizeColumnsToContents()
     
     # 生成: 工作表 或者 等待表
     #def populate(self, seq) :
