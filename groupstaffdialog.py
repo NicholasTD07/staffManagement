@@ -154,8 +154,9 @@ class GroupStaffDialog(QDialog) :
     #---- 辅助函数 ----#
     def saveGroups(self) :
         # 初始化局部变量 #
-        groupedTable = self.groupedTable
+        unGrpIDs = self.unGrpIDs
         groups = self.groups
+        groupedTable = self.groupedTable
         row = 0
         rows = {}
         rowCount = groupedTable.rowCount()
@@ -170,6 +171,7 @@ class GroupStaffDialog(QDialog) :
             for item in items :
                 Id = int(item.data(Qt.UserRole))
                 thisRow.append(Id)
+                unGrpIDs.remove(Id)
             group = group + \
                     [ Id for Id in thisRow if Id not in group ]
             print("row:", row, "\n", "group:", group)
