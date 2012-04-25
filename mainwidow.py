@@ -208,7 +208,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
 
     # 员工分组 #
     def groupStaff(self) :
-        form = groupStaffdialog.GroupStaffDialog(
+        form = groupstaffdialog.GroupStaffDialog(
                 self.staffs, self)
         if form.exec() :
             #self.updateSOMETHING()
