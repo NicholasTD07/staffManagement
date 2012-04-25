@@ -24,6 +24,9 @@ class GroupStaffDialog(QDialog) :
         self.unGrpIDs = staffs.getUngrpStaff()
         self.groups = staffs.getGroups()
 
+        # 内部变量 #
+        self.lastColumn = {}
+
         # 设置界面 #
         self.setupUi()
 
@@ -40,6 +43,10 @@ class GroupStaffDialog(QDialog) :
         self.connect(self.addGroupButton, SIGNAL("clicked()"),
                 lambda : self.groups.append([]))
                 #lambda : print("点击按键"))
+
+        # 添加至分组按键 #
+        self.connect(self.whichGroupButton, SIGNAL("clicked()"),
+                self.on_whichGroupButton_clicked)
 
         # 数字框 #
         self.connect(self.groupSpinBox, SIGNAL("valueChanged(int)"),
@@ -155,6 +162,32 @@ class GroupStaffDialog(QDialog) :
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(maxGroups)
 
+    def on_whichGroupButton_clicked(self) :
+        # 初始化局部变量 #
+        unGrpTable = self.unGrpTable
+        groupedTable = self.groupedTable
+        lastColumn = self.lastColumn
+        row = self.groupSpinBox.value() - 1
+        column = lastColumn[row]
+        # 员工信息 #
+        item = unGrpTable.currentItem()
+        # 检查合法性 #
+        if item is None :
+            QMessageBox.warning(self,
+                    "请选择员工",
+                    "尚未选择任何员工进行操作."
+                    "\n请在未分组员工框内选择之后再进行操作.")
+        itemRow = unGrpTable.currentRow()
+        itemColumn = unGrpTable.currentColumn()
+        Id = int(item.data(Qt.UserRole))
+        # 弹出员工 #
+        unGrpTable.takeItem(itemRow, itemColumn)
+        # 插入员工 #
+        groupedTable.setItem(row, column, item)
+        groupedTable.setCurrentItem(item)
+        # 更新内部变量 #
+        lastColumn[row] += 1
+
     #---- 更新表格 ----#
 
     #-- 生成未分组员工表格 --#
@@ -185,6 +218,7 @@ class GroupStaffDialog(QDialog) :
         # 初始化局部变量 #
         groups = self.groups
         groupedTable = self.groupedTable
+        lastColumn = self.lastColumn
         lenGroups = len(groups)
         maxColumn = 0
         for group in groups :
@@ -202,12 +236,14 @@ class GroupStaffDialog(QDialog) :
         for group in groups :
             row = groups.index(group)
             column = 0
+            lastColumn[row] = 0
             for Id in group :
                 item = QTableWidgetItem(str(Id))
                 item.setData(Qt.UserRole, int(Id))
                 item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
                 unGrpTable.setItem(row, column, item)
                 column += 1
+            lastColumn[row] = column
         groupedTable.resizeColumnsToContents()
 
 
