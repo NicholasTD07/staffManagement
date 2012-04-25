@@ -730,7 +730,12 @@ class StaffContainer :
         t_wType = staff.wType
         sType = staff.sType
 
-        # 2. 更新 nPos, sPos
+        # 2. 检查员工当前状态是否为等待状态
+        if t_wType != self.WAIT :
+            self.log("\t员工不在等待状态, 结束操作.")
+            return
+
+        # 3. 更新 nPos, sPos
         pos = self.__workSeqs[wTime].nSeq.index(staff)
         if sType is self.NOR :
             self.__workSeqs[wTime].nPos.remove( pos )
