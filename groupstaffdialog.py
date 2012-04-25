@@ -17,17 +17,44 @@ class GroupStaffDialog(QDialog) :
 
     def __init__(self, staffs, parent=None) :
         # 初始化 #
-
         super(GroupStaffDialog, self).__init__(parent)
 
         # 获取员工分组信息 #
-
         self.staffs = staffs
         self.unGrpIDs = staffs.getUngrpStaff()
         self.groups = staffs.getGroups()
 
-        #---- 添加组件 ----#
+        # 设置界面 #
+        self.setupUi()
 
+        #---- 更新内容 ----#
+
+        # 更新表格 #
+        self.updateUnGrpTable()
+        self.updateGroupedTable()
+
+
+        #---- 自定义信号 ----#
+
+        # 添加分组按键 #
+        self.connect(self.addGroupButton, SIGNAL("clicked()"),
+                lambda : self.groups.append([]))
+                #lambda : print("点击按键"))
+
+        # 数字框 #
+        self.connect(self.groupSpinBox, SIGNAL("valueChanged(int)"),
+                self.on_groupSpinBox_valueChanged)
+                #lambda : print("点击按键"))
+
+        # 链接信号 #
+        self.connect(self.buttonBox, SIGNAL("accepted()"),
+                        self.accept)
+        self.connect(self.buttonBox, SIGNAL("rejected()"),
+                        self.reject)
+
+    # 设置界面 #
+    def setupUi(self) :
+        #-- 添加组件 --#
         # 标签 #
         self.unGrpLabel = QLabel("未分组员工序号:", self)
         self.groupedLabel = QLabel("已分组员工序号:", self)
@@ -43,7 +70,7 @@ class GroupStaffDialog(QDialog) :
         self.addGroupButton = QPushButton()
         self.addGroupButton.setText("添加分组")
         self.whichGroupButton = QPushButton()
-        self.whichGroupButton.setText("添加")
+        self.whichGroupButton.setText("添加至第1分组")
 
         # 按键组 #
         buttonBox = QDialogButtonBox(self)
@@ -103,32 +130,10 @@ class GroupStaffDialog(QDialog) :
 
         # 设置属性 #
         self.setLayout(self.gridLayout)
-        self.resize(460, 330)
+        self.resize(540, 330)
         self.setWindowTitle("员工分组")
 
-        # 链接信号 #
-        self.connect(self.buttonBox, SIGNAL("accepted()"),
-                        self.accept)
-        self.connect(self.buttonBox, SIGNAL("rejected()"),
-                        self.reject)
-
-        #---- 自定义信号 ----#
-
-        # 添加分组按键 #
-        self.connect(self.addGroupButton, SIGNAL("clicked()"),
-                lambda : self.groups.append([]))
-                #lambda : print("点击按键"))
-
-        # 数字框 #
-        self.connect(self.groupSpinBox, SIGNAL("valueChanged(int)"),
-                self.on_groupSpinBox_valueChanged)
-                #lambda : print("点击按键"))
-
-        #---- 更新内容 ----#
-
-        # 更新表格 #
-        unGrpTable.resizeColumnsToContents()
-
+    # 数字框信号槽 # 
     def on_groupSpinBox_valueChanged(self) :
         # 初始化局部变量 #
         groups = self.groups
@@ -148,30 +153,61 @@ class GroupStaffDialog(QDialog) :
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(maxGroups)
 
+    #---- 更新表格 ----#
+
+    # 生成未分组员工表格 #
     def updateUnGrpTable(self) :
         # 初始化局部变量 #
         i = 0
         unGrpIDs = self.unGrpIDs
         unGrpTable = self.unGrpTable
         lenIDs = len(unGrpIDs)
-        # 清除: 已有内容
+        # 清除已有内容
         unGrpTable.clear()
-        # 初始化: 设置 
+        # 初始化设置 
         unGrpTable.setSortingEnabled(False)
-        unGrpTable.setRowCount(int(length/10)+1)
+        unGrpTable.setRowCount(int(lenIDs/10)+1)
         unGrpTable.setColumnCount(10)
+        # 更新表格内容 #
         while i < lenIDs:
-            if i != 0 and i % 10 == 0 :
-                lastRow += 1
-                lastColumn = 0
-                print("增加一行. 此时 i: ", i)
             Id = unGrpIDs[i]
             item = QTableWidgetItem(str(Id))
             item.setData(Qt.UserRole, int(Id))
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-            unGrpTable.setItem(lastRow, lastColumn, item)
+            unGrpTable.setItem(i // 10, i % 10, item)
             i += 1
         unGrpTable.resizeColumnsToContents()
+
+    # 生成分组员工表格 #
+    def updateGroupedTable(self) :
+        # 初始化局部变量 #
+        groups = self.groups
+        groupedTable = self.groupedTable
+        lenGroups = len(groups)
+        maxColumn = 0
+        for group in groups :
+            column = len(group)
+            if column > maxColumn :
+                maxColumn = column
+        maxColumn += 10
+        # 清除已有内容 #
+        groupedTable.clear()
+        # 初始化设置 #
+        groupedTable.setSortingEnabled(False)
+        groupedTable.setRowCount(lenGroups)
+        groupedTable.setColumnCount(maxColumn)
+        # 更新表格内容 #
+        for group in groups :
+            row = groups.index(group)
+            column = 0
+            for Id in group :
+                item = QTableWidgetItem(str(Id))
+                item.setData(Qt.UserRole, int(Id))
+                item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
+                unGrpTable.setItem(row, column, item)
+                column += 1
+        groupedTable.resizeColumnsToContents()
+
 
 if __name__ == "__main__" :
     import sys
