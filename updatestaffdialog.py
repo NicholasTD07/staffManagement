@@ -72,14 +72,15 @@ class UpdateStaffDialog(QDialog,
 
     def accept(self) :
         print("点击了确定键")
+        updateStaff = self.staffs.updateStaff
         name = self.nameLineEdit.text()
         gender = self.getGender()
         if self.staff is None :
             print("添加模式")
-            p = re.compile(r'\D*')
+            p = re.compile(r'\D+')
             rawdata = self.IdLineEdit.text()
             IDs = [ int(i) for i
-                in p.sub(" ", rawdata) if i.isalnum() ]
+                in re.split(p, rawdata) ]
             print("输入的员工序号: {}".format(IDs))
             if self.checkAndWarn(IDs=IDs) :
                 print("已有员工工号,提示!")
@@ -94,7 +95,7 @@ class UpdateStaffDialog(QDialog,
             else :
                 for Id in IDs :
                     print("没有该工号")
-                    self.staffs.updateStaff(Id)
+                    updateStaff(Id, gender, name)
                     print("新建成功!")
             QMessageBox.information(self,
                 "操作成功!",
@@ -110,8 +111,8 @@ class UpdateStaffDialog(QDialog,
                 "操作成功!",
                 "成功修改员工信息!\t\n"
                 "工号: {}".format(Id))
-        self.staffs.updateStaff(Id=Id,gender=gender,
-                            name=name)
+            updateStaff(Id=Id,gender=gender,
+                                name=name)
         QDialog.accept(self)
 
     #---- 辅助函数 ----#
