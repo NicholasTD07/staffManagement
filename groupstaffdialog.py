@@ -187,6 +187,8 @@ class GroupStaffDialog(QDialog) :
         groupedTable.setCurrentItem(item)
         # 更新内部变量 #
         lastColumn[row] += 1
+        # 必须更新列大小 #
+        groupedTable.resizeColumnsToContents()
 
     #---- 更新表格 ----#
 
@@ -220,6 +222,7 @@ class GroupStaffDialog(QDialog) :
         groupedTable = self.groupedTable
         lastColumn = self.lastColumn
         lenGroups = len(groups)
+        row = 0
         maxColumn = 0
         for group in groups :
             column = len(group)
@@ -234,7 +237,6 @@ class GroupStaffDialog(QDialog) :
         groupedTable.setColumnCount(maxColumn)
         # 更新表格内容 #
         for group in groups :
-            row = groups.index(group)
             column = 0
             lastColumn[row] = 0
             for Id in group :
@@ -244,6 +246,7 @@ class GroupStaffDialog(QDialog) :
                 unGrpTable.setItem(row, column, item)
                 column += 1
             lastColumn[row] = column
+            row += 1
         groupedTable.resizeColumnsToContents()
 
 
