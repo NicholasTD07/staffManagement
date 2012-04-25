@@ -149,14 +149,10 @@ class GroupStaffDialog(QDialog) :
         spinBox = self.groupSpinBox
         value = spinBox.value()
         maxGroups = len(groups)
-        #print(value)
-        #print(len(groups))
         # 判断数据合法性 #
         if value <= maxGroups :
-            print("合法范围")
             self.whichGroupButton.setText("添加至第{}分组".format(value))
         else :
-            print("非法范围")
             QMessageBox.warning(self,
                     "设置分组",
                     "超出当前最大分组数.自动设置为当前最大值")
@@ -165,6 +161,7 @@ class GroupStaffDialog(QDialog) :
     def on_whichGroupButton_clicked(self) :
         # 初始化局部变量 #
         unGrpTable = self.unGrpTable
+        unGrpTablesetCurrentCell = unGrpTable.setCurrentCell
         groupedTable = self.groupedTable
         lastColumn = self.lastColumn
         row = self.groupSpinBox.value() - 1
@@ -180,18 +177,25 @@ class GroupStaffDialog(QDialog) :
             itemRow = unGrpTable.row(item)
             itemColumn = unGrpTable.column(item)
             Id = int(item.data(Qt.UserRole))
-            print(Id)
             # 弹出员工 #
             unGrpTable.takeItem(itemRow, itemColumn)
-            # 插入员工 #
+            # 取得列位置 #
             column = lastColumn[row]
+            # 判断合法性 #
+            if column + 1 >= groupedTable.columnCount() :
+                groupedTable.insertColumn(column)
+            # 插入员工 #
             groupedTable.setItem(row, column, item)
             groupedTable.setCurrentItem(item)
             # 更新内部变量 #
             lastColumn[row] += 1
-            print("row, column:", row, column)
             # 必须更新列大小 #
             groupedTable.resizeColumnsToContents()
+        # 将选择员工放在下一个位置 #
+        if itemColumn != 0 and itemColumn % 9 == 0 :
+            unGrpTablesetCurrentCell(itemRow+1, 0)
+        else :
+            unGrpTablesetCurrentCell(itemRow, itemColumn+1)
 
     #---- 更新表格 ----#
 
