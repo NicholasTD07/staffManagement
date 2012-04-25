@@ -168,27 +168,30 @@ class GroupStaffDialog(QDialog) :
         groupedTable = self.groupedTable
         lastColumn = self.lastColumn
         row = self.groupSpinBox.value() - 1
-        column = lastColumn[row]
-        # 员工信息 #
-        item = unGrpTable.currentItem()
+        # 获取多选员工 #
+        items = unGrpTable.selectedItems()
         # 检查合法性 #
-        if item is None :
+        if items is None :
             QMessageBox.warning(self,
                     "请选择员工",
                     "尚未选择任何员工进行操作."
                     "\n请在未分组员工框内选择之后再进行操作.")
-        itemRow = unGrpTable.currentRow()
-        itemColumn = unGrpTable.currentColumn()
-        Id = int(item.data(Qt.UserRole))
-        # 弹出员工 #
-        unGrpTable.takeItem(itemRow, itemColumn)
-        # 插入员工 #
-        groupedTable.setItem(row, column, item)
-        groupedTable.setCurrentItem(item)
-        # 更新内部变量 #
-        lastColumn[row] += 1
-        # 必须更新列大小 #
-        groupedTable.resizeColumnsToContents()
+        for item in items :
+            itemRow = unGrpTable.row(item)
+            itemColumn = unGrpTable.column(item)
+            Id = int(item.data(Qt.UserRole))
+            print(Id)
+            # 弹出员工 #
+            unGrpTable.takeItem(itemRow, itemColumn)
+            # 插入员工 #
+            column = lastColumn[row]
+            groupedTable.setItem(row, column, item)
+            groupedTable.setCurrentItem(item)
+            # 更新内部变量 #
+            lastColumn[row] += 1
+            print("row, column:", row, column)
+            # 必须更新列大小 #
+            groupedTable.resizeColumnsToContents()
 
     #---- 更新表格 ----#
 
