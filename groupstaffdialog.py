@@ -140,6 +140,41 @@ class GroupStaffDialog(QDialog) :
         self.resize(540, 330)
         self.setWindowTitle("员工分组")
 
+    #---- 重定义函数 ----#
+
+    def accept(self) :
+        reply = QMessageBox.question(self,
+                    "员工分组: 尚未保存",
+                    "是否保存员工分组?",
+                    QMessageBox.Yes|QMessageBox.No)
+        if reply == QMessageBox.Yes :
+            self.saveGroups()
+        QDialog.accept(self)
+
+    #---- 辅助函数 ----#
+    def saveGroups(self) :
+        # 初始化局部变量 #
+        groupedTable = self.groupedTable
+        groups = self.groups
+        row = 0
+        rows = {}
+        rowCount = groupedTable.rowCount()
+        # 获取每行的员工工号 #
+        while row < rowCount :
+            # 初始化循环变量 #
+            group = groups[row]
+            rows[row] = []
+            thisRow = rows[row]
+            groupedTable.selectRow(row)
+            items = groupedTable.selectedItems()
+            for item in items :
+                Id = int(item.data(Qt.UserRole))
+                thisRow.append(Id)
+            group = group + \
+                    [ Id for Id in thisRow if Id not in group ]
+            print("row:", row, "\n", "group:", group)
+            row += 1
+
     #---- 自定义槽 ----#
 
     #-- 数字框信号槽 --# 
@@ -158,6 +193,7 @@ class GroupStaffDialog(QDialog) :
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(maxGroups)
 
+    #-- 添加至分组按键信号槽 --#
     def on_whichGroupButton_clicked(self) :
         # 初始化局部变量 #
         unGrpTable = self.unGrpTable
@@ -189,8 +225,8 @@ class GroupStaffDialog(QDialog) :
             groupedTable.setCurrentItem(item)
             # 更新内部变量 #
             lastColumn[row] += 1
-            # 必须更新列大小 #
-            groupedTable.resizeColumnsToContents()
+        # 必须更新列大小 #
+        groupedTable.resizeColumnsToContents()
         # 将选择员工放在下一个位置 #
         if itemColumn != 0 and itemColumn % 9 == 0 :
             unGrpTablesetCurrentCell(itemRow+1, 0)
