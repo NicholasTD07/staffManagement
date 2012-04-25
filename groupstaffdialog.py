@@ -52,7 +52,7 @@ class GroupStaffDialog(QDialog) :
         self.connect(self.buttonBox, SIGNAL("rejected()"),
                         self.reject)
 
-    # 设置界面 #
+    #---- 设置界面 ----#
     def setupUi(self) :
         #-- 添加组件 --#
         # 标签 #
@@ -133,7 +133,9 @@ class GroupStaffDialog(QDialog) :
         self.resize(540, 330)
         self.setWindowTitle("员工分组")
 
-    # 数字框信号槽 # 
+    #---- 自定义槽 ----#
+
+    #-- 数字框信号槽 --# 
     def on_groupSpinBox_valueChanged(self) :
         # 初始化局部变量 #
         groups = self.groups
@@ -155,7 +157,7 @@ class GroupStaffDialog(QDialog) :
 
     #---- 更新表格 ----#
 
-    # 生成未分组员工表格 #
+    #-- 生成未分组员工表格 --#
     def updateUnGrpTable(self) :
         # 初始化局部变量 #
         i = 0
@@ -178,7 +180,7 @@ class GroupStaffDialog(QDialog) :
             i += 1
         unGrpTable.resizeColumnsToContents()
 
-    # 生成分组员工表格 #
+    #-- 生成分组员工表格 --#
     def updateGroupedTable(self) :
         # 初始化局部变量 #
         groups = self.groups
