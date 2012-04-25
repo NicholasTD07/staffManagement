@@ -143,6 +143,7 @@ class WorkGraph(QWidget) :
     def __init__(self, staffs, parent=None) :
         super(WorkGraph, self).__init__(parent)
         self.staffs = staffs
+        self.workGroup = staffs.getWorkGroup()
 
 
         self.scene = QGraphicsScene(self)
@@ -166,7 +167,15 @@ class WorkGraph(QWidget) :
         pass
 
     def populate(self) :
-        for staff in self.staffs :
+        # 初始化局部变量 #
+        staffs = self.staffs
+        getStaff = staffs.getStaff
+        groups = staffs.getGroups()
+        if self.workGroup is None :
+            return
+        workGroup = groups[self.workGroup]
+        for Id in workGroup :
+            staff = getStaff(Id)
             try :
                 staffIcon = StaffIcon(self.staffs, staff, self)
             except wrongType :
@@ -194,6 +203,10 @@ if __name__ == '__main__' :
     print()
     S.clear()
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.groupStaff(1,1)
+    S.groupStaff(2,1)
+    S.groupStaff(3,1)
+    S.setWorkGroup(1)
     S.reportStaffs()
     S.staffsWait(1,2,3,4,5,6,7,8,9)
     # 测试 有选钟情况下的点钟.
