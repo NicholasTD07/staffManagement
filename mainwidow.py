@@ -114,7 +114,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
 
     # 关于 #
     def helpAbout(self):
-        QMessageBox.about(self, "员工福安里系统",
+        QMessageBox.about(self, "员工管理系统",
             """<b>员工信息管理 </b> v {0}
             <p>Python {1} - Qt {2} - PyQt {3} on {4}
             <p><b>作者: thedevil7<b>
