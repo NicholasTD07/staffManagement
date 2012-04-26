@@ -365,11 +365,12 @@ class StaffContainer :
 
         # 3. 判断员工工作状态, 利用相应基本操作退出状态
         # 3.1 从工作序号队列中移除
-        pos = workSeq.nSeq.index(staff)
         if sType is self.NOR :
+            pos = workSeq.nSeq.index(staff)
             workSeq.nPos.remove( pos )
             self.log("\t移除员工 nPos : {}.".format( pos ))
         elif sType is self.SEL :
+            pos = workSeq.nSeq.index(staff)
             workSeq.sPos.remove( pos )
             self.log("\t移除员工 sPos : {}.".format( pos ))
         else :
@@ -377,10 +378,11 @@ class StaffContainer :
             .format(sType))
         
         # 3. 使员工脱离工作队列
-        pos = nSeq.index(staff)
-        nSeq.remove(staff)
-        nSeq.insert(pos, None)
-        self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
+        if sType != self.IDLE :
+            pos = nSeq.index(staff)
+            nSeq.remove(staff)
+            nSeq.insert(pos, None)
+            self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 4. 从员工队列中移除员工
         del self.__staffs[Id]
@@ -718,6 +720,54 @@ class StaffContainer :
         self.log("\t@@@----成功: 员工等待操作----@@@")
         self.__dirty = True
 
+    def staffIdle(self, Id) :
+        self.log("\t{}号员工下班操作:".format(Id))
+
+        # 1. 初始化局部变量
+        # 1.1 员工信息
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+        wType = staff.wType
+        sType = staff.sType
+        # 1.2 局部变量
+        workSeq = self.__workSeqs[wTime]
+        nSeq = workSeq.nSeq
+
+        # 2. 检查员工是否在等待状态
+        if wType != self.WAIT :
+            msg = "员工不在等待状态.无法执行下班操作."
+            self.log(msg)
+            raise notWaiting(msg)
+
+        # 3. 更新 nPos, sPos
+        pos = nSeq.index(staff)
+        if sType is self.NOR :
+            workSeq.nPos.remove( pos )
+            self.log("\t移除员工 nPos : {}.".format( pos ))
+        elif sType is self.SEL :
+            workSeq.sPos.remove( pos )
+            self.log("\t移除员工 sPos : {}.".format( pos ))
+        else :
+            self.log("\t@@@--员工处于空闲态({}), 无 pos, 无操作."\
+            .format(sType))
+
+        # 4.等待状态下脱离工作队列
+        pos = nSeq.index(staff)
+        nSeq.remove(staff)
+        nSeq.insert(pos, None)
+        self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
+
+        # 5. 设置员工状态
+        staff.wType = self.IDLE
+        staff.sType = self.IDLE
+
+        # 5. 加入变动员工组
+        self.__modStaffs.add(staff)
+
+        # 6. 操作成功
+        self.log("\t@@@----成功: 员工下班操作----@@@")
+        self.__dirty = True
+
     # 复合操作 #
 
     def updateStaff(self, Id, 
@@ -944,11 +994,13 @@ if __name__ == '__main__' :
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
     S.reportStaffs()
     S.staffsWait(1,2,3,4,5,6,7,8,9)
-    S.staffWork(1, S.NAMED)
+    #S.staffWork(1, S.NAMED)
     # 测试等待状态下的删除员工. -- 通过.
     # 测试正常工作状态下的删除员工. -- 通过.
     # 测试选钟工作状态下的删除员工. -- 通过.
     # 测试点钟工作状态下的删除员工. -- 通过.
+    # 测试休息状态下的删除员工. -- 未通过.
+    S.staffIdle(1)
     S.deleteStaff(1)
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
