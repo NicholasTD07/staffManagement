@@ -280,25 +280,35 @@ class StaffContainer :
     def groupStaff(self, Id, grpNum) :
         self.log("\t\t{}号员工分组(第{}组)操作:"\
             .format(Id, grpNum))
+        # 1. 初始化局部变量 #
+        unGrpIDs = self.__unGrpIDs
+        groups = self.__groups
+        staff = self.getStaff(Id)
 
-        # 1. 将员工序号从 未分组员工中弹出
-        if Id in self.__unGrpIDs :
-            self.__unGrpIDs.remove(Id)
+        # 2. 检查员工是否处于 IDLE 状态
+        if staff.wType == self.IDLE :
+            msg = "员工状态错误.\n需要在空闲态才能分组."
+            self.log(msg)
+            raise wrongType(msg)
+
+        # 3. 将员工序号从 未分组员工中弹出
+        if Id in unGrpIDs :
+            unGrpIDs.remove(Id)
         else :
             msg = "!!!----分组失败: 员工不在未分组员工中."
             self.log(msg)
             raise notFoundInGroup(msg)
 
-        # 2. 将员工序号插入分组
-        # 2.1 检测分组是否存在 并且 更新分组
-        while len(self.__groups) < (grpNum + 1) :
-            self.__groups.append([])
-        # 2.2 将员工放入分组, 并且使员工处于等待状态.
-        self.__groups[grpNum].append(Id)
+        # 4. 将员工序号插入分组
+        # 4.1 检测分组是否存在 并且 更新分组
+        while len(groups) < (grpNum + 1) :
+            groups.append([])
+        # 4.2 将员工放入分组, 并且使员工处于等待状态.
+        groups[grpNum].append(Id)
         self.staffWait(Id)
         self.log("\t\t员工进入第{}组分组.".format(grpNum))
         
-        # 3. 操作完成
+        # 5. 操作完成
         self.log("\t\t@@@----成功: 员工进入分组.----@@@")
 
     def updateMax(self, Id, time) :
