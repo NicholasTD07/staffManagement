@@ -345,46 +345,66 @@ class StaffContainer :
     def deleteStaff(self, Id) :
         self.log("\t删除员工操作: ")
 
-        # 1.判断员工是否存在
+        # 1. 判断员工是否存在
         if Id not in self.__staffs :
             return
         
-        # 2.获得员工信息
+        # 2. 初始化局部变量
+        # 2.1 员工信息
         staff = self.__staffs[Id]
-        time = staff.wTime
+        wTime = staff.wTime
         wType = staff.wType
         sType = staff.sType
+        # 2.2 局部变量
+        unGrpIDs = self.__unGrpIDs
+        groups = self.__groups
+        workSeq = self.__workSeqs[wTime]
+        nSeq = workSeq.nSeq
         self.log("\t\t员工工号为: {}, 工作类型为: {}, 队伍类型为: {}"\
             .format(Id, wType, sType))
 
-        # 3.判断员工工作状态, 利用相应基本操作退出状态
-        if wType in self.workTypes :
-            self.leaveWork(Id)
-        elif wType is self.WAIT :
-            self.leaveWait(Id)
-        else :      # 员工处于休息状态, 可以直接移除
-            pass
+        # 3. 判断员工工作状态, 利用相应基本操作退出状态
+        # 3.1 从工作序号队列中移除
+        pos = workSeq.nSeq.index(staff)
+        if sType is self.NOR :
+            workSeq.nPos.remove( pos )
+            self.log("\t移除员工 nPos : {}.".format( pos ))
+        elif sType is self.SEL :
+            workSeq.sPos.remove( pos )
+            self.log("\t移除员工 sPos : {}.".format( pos ))
+        else :
+            self.log("\t@@@--员工处于空闲态({}), 无 pos, 无操作."\
+            .format(sType))
         
-        # 4.从 员工队列 中移除员工
+        # 3. 使员工脱离工作队列
+        pos = nSeq.index(staff)
+        nSeq.remove(staff)
+        nSeq.insert(pos, None)
+        self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
+
+        # 4. 从员工队列中移除员工
         del self.__staffs[Id]
         self.log("\t\t从员工队列中移除工号为: {}的员工."\
             .format(Id))
 
-        # 5.从 工号队列 中移除员工工号
+        # 5. 从员工工号队列中移除员工工号
         self.__IDs.remove(Id)
         self.log("\t\t从工号队列中移除工号为: {}的员工."\
             .format(Id))
 
-        # 6.从 工号队列 中移除员工工号
-        if Id in self.__unGrpIDs :
-            self.__unGrpIDs.remove(Id)
+        # 6. 从分组队列中移除员工工号
+        if Id in unGrpIDs :
+            unGrpIDs.remove(Id)
             found = True
         else :
             found = False
-            for group in self.__groups :
-                if Id in group :
-                    found = True
-                    group.remove(Id)
+            try :
+                for group in groups :
+                    if Id in group :
+                        raise foundInGroup
+            except fonudInGroup :
+                        found = True
+                        group.remove(Id)
         if not found :
             msg = "!!!----员工组内未找到员工.----!!!"
             self.log(msg)
@@ -392,10 +412,10 @@ class StaffContainer :
         self.log("\t\t从员工组中移除工号为: {}的员工."\
             .format(Id))
 
-        # 7.将员工加入 变动员工组
+        #  7.将员工加入变动员工组
         self.__modStaffs.add(Id)
 
-        # 8.操作完成, 设置 dirty
+        #  8.操作完成, 设置 dirty
         self.log("\t@@@---- 成功: 移除员工 ----@@@")
         self.__dirty = True
             
@@ -915,6 +935,21 @@ if __name__ == '__main__' :
     # 测试存入文件
     S.save("test.qpc")
     S.load("test.qpc")
+
+    # 重建测试环境
+    print()
+    print()
+    print()
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.reportStaffs()
+    S.staffsWait(1,2,3,4,5,6,7,8,9)
+    S.staffWork(1, S.NAMED)
+    # 测试等待状态下的删除员工. -- 通过.
+    # 测试正常工作状态下的删除员工. -- 通过.
+    # 测试选钟工作状态下的删除员工. -- 通过.
+    # 测试点钟工作状态下的删除员工. -- 通过.
+    S.deleteStaff(1)
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
     # 测试 reportStaffs()
