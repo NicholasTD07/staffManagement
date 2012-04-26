@@ -426,10 +426,13 @@ class StaffContainer :
     def selWork(self, Id) :
         self.log("\t\t{}号员工选钟上班工作:".format(Id))
 
-        # 1. 获得员工基本信息
+        # 1. 初始化局部变量
         staff = self.__staffs[Id]
         wTime = staff.wTime
         wType = staff.wType
+        workSeqs = self.__workSeqs
+        workSeq = workSeqs[wTime]
+        nSeq = workSeq.nSeq
 
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
@@ -438,9 +441,9 @@ class StaffContainer :
 
         # 3. 提取当前工作序号, 使员工脱离工作队列
         # 3.1 判断员工工作状态
-        pos = self.__workSeqs[wTime].nSeq.index(staff)
-        self.__workSeqs[wTime].nSeq.remove(staff)
-        self.__workSeqs[wTime].nSeq.insert(pos, None)
+        pos = nSeq.index(staff)
+        nSeq.remove(staff)
+        nSeq.insert(pos, None)
         self.log("\t\t员工脱离第{}次工作队列, 工作序号: {}."\
             .format(wTime, pos))
 
@@ -448,6 +451,8 @@ class StaffContainer :
         staff.wTime += 1
         wTime = staff.wTime
         self.updateMaxSeq(wTime)
+        workSeq = workSeqs[wTime]
+        nSeq = workSeq.nSeq
 
         # 5. 更新状态
         staff.wType = self.SEL
@@ -459,20 +464,20 @@ class StaffContainer :
         # 6.1 已取得当前工作序号
         # 6.2 检查当前序列长度
         checked = False
-        while len(self.__workSeqs[wTime].nSeq) <= pos :
-            self.__workSeqs[wTime].nSeq.append(None)
+        while len(nSeq) <= pos :
+            nSeq.append(None)
             if not checked :
                 self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                 checked = True
         # 6.3 判断工作位置状态, 插入队伍
-        inPos = self.__workSeqs[wTime].nSeq[pos]
+        inPos = nSeq[pos]
         if inPos is None :
-            self.__workSeqs[wTime].nSeq[pos] = staff
+            nSeq[pos] = staff
         else :
-            self.__workSeqs[wTime].nSeq.insert(pos, staff)
+            nSeq.insert(pos, staff)
 
         # 7. 更新 selected 状态, 更新 sPos
-        sPos = self.__workSeqs[wTime].sPos
+        sPos = workSeq.sPos
         if pos <= max(sPos) :
             self.log("\t\t更新 sPos.未更新的 sPos: {}"\
                 .format(sPos))
@@ -483,18 +488,18 @@ class StaffContainer :
             self.log("\t\t更新 sPos.未更新的 sPos: {}"\
                 .format(sPos))
         if pos not in sPos :
-            self.__workSeqs[wTime].sPos.append( pos )
+            workSeq.sPos.append( pos )
         self.log("\t\t向第{}次时间队列添加 sPos :　{}."\
             .format(wTime, pos))
 
         # 8. 判断是否需要更新 nPos
         nPos = self.__workSeqs[wTime].nPos
         if pos < max(nPos) :
-            self.__workSeqs[wTime].nPos = [i for i in nPos if i < pos] \
+            workSeq.nPos = [i for i in nPos if i < pos] \
                 + [i+1 for i in nPos if i >= pos]
         else :
-            if not self.__workSeqs[wTime].selected :
-                self.__workSeqs[wTime].selected = True
+            if not workSeq.selected :
+                workSeq.selected = True
 
 
         # 9. 加入变动员工组
@@ -507,10 +512,13 @@ class StaffContainer :
     def namedWork(self, Id) :
         self.log("\t\t{}号员工点钟上班工作:".format(Id))
 
-        # 1. 获得员工基本信息
+        # 1. 初始化局部变量
         staff = self.__staffs[Id]
         wTime = staff.wTime
         wType = staff.wType
+        workSeqs = self.__workSeqs
+        workSeq = workSeqs[wTime]
+        nSeq = workSeq.nSeq
 
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
@@ -519,14 +527,16 @@ class StaffContainer :
 
         # 3. 使员工脱离工作队列
         pos = self.__workSeqs[wTime].nSeq.index(staff)
-        self.__workSeqs[wTime].nSeq.remove(staff)
-        self.__workSeqs[wTime].nSeq.insert(pos, None)
+        nSeq.remove(staff)
+        nSeq.insert(pos, None)
         self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 4. 更新工作次数
         staff.wTime += 1
         wTime = staff.wTime
         self.updateMaxSeq(wTime)
+        workSeq = workSeqs[wTime]
+        nSeq = workSeq.nSeq
 
         # 5. 更新状态
         staff.wType = self.NAMED
@@ -535,25 +545,25 @@ class StaffContainer :
 
         # 6. 员工按照序列正常工作序号进入序列
         # 6.1 取得当前序列正常工作序号
-        nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
-        sPos = ( max(self.__workSeqs[wTime].sPos) + 1 )
+        nPos = ( max(workSeq.nPos) + 1 )
+        sPos = ( max(workSeq.sPos) + 1 )
         #nPos = ( max(self.__workSeqs[wTime].nPos) )
         #sPos = ( max(self.__workSeqs[wTime].sPos) )
         # 6.2 判断 checked 状态
-        if self.__workSeqs[wTime].selected : # 有选钟, 放在队列末尾
+        if workSeq.selected : # 有选钟, 放在队列末尾
             self.log("\t\t有员工被选钟.且并非为插入正常工作序列中.")
             self.log("\t\t员工工作位置 sPos: {}."\
                 .format(sPos))
             # 6.3 检查序列长度
             checked = False
-            while len(self.__workSeqs[wTime].nSeq) <= sPos :
-                self.__workSeqs[wTime].nSeq.append(None)
+            while len(nSeq) <= sPos :
+                nSeq.append(None)
                 if not checked :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                     checked = True
-            if self.__workSeqs[wTime].\
-            nSeq[sPos-1].wType == self.SEL :
-                inPos = self.__workSeqs[wTime].nSeq[sPos]
+            if isinstance(nSeq[sPos-1], Staff)\
+                    and nSeq[sPos-1].wType == self.SEL :
+                inPos = nSeq[sPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
                     self.__workSeqs[wTime].\
@@ -574,20 +584,18 @@ class StaffContainer :
                 .format(nPos))
             # 6.3 检查序列长度
             checked = False
-            while len(self.__workSeqs[wTime].nSeq) <= nPos :
-                self.__workSeqs[wTime].nSeq.append(None)
+            while len(nSeq) <= nPos :
+                nSeq.append(None)
                 if not checked :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                     checked = True
-            inPos = self.__workSeqs[wTime].nSeq[nPos-1]
+            inPos = nSeq[nPos-1]
             if inPos is None or (isinstance(inPos, Staff) and inPos.wType == self.NOR) :
-                inPos = self.__workSeqs[wTime].nSeq[nPos]
+                inPos = nSeq[nPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
-                    self.__workSeqs[wTime].\
                     nSeq[nPos] = staff
-                    self.__workSeqs[wTime].\
-                    nPos.append(nPos)
+                    workSeq.nPos.append(nPos)
                     staff.sType = self.NOR
                 else :
                     self.log("员工工作位置异常.退出.")
