@@ -612,6 +612,35 @@ class StaffContainer :
         self.log("\t\t@@@---- 成功: 员工点钟上班操作 ----@@@")
         self.__dirty = True
 
+    def staffWait(self, Id) :
+        self.log("\t{}号员工等待操作:".format(Id))
+
+        # 1. 获得员工信息
+        staff = self.__staffs[Id]
+        wTime = staff.wTime
+        wType = staff.wType
+        sType = staff.sType
+
+        # 2. 判断员工当前状态
+        if wType is self.WAIT :
+            self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@")
+            return
+        elif wType in self.workTypes :
+            staff.wType = self.WAIT
+            pos = self.__workSeqs[wTime].nSeq.index(staff)
+            self.log("\t\t员工当前位置: {}.".format(pos))
+        elif wType is self.IDLE :
+            staff.wType = self.WAIT
+            self.__workSeqs[0].nSeq.append(staff)
+
+            
+        # 3. 加入变动员工组
+        self.__modStaffs.add(staff)
+
+        # 4. 操作成功
+        self.log("\t@@@----成功: 员工等待操作----@@@")
+        self.__dirty = True
+
     # 复合操作 #
 
     def updateStaff(self, Id, 
@@ -708,35 +737,6 @@ class StaffContainer :
         self.log("\t@@@---- 成功: 移除员工 ----@@@")
         self.__dirty = True
             
-    def staffWait(self, Id) :
-        self.log("\t{}号员工等待操作:".format(Id))
-
-        # 1. 获得员工信息
-        staff = self.__staffs[Id]
-        wTime = staff.wTime
-        wType = staff.wType
-        sType = staff.sType
-
-        # 2. 判断员工当前状态
-        if wType is self.WAIT :
-            self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@")
-            return
-        elif wType in self.workTypes :
-            staff.wType = self.WAIT
-            pos = self.__workSeqs[wTime].nSeq.index(staff)
-            self.log("\t\t员工当前位置: {}.".format(pos))
-        elif wType is self.IDLE :
-            staff.wType = self.WAIT
-            self.__workSeqs[0].nSeq.append(staff)
-
-            
-        # 3. 加入变动员工组
-        self.__modStaffs.add(staff)
-
-        # 4. 操作成功
-        self.log("\t@@@----成功: 员工等待操作----@@@")
-        self.__dirty = True
-
     def staffWork(self, Id, wType=NOR) :
         self.log("\t{}员工{}工作操作:".format(Id, wType))
 
