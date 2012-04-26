@@ -280,7 +280,7 @@ class StaffContainer :
     def groupStaff(self, Id, grpNum) :
         self.log("\t\t{}号员工分组(第{}组)操作:"\
             .format(Id, grpNum))
-        # 1. 初始化局部变量 #
+        # 1. 初始化局部变量
         unGrpIDs = self.__unGrpIDs
         groups = self.__groups
         staff = self.getStaff(Id)
@@ -345,10 +345,13 @@ class StaffContainer :
     def norWork(self, Id) :
         self.log("\t\t{}员工正常上班操作:".format(Id))
 
-        # 1. 获得员工基本信息
+        # 1. 初始化局部变量
         staff = self.__staffs[Id]
         wTime = staff.wTime
         wType = staff.wType
+        workSeqs = self.__workSeqs
+        workSeq = workSeqs[wTime]
+        nSeq = workSeq.nSeq
 
         # 2. 判断员工当前状态是否为等待状态
         if wType is not self.WAIT :
@@ -356,15 +359,17 @@ class StaffContainer :
             raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
 
         # 3. 使员工脱离工作队列
-        pos = self.__workSeqs[wTime].nSeq.index(staff)
-        self.__workSeqs[wTime].nSeq.remove(staff)
-        self.__workSeqs[wTime].nSeq.insert(pos, None)
+        pos = nSeq.index(staff)
+        nSeq.remove(staff)
+        nSeq.insert(pos, None)
         self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 4. 更新工作次数
         staff.wTime += 1
         wTime = staff.wTime
         self.updateMaxSeq(wTime)
+        workSeq = workSeqs[wTime]
+        nSeq = workSeq.nSeq
 
         # 5. 更新状态
         staff.wType = self.NOR
@@ -374,29 +379,29 @@ class StaffContainer :
 
         # 6. 员工按照序列正常工作序号, 进入序列
         # 6.1 取得当前序列正常工作序号
-        nPos = ( max(self.__workSeqs[wTime].nPos) + 1 )
+        nPos = ( max(workSeq.nPos) + 1 )
         # 6.2 检查当前序列长度
         checked = False
-        while len(self.__workSeqs[wTime].nSeq) <= nPos :
+        while len(nSeq) <= nPos :
             self.__workSeqs[wTime].nSeq.append(None)
             if not checked :
                 self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                 checked = True
         # 6.3 判断工作位置状态
-        inPos = self.__workSeqs[wTime].nSeq[nPos]
+        inPos = nSeq[nPos]
         if inPos is None :
-            self.__workSeqs[wTime].nSeq[nPos] = staff
+            nSeq[nPos] = staff
             self.log("\t\t员工工作位置为空, 正常上班.")
         elif isinstance(inPos, Staff) and inPos.wType is self.SEL :
-            self.__workSeqs[wTime].nSeq.insert(nPos, staff)
+            nSeq.insert(nPos, staff)
             self.log("\t\t员工工作位置非空为选钟员工, 插队上班.")
         else :
             self.log("\t\t!!!----错误: 插入员工时出现未知错误.----!!!")
             raise norWork("!!!----错误: 插入员工时出现未知错误.----!!!")
 
         # 7. 更新队列工作序号
-        if nPos not in self.__workSeqs[wTime].nPos :
-            self.__workSeqs[wTime].nPos.append( nPos )
+        if nPos not in workSeq.nPos :
+            workSeq.nPos.append( nPos )
         self.log("\t\t向第{}次时间队列添加 nPos :　{}."\
             .format(wTime, nPos))
 
