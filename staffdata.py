@@ -363,11 +363,11 @@ class StaffContainer :
         if wType != self.WAIT :
             msg = "员工状态错误.\n需要在等待态才能取消分组."
             self.log(msg)
-            reaise wrongType(msg)
+            raise wrongType(msg)
 
         # 3. 将员工从当前分组中弹出
         if Id in groups[group] :
-            goups[group].remove(Id)
+            groups[group].remove(Id)
         else :
             msg = "取消分组失败: 员工不在{}分组内."\
                     .format(group)
@@ -377,7 +377,7 @@ class StaffContainer :
         # 4. 将员工序号插入未分组序列
         unGrpIDs.append(Id)
         # 4.1 使员工处于空闲态
-        self.staffIdle(staff)
+        self.staffIdle(Id)
 
         # 5. 更新员工组号
         staff.group = None
@@ -1052,6 +1052,24 @@ if __name__ == '__main__' :
     # 测试休息状态下的删除员工. -- 未通过.
     S.staffIdle(1)
     S.deleteStaff(1)
+
+
+    # 重建测试环境
+    print()
+    print()
+    print()
+    S.clear()
+    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    # 局部变量
+    group = S.groupStaff
+    unGrpStaff = S.unGrpStaff
+    # 测试员工分组
+    group(1, 0)
+    unGrpStaff(1)
+    
+
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
     # 测试 reportStaffs()
