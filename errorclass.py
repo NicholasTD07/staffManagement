@@ -43,3 +43,5 @@ class workWrong(Error) :
     """员工正常工作时出现错误."""
     pass
 
+class foundInGroup(Error) :
+    pass
