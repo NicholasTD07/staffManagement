@@ -30,6 +30,7 @@ class Staff :
         self.wTime = 0
         self.wType = StaffContainer.IDLE
         self.sType = StaffContainer.IDLE
+        self.group = None
 
 
     def tell(self) :
@@ -311,13 +312,14 @@ class StaffContainer :
     def groupStaff(self, Id, grpNum) :
         self.log("\t\t{}号员工分组(第{}组)操作:"\
             .format(Id, grpNum))
+
         # 1. 初始化局部变量
         unGrpIDs = self.__unGrpIDs
         groups = self.__groups
-        staff = self.getStaff(Id)
+        staff = self.__staffs[Id]
 
         # 2. 检查员工是否处于 IDLE 状态
-        if staff.wType == self.IDLE :
+        if staff.wType != self.IDLE :
             msg = "员工状态错误.\n需要在空闲态才能分组."
             self.log(msg)
             raise wrongType(msg)
@@ -326,12 +328,12 @@ class StaffContainer :
         if Id in unGrpIDs :
             unGrpIDs.remove(Id)
         else :
-            msg = "!!!----分组失败: 员工不在未分组员工中."
+            msg = "分组失败: 员工不在未分组员工中."
             self.log(msg)
             raise notFoundInGroup(msg)
 
         # 4. 将员工序号插入分组
-        # 4.1 检测分组是否存在 并且 更新分组
+        # 4.1 检测分组是否存在并且更新分组
         while len(groups) < (grpNum + 1) :
             groups.append([])
         # 4.2 将员工放入分组, 并且使员工处于等待状态.
@@ -339,8 +341,49 @@ class StaffContainer :
         self.staffWait(Id)
         self.log("\t\t员工进入第{}组分组.".format(grpNum))
         
-        # 5. 操作完成
+        # 5. 更新员工组号
+        staff.group = grpNum
+
+        # 6. 操作完成
         self.log("\t\t@@@----成功: 员工进入分组.----@@@")
+
+    def unGrpStaff(self, Id) :
+        self.log("\t\t{}号员工退出分组操作:".format(Id))
+
+        # 1. 初始化局部变量
+        # 1.1 员工信息
+        staff = self.__staffs[Id]
+        wType = staff.wType
+        group = staff.group
+        # 1.2 局部变量
+        unGrpIDs = self.__unGrpIDs
+        groups = self.__groups
+
+        # 2. 检查员工是否处于 WAIT 状态
+        if wType != self.WAIT :
+            msg = "员工状态错误.\n需要在等待态才能取消分组."
+            self.log(msg)
+            reaise wrongType(msg)
+
+        # 3. 将员工从当前分组中弹出
+        if Id in groups[group] :
+            goups[group].remove(Id)
+        else :
+            msg = "取消分组失败: 员工不在{}分组内."\
+                    .format(group)
+            self.log(msg)
+            raise notFoundInGroup(msg)
+
+        # 4. 将员工序号插入未分组序列
+        unGrpIDs.append(Id)
+        # 4.1 使员工处于空闲态
+        self.staffIdle(staff)
+
+        # 5. 更新员工组号
+        staff.group = None
+
+        # 6. 操作完成
+        self.log("\t\t@@@----成功: 员工退出分组.----@@@")
 
     def deleteStaff(self, Id) :
         self.log("\t删除员工操作: ")
@@ -355,6 +398,7 @@ class StaffContainer :
         wTime = staff.wTime
         wType = staff.wType
         sType = staff.sType
+        group = staff.group
         # 2.2 局部变量
         unGrpIDs = self.__unGrpIDs
         groups = self.__groups
@@ -395,18 +439,24 @@ class StaffContainer :
             .format(Id))
 
         # 6. 从分组队列中移除员工工号
-        if Id in unGrpIDs :
+        #if Id in unGrpIDs :
+        #    unGrpIDs.remove(Id)
+        #    found = True
+        #else :
+        #    found = False
+        #    try :
+        #        for group in groups :
+        #            if Id in group :
+        #                raise foundInGroup
+        #    except fonudInGroup :
+        #                found = True
+        #                group.remove(Id)
+        if group is None :
             unGrpIDs.remove(Id)
             found = True
         else :
-            found = False
-            try :
-                for group in groups :
-                    if Id in group :
-                        raise foundInGroup
-            except fonudInGroup :
-                        found = True
-                        group.remove(Id)
+            groups[group].remove(Id)
+            found = True
         if not found :
             msg = "!!!----员工组内未找到员工.----!!!"
             self.log(msg)
