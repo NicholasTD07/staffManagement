@@ -729,18 +729,11 @@ class StaffContainer :
             staff.wType = self.WAIT
             self.__workSeqs[0].nSeq.append(staff)
 
-        ## 3. 更新 nPos, sPos
-        #if sType is self.NOR :
-        #    self.__workSeqs[wTime].nPos.remove( pos + 1 )
-        #elif sType is self.SEL :
-        #    self.__workSeqs[wTime].sPos.remove( pos + 1 )
-        #else :
-        #    self.log("\t@@@--员工处于空闲态, 无 pos, 无操作.")
             
-        # 4. 加入变动员工组
+        # 3. 加入变动员工组
         self.__modStaffs.add(staff)
 
-        # 5. 操作成功
+        # 4. 操作成功
         self.log("\t@@@----成功: 员工等待操作----@@@")
         self.__dirty = True
 
