@@ -277,6 +277,37 @@ class StaffContainer :
 
     # 基本操作 #
 
+    def updateMax(self, Id, time) :
+        self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
+            .format(Id, time))
+
+        # 1.取得员工基本信息
+        staff = self.__staffs[Id]
+        self.log("\t\t员工工作次数:{}, 序列最大值: {}."\
+         .format(staff.wTime, self.__maxTime))
+
+        # 2.设定员工工作序号为指定次数
+        staff.wTime = time
+
+        # 3.判断是否超出当前最大值
+        if time > self.__maxTime :
+            self.__maxTime = time
+            self.log("\t\t\t序列最大最大次数被更新: {}次"\
+            .format(time))
+
+            # 4.自动新增序列
+
+            self.log("\t\t\t更新时间队列: 自动更新最大工作次数.")
+            count = 0
+            while len(self.__workSeqs) < ( time + 1 ) :
+                self.__workSeqs.append(TimeSeq())
+                count += 1
+            self.log("\t\t@更新时间队列: 自动增加了{}列时间队列@"\
+            .format(count))
+        else :
+            self.log("\t\t@@@----序列最大工作次数保持: {}次----@@@"\
+            .format(time))
+
     def groupStaff(self, Id, grpNum) :
         self.log("\t\t{}号员工分组(第{}组)操作:"\
             .format(Id, grpNum))
@@ -311,37 +342,63 @@ class StaffContainer :
         # 5. 操作完成
         self.log("\t\t@@@----成功: 员工进入分组.----@@@")
 
-    def updateMax(self, Id, time) :
-        self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
-            .format(Id, time))
+    def deleteStaff(self, Id) :
+        self.log("\t删除员工操作: ")
 
-        # 1.取得员工基本信息
+        # 1.判断员工是否存在
+        if Id not in self.__staffs :
+            return
+        
+        # 2.获得员工信息
         staff = self.__staffs[Id]
-        self.log("\t\t员工工作次数:{}, 序列最大值: {}."\
-         .format(staff.wTime, self.__maxTime))
+        time = staff.wTime
+        wType = staff.wType
+        sType = staff.sType
+        self.log("\t\t员工工号为: {}, 工作类型为: {}, 队伍类型为: {}"\
+            .format(Id, wType, sType))
 
-        # 2.设定员工工作序号为指定次数
-        staff.wTime = time
+        # 3.判断员工工作状态, 利用相应基本操作退出状态
+        if wType in self.workTypes :
+            self.leaveWork(Id)
+        elif wType is self.WAIT :
+            self.leaveWait(Id)
+        else :      # 员工处于休息状态, 可以直接移除
+            pass
+        
+        # 4.从 员工队列 中移除员工
+        del self.__staffs[Id]
+        self.log("\t\t从员工队列中移除工号为: {}的员工."\
+            .format(Id))
 
-        # 3.判断是否超出当前最大值
-        if time > self.__maxTime :
-            self.__maxTime = time
-            self.log("\t\t\t序列最大最大次数被更新: {}次"\
-            .format(time))
+        # 5.从 工号队列 中移除员工工号
+        self.__IDs.remove(Id)
+        self.log("\t\t从工号队列中移除工号为: {}的员工."\
+            .format(Id))
 
-            # 4.自动新增序列
-
-            self.log("\t\t\t更新时间队列: 自动更新最大工作次数.")
-            count = 0
-            while len(self.__workSeqs) < ( time + 1 ) :
-                self.__workSeqs.append(TimeSeq())
-                count += 1
-            self.log("\t\t@更新时间队列: 自动增加了{}列时间队列@"\
-            .format(count))
+        # 6.从 工号队列 中移除员工工号
+        if Id in self.__unGrpIDs :
+            self.__unGrpIDs.remove(Id)
+            found = True
         else :
-            self.log("\t\t@@@----序列最大工作次数保持: {}次----@@@"\
-            .format(time))
+            found = False
+            for group in self.__groups :
+                if Id in group :
+                    found = True
+                    group.remove(Id)
+        if not found :
+            msg = "!!!----员工组内未找到员工.----!!!"
+            self.log(msg)
+            raise notFoundInGroup(msg)
+        self.log("\t\t从员工组中移除工号为: {}的员工."\
+            .format(Id))
 
+        # 7.将员工加入 变动员工组
+        self.__modStaffs.add(Id)
+
+        # 8.操作完成, 设置 dirty
+        self.log("\t@@@---- 成功: 移除员工 ----@@@")
+        self.__dirty = True
+            
     def norWork(self, Id) :
         self.log("\t\t{}员工正常上班操作:".format(Id))
 
@@ -680,63 +737,6 @@ class StaffContainer :
 
         self.log("\t@@@---- 成功: 更新员工信息 ----@@@")
 
-    def deleteStaff(self, Id) :
-        self.log("\t删除员工操作: ")
-
-        # 1.判断员工是否存在
-        if Id not in self.__staffs :
-            return
-        
-        # 2.获得员工信息
-        staff = self.__staffs[Id]
-        time = staff.wTime
-        wType = staff.wType
-        sType = staff.sType
-        self.log("\t\t员工工号为: {}, 工作类型为: {}, 队伍类型为: {}"\
-            .format(Id, wType, sType))
-
-        # 3.判断员工工作状态, 利用相应基本操作退出状态
-        if wType in self.workTypes :
-            self.leaveWork(Id)
-        elif wType is self.WAIT :
-            self.leaveWait(Id)
-        else :      # 员工处于休息状态, 可以直接移除
-            pass
-        
-        # 4.从 员工队列 中移除员工
-        del self.__staffs[Id]
-        self.log("\t\t从员工队列中移除工号为: {}的员工."\
-            .format(Id))
-
-        # 5.从 工号队列 中移除员工工号
-        self.__IDs.remove(Id)
-        self.log("\t\t从工号队列中移除工号为: {}的员工."\
-            .format(Id))
-
-        # 6.从 工号队列 中移除员工工号
-        if Id in self.__unGrpIDs :
-            self.__unGrpIDs.remove(Id)
-            found = True
-        else :
-            found = False
-            for group in self.__groups :
-                if Id in group :
-                    found = True
-                    group.remove(Id)
-        if not found :
-            msg = "!!!----员工组内未找到员工.----!!!"
-            self.log(msg)
-            raise notFoundInGroup(msg)
-        self.log("\t\t从员工组中移除工号为: {}的员工."\
-            .format(Id))
-
-        # 7.将员工加入 变动员工组
-        self.__modStaffs.add(Id)
-
-        # 8.操作完成, 设置 dirty
-        self.log("\t@@@---- 成功: 移除员工 ----@@@")
-        self.__dirty = True
-            
     def staffWork(self, Id, wType=NOR) :
         self.log("\t{}员工{}工作操作:".format(Id, wType))
 
