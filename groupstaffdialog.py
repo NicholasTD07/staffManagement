@@ -69,7 +69,7 @@ class GroupStaffDialog(QDialog) :
 
         # 数字框 #
         groupSpinBox = QSpinBox(self)
-        groupSpinBox.setRange(1,100)
+        groupSpinBox.setRange(1, len(self.groups))
         groupSpinBox.setValue(1)
         self.groupSpinBox = groupSpinBox
 
