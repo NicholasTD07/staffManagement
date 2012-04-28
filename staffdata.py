@@ -753,7 +753,7 @@ class StaffContainer :
         # 2. 判断员工当前状态
         if wType is self.WAIT :
             self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@")
-            return
+            return False
         elif wType in self.workTypes :
             staff.wType = self.WAIT
             pos = self.__workSeqs[wTime].nSeq.index(staff)
@@ -769,6 +769,8 @@ class StaffContainer :
         # 4. 操作成功
         self.log("\t@@@----成功: 员工等待操作----@@@")
         self.__dirty = True
+
+        return True
 
     def staffIdle(self, Id) :
         self.log("\t{}号员工下班操作:".format(Id))
