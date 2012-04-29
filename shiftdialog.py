@@ -16,6 +16,7 @@ import staffdata
 
 class ShiftDialog(QDialog) :
 
+#{{{ # 初始化员工换班对话框 #
     def __init__(self, staffs, parent=None) :
         # 初始化 #
         super(ShiftDialog, self).__init__(parent)
@@ -61,6 +62,7 @@ class ShiftDialog(QDialog) :
                         self.accept)
         self.connect(self.buttonBox, SIGNAL("rejected()"),
                         self.reject)
+#}}}
 
     #---- 重定义函数 ----#
 
@@ -69,7 +71,7 @@ class ShiftDialog(QDialog) :
 
     #---- 自定义槽 ----#
 
-    # 点击表格 #
+    #{{{ # 点击表格 #
     def on_workTableItem_clicked(self) :
         # 初始化局部变量 #
         workTable = self.workTable
@@ -96,7 +98,9 @@ class ShiftDialog(QDialog) :
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(lenGroups)
         self.updateStandbyTable()
+    #}}}
 
+    #{{{ # 点击换班按钮 #
     def on_shiftGroupButton_clicked(self) :
         # 初始化局部变量 #
         workStaffs = self.workStaffs
@@ -123,8 +127,9 @@ class ShiftDialog(QDialog) :
         QMessageBox.information(self,
                "员工换班",
                "员工换班成功!")
+    #}}}
 
-    #---- 设置界面 ----#
+    #{{{ #---- 设置界面 ----#
     def setupUi(self) :
         #-- 添加组件 --#
         # 标签 #
@@ -193,10 +198,11 @@ class ShiftDialog(QDialog) :
         self.setLayout(self.gridLayout)
         self.resize(540, 330)
         self.setWindowTitle("换班")
+    #}}}
 
     #---- 更新表格 ----#
 
-    # 上班表格 #
+    #{{{ # 上班表格 #
     def updateWorkTable(self) :
         # 初始化局部变量 #
         workColor = QColor(255,0,0)
@@ -231,8 +237,9 @@ class ShiftDialog(QDialog) :
             workTable.setItem(i//columnCount, i%columnCount, item)
             i += 1
         workTable.resizeColumnsToContents()
+    #}}}
 
-    # 换班表格 #
+    #{{{ # 换班表格 #
     def updateStandbyTable(self) :
         # 初始化局部变量 #
         i = 0
@@ -256,7 +263,7 @@ class ShiftDialog(QDialog) :
             standbyTable.setItem(i//columnCount, i%columnCount, item)
             i += 1
         standbyTable.resizeColumnsToContents()
-
+    #}}}
 
 if __name__ == "__main__" :
     import sys
