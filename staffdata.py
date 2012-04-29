@@ -19,7 +19,7 @@ __version__ = "0.3.1"
 DEBUG = True
 PRINT = True
 
-
+#{{{ #---- 定义员工类 ----#
 class Staff :
     """包含员工的详细信息"""
 
@@ -38,7 +38,9 @@ class Staff :
 我的工作类型是: {}."""\
         .format(self.Id, self.name, self.gender, self.wTime,
             self.wType))
+#}}}
 
+#{{{ #---- 定义时间队列 ----#
 class TimeSeq :
     """包含不同工作次数的员工"""
 
@@ -47,8 +49,9 @@ class TimeSeq :
         self.sPos = [0]
         self.selected = False
         self.nSeq = [None]
+#}}}
 
-
+#{{{ #-------- 定义员工容器 --------#
 class StaffContainer :
     """员工以及工作对列的容器"""
 
@@ -63,6 +66,7 @@ class StaffContainer :
 
     workTypes = [NOR, SEL, NAMED]
 
+    #{{{ # 初始化容器 #
     def __init__(self) :
         self.__IDs = []
         self.__unGrpIDs = []
@@ -76,8 +80,9 @@ class StaffContainer :
         self.__fileName = ""
         self.__dirty = False
         self.addTimeSeq()
+    #}}}
 
-    #---- 自定义内置函数 ----#
+    #{{{ #---- 自定义内置函数 ----#
 
     def __iter__(self) :
         for staff in iter(self.__staffs.values()) :
@@ -86,27 +91,33 @@ class StaffContainer :
     def __len__(self) :
         return len(self.__staffs)
 
-    #------------------------#
+    #}}}#------------------------#
 
     #---- 容器的简单函数 ----#
 
+    #{{{ # 清除容器 #
     def clear(self, clearFilename=True) :
         self.log("\t清除容器操作: ")
         self.__IDs = []
+        self.__unGrpIDs = []
+        self.__groups = [ [], [], [] ]
+        self.__workGroup = None
         self.__staffs = {}
         self.__modStaffs = set()
         self.__workSeqs = []
         self.__maxTime = 0
         self.__maxId = 0
+        # 判断是否清除文件名 #
         if clearFilename :
             self.__fileName = ""
             self.log("\t\t清除文件名.")
+        # 添加默认时间队列 #
         self.addTimeSeq()
-
         self.__dirty = True
         self.log("\t@@@---成功: 清除容器---@@@\n\n")
+    #}}}
 
-    #-- 返回及设置属性 --#
+    #{{{ #-- 返回及设置属性 --#
 
     def getIDs(self) :
         return self.__IDs
@@ -174,8 +185,10 @@ class StaffContainer :
         self.log("\t设置改动(__dirty): {}.".format(dirty))
 
     #--------------------#
+    #}}}
 
-    #---- 文件操作 ----#
+
+    #{{{ #---- 文件操作 ----#
 
     def log(self, msg) :
         if DEBUG :
@@ -256,8 +269,9 @@ class StaffContainer :
             return True, msg, staffs
 
     #------------------#
+    #}}}
 
-    #---- 时间队列 ----#
+    #{{{ #---- 时间队列 ----#
 
     #-- 操纵容器内时间队列 --#
 
@@ -409,11 +423,11 @@ class StaffContainer :
 
         # 3. 判断员工工作状态, 利用相应基本操作退出状态
         # 3.1 从工作序号队列中移除
-        if sType is self.NOR :
+        if sType == self.NOR :
             pos = workSeq.nSeq.index(staff)
             workSeq.nPos.remove( pos )
             self.log("\t移除员工 nPos : {}.".format( pos ))
-        elif sType is self.SEL :
+        elif sType == self.SEL :
             pos = workSeq.nSeq.index(staff)
             workSeq.sPos.remove( pos )
             self.log("\t移除员工 sPos : {}.".format( pos ))
@@ -483,9 +497,10 @@ class StaffContainer :
         nSeq = workSeq.nSeq
 
         # 2. 判断员工当前状态是否为等待状态
-        if wType is not self.WAIT :
-            self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
+        if wType != self.WAIT :
+            msg = "\t\t!!!----失败: 员工当前状态({})错误----!!!".format(wType)
+            self.log(msg)
+            raise notWaiting(msg)
 
         # 3. 使员工脱离工作队列
         pos = nSeq.index(staff)
@@ -521,7 +536,7 @@ class StaffContainer :
         if inPos is None :
             nSeq[nPos] = staff
             self.log("\t\t员工工作位置为空, 正常上班.")
-        elif isinstance(inPos, Staff) and inPos.wType is self.SEL :
+        elif isinstance(inPos, Staff) and inPos.wType == self.SEL :
             nSeq.insert(nPos, staff)
             self.log("\t\t员工工作位置非空为选钟员工, 插队上班.")
         else :
@@ -564,7 +579,7 @@ class StaffContainer :
         nSeq = workSeq.nSeq
 
         # 2. 判断员工当前状态是否为等待状态
-        if wType is not self.WAIT :
+        if wType != self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
             raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
 
@@ -650,7 +665,7 @@ class StaffContainer :
         nSeq = workSeq.nSeq
 
         # 2. 判断员工当前状态是否为等待状态
-        if wType is not self.WAIT :
+        if wType != self.WAIT :
             self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
             raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
 
@@ -751,14 +766,14 @@ class StaffContainer :
         sType = staff.sType
 
         # 2. 判断员工当前状态
-        if wType is self.WAIT :
+        if wType == self.WAIT :
             self.log("\t@@@--员工已经处于等待状态, 无任何操作退出--@@@")
             return False
         elif wType in self.workTypes :
             staff.wType = self.WAIT
             pos = self.__workSeqs[wTime].nSeq.index(staff)
             self.log("\t\t员工当前位置: {}.".format(pos))
-        elif wType is self.IDLE :
+        elif wType == self.IDLE :
             staff.wType = self.WAIT
             self.__workSeqs[0].nSeq.append(staff)
 
@@ -793,10 +808,10 @@ class StaffContainer :
 
         # 3. 更新 nPos, sPos
         pos = nSeq.index(staff)
-        if sType is self.NOR :
+        if sType == self.NOR :
             workSeq.nPos.remove( pos )
             self.log("\t移除员工 nPos : {}.".format( pos ))
-        elif sType is self.SEL :
+        elif sType == self.SEL :
             workSeq.sPos.remove( pos )
             self.log("\t移除员工 sPos : {}.".format( pos ))
         else :
@@ -876,21 +891,24 @@ class StaffContainer :
 
         # 3. 更新 nPos, sPos
         pos = workSeq.nSeq.index(staff)
-        if sType is self.NOR :
+        self.log("\t员工当前位置: {}".format(pos))
+        if sType == self.NOR :
+            self.log("\t当前正常工作队列: {}".format(workSeq.nPos))
             workSeq.nPos.remove( pos )
             self.log("\t移除员工 nPos : {}.".format( pos ))
-        elif sType is self.SEL :
+        elif sType == self.SEL :
+            self.log("\t当前选钟工作队列: {}".format(workSeq.sPos))
             workSeq.sPos.remove( pos )
             self.log("\t移除员工 sPos : {}.".format( pos ))
         else :
             self.log("\t@@@--员工处于空闲态({}), 无 pos, 无操作."\
             .format(sType))
 
-        if wType is self.NOR :
+        if wType == self.NOR :
             self.norWork(Id)
-        elif wType is self.SEL :
+        elif wType == self.SEL :
             self.selWork(Id)
-        elif wType is self.NAMED :
+        elif wType == self.NAMED :
             self.namedWork(Id)
         else :
             raise workWrong("需要工作的工作类型错误.")
@@ -934,6 +952,9 @@ class StaffContainer :
             msg = "".join(["员工序号: {}".format(Id) for Id in staffs])
             print(msg)
             print()
+    #}}}
+#}}}
+
 
 if __name__ == '__main__' :
 
