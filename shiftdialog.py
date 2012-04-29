@@ -25,7 +25,14 @@ class ShiftDialog(QDialog) :
         self.workTypes = staffs.workTypes
         self.groups = staffs.getGroups()
         self.getWorkGroup = staffs.getWorkGroup
-        self.workGroup = self.groups[self.getWorkGroup()]
+        workGroupNum = self.getWorkGroup()
+        if workGroupNum is None :
+            QMessageBox.warning(self,
+                    "未设置上班分组.",
+                    "当前显示的上班分组为第一个员工分组,"
+                    "并不是上班分组.")
+            workGroupNum = 0
+        self.workGroup = self.groups[workGroupNum]
         self.lenGroups = len(self.groups)
         self.workStaffs = []
 
@@ -103,12 +110,15 @@ class ShiftDialog(QDialog) :
                     "请转换状态后再换班."\
                             .format(workStaffs))
             return
+        # 更新上班分组号 #
         setWorkGroup(standbyGrpNum) 
         # 更新界面 #
         workGroupNum = self.getWorkGroup()
+        if workGroupNum is None :
+            workGroupNum = 0
         self.workGroup = self.groups[workGroupNum]
         self.workGroupLabel.setText("上班分组: {}"\
-                .format(workGroupNum + 1))
+                .format((workGroupNum + 1)))
         self.updateWorkTable()
         QMessageBox.information(self,
                "员工换班",
@@ -118,8 +128,12 @@ class ShiftDialog(QDialog) :
     def setupUi(self) :
         #-- 添加组件 --#
         # 标签 #
-        self.workGroupLabel = QLabel("上班分组: {}"\
-                .format(self.getWorkGroup() + 1), self)
+        workGroupNum = self.getWorkGroup()
+        if workGroupNum is None :
+            self.workGroupLabel = QLabel("第一分组", self)
+        else :
+            self.workGroupLabel = QLabel("上班分组: {}"\
+                    .format(workGroupNum + 1), self)
         self.shiftGroupLabel = QLabel("换班分组:", self)
         self.helpLabel = QLabel(
                 "说明:"
