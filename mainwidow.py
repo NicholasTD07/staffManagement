@@ -27,12 +27,13 @@ __version__ = "0.3.0"
 
 class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
 
+    #{{{ #---- 初始化主窗口 ----# 
     def __init__(self, parent=None) : 
         # 1. 初始化 主窗口
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        # 2. 连接信号和槽
+        #{{{ 2. 连接信号和槽
         self.staffs = staffdata.StaffContainer()
         self.connectSlot(self.fileNewAction, self.fileNew)
         self.connectSlot(self.fileOpenAction, self.fileOpen)
@@ -46,7 +47,8 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
                 self.deleteStaff)
         self.connectSlot(self.checkTableAction,
                 self.checkTable)
-             
+        #}}}
+
         # 3. 初始化 设置
         #    并且恢复上一次的窗口大小, 位置, 状态.
         settings = QSettings()
@@ -63,11 +65,12 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         self.workGraph = workgraph.WorkGraph(self.staffs, self)
         # 7. 并设置为 主部件
         self.setCentralWidget(self.workGraph)
+    #}}}
 
-    #---- 重定义 ----#
+#{{{ #---- 重定义 ----#
 
-    # 重定义: 关闭时 检查文件是否已保存
-    #         并且 存入当前设置
+    #{{{ 重定义: 关闭时 检查文件是否已保存
+    #            并且 存入当前设置
     def closeEvent(self, event) :
         if self.okToContinue() :
             settings = QSettings()
@@ -79,17 +82,20 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
                         self.saveState())
         else :
             event.ignore()
+    #}}}
+#}}}
 
-    #---- 窗口内部函数 ----#
+#{{{ #---- 窗口内部函数 ----#
 
-    # 连接 信号和槽 #
+    #{{{ # 连接 信号和槽 #
     def connectSlot(self, action=None, slot=None,
             signal="triggered()") :
         if action is not None :
             if slot is not None:
                 self.connect(action, SIGNAL(signal), slot)
+    #}}}
 
-    # 检查文件是否已保存 #
+    #{{{ # 检查文件是否已保存 #
     def okToContinue(self) :
         if self.staffs.isDirty() :
             reply = QMessageBox.question(self,
@@ -102,8 +108,9 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             elif reply == QMessageBox.Yes :
                 return self.fileSave()
         return True
+    #}}}
 
-    # 载入上次的文件 #
+    #{{{ # 载入上次的文件 #
     def loadLastFile(self) :
         settings = QSettings()
         fileName = settings.value("LastFile")
@@ -113,8 +120,9 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.staffs.setDirty(False)
             self.statusBar().showMessage(msg, 5000)
         #self.updateSOMETHING()
+    #}}}
 
-    # 关于 #
+    #{{{ # 关于 #
     def helpAbout(self):
         QMessageBox.about(self, "员工管理系统",
             """<b>员工信息管理 </b> v {0}
@@ -124,10 +132,12 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             __version__, platform.python_version(),
                 QT_VERSION_STR, PYQT_VERSION_STR,
                 platform.system()))
+    #}}}
+#}}}
 
-    #---- 文件操作 ----#
+#{{{ #---- 文件操作 ----#
 
-    # 新建文件 #
+    #{{{ # 新建文件 #
     def fileNew(self) :
         if not self.okToContinue() :
             return
@@ -135,9 +145,9 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         self.statusBar().clearMessage()
         msg = "新建员工信息成功!"
         self.statusBar().showMessage(msg, 5000)
-        #self.updateSOMETHING()
+    #}}}
 
-    # 读取文件 #
+    #{{{ # 读取文件 #
     def fileOpen(self) :
         if not self.okToContinue() :
             return
@@ -157,8 +167,10 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.staffs = staffs
             self.staffs.setDirty(False)
             self.statusBar().showMessage(msg, 5000)
-            #self.updateSOMETHING()
+            self.workGraph.populate()
+    #}}}
 
+    #{{{ # 保存文件 #
     def fileSave(self) :
         if not self.staffs.getFilename() :
             return self.fileSaveAs()
@@ -166,7 +178,9 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             ok, msg = self.staffs.save()
             self.statusBar().showMessage(msg, 5000)
             return ok
+    #}}}
 
+    #{{{ # 另存文件 #
     def fileSaveAs(self) :
         fileName = self.staffs.getFilename()\
                     if self.staffs.getFilename() else "."
@@ -181,47 +195,56 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.statusBar().showMessage(msg, 5000)
             return ok
         return False
+    #}}}
+#}}}
 
-    #---- 员工操作 ----#
+#{{{ #---- 员工操作 ----#
 
-    # 添加员工 #
+    #{{{ # 添加员工 #
     def addStaff(self) :
         form = updatestaffdialog.UpdateStaffDialog(
                     self.staffs, None, self)
         if form.exec_() :
             #self.updateSOMETHING()
             pass
+    #}}}
 
-    # 删除员工 #
+    #{{{ # 删除员工 #
     def deleteStaff(self) :
         form = deletestaffdialog.DeleteStaffDialog(self.staffs,
                                                     None, self)
         if form.exec_() :
             #self.updateSOMETHING()
             pass
-            
-    # 员工列表 #
+            #}}}
+
+    #{{{ # 员工列表 #
     def checkTable(self) :
         form = stafflistdialog.StaffListDialog(
                     self.staffs, self)
         if form.exec_() :
             #self.updateSOMETHING()
             pass
+    #}}}
 
-    # 员工分组 #
+    #{{{ # 员工分组 #
     def groupStaff(self) :
         form = groupstaffdialog.GroupStaffDialog(
                 self.staffs, self)
         if form.exec() :
-            #self.updateSOMETHING()
+            self.workGraph.populate()
             pass
+    #}}}
 
+    #{{{ # 员工换班 #
     def shiftGroup(self) :
         form = shiftdialog.ShiftDialog(
                 self.staffs, self)
         if form.exec() :
-            #self.updateSOMETHING()
+            self.workGraph.populate()
             pass
+    #}}}
+#}}}
 
 
 if __name__ == '__main__' :

@@ -17,7 +17,8 @@ from errorclass import *
 
 
 class StaffMenu(QMenu) :
-
+#{{{ 员工菜单
+#{{{ #---- 初始化员工菜单 ----#
     def __init__(self, staffs, staff, event, parent=None) :
         super(QMenu, self).__init__()
         # 获得员工 #
@@ -50,13 +51,17 @@ class StaffMenu(QMenu) :
         self.connectSlot(self.namedWorkAction, self.namedWork)
         self.connectSlot(self.waitAction, self.wait)
         self.exec(event.screenPos())
+#}}}
 
+    #{{{ # 链接信号 #
     def connectSlot(self, action=None, slot=None,
             signal="activated()") :
         if action is not None :
             if slot is not None:
                 self.connect(action, SIGNAL(signal), slot)
+    #}}}
 
+    #{{{ # 工作等待函数 #
     def norWork(self) :
         self.staffWork(self.Id, self.NOR)
 
@@ -69,10 +74,13 @@ class StaffMenu(QMenu) :
     def wait(self) :
         print("StaffWait")
         self.staffWait(self.Id)
+    #}}}
+#}}}
 
 
 class StaffIcon(QGraphicsItem) :
-    
+    #{{{ 员工图标
+#{{{ # 初始化共用参数 #
     red, green, blue = 0, 0, 255
     WorkColor = QColor(red, green, blue)
 
@@ -80,7 +88,9 @@ class StaffIcon(QGraphicsItem) :
     WaitColor = QColor(red, green, blue)
 
     Rect = QRectF(0, 0, 40, 40)
+#}}}
 
+#{{{ #---- 初始化员工图标 ----#
     def __init__(self, staffs, staff, parent) :
         super(StaffIcon, self).__init__()
         print("初始化 员工图标.员工序号: {}".format(staff.Id))
@@ -95,29 +105,26 @@ class StaffIcon(QGraphicsItem) :
                 .format(self.Id), self)
         self.StaffNum.setTextWidth(10)
         self.StaffNum.setFont(QFont("Times", 20))
+#}}}
 
     def boundingRect(self) :
         return StaffIcon.Rect
 
     def paint(self, painter, option, widget=None):
-        #painter.setPen(Qt.NoPen)
-        print("员工图标 绘图.")
         painter.setBrush(QBrush(self.color))
         painter.drawRect(StaffIcon.Rect)
 
     def update(self) :
         self.putInPlace()
         QGraphicsItem.update(self, StaffIcon.Rect)
-        
+
+    #{{{ # 设置位置颜色 #
     def putInPlace(self) :
-        print("员工图标 放置位置.")
         staff = self.staff
         wType = staff.wType
         if wType is self.staffs.WAIT :
-            print("员工颜色为等待.")
             self.color = self.WaitColor
         elif wType in self.staffs.workTypes :
-            print("员工颜色为工作.")
             self.color = self.WorkColor
         else :
             raise wrongType("类型错误({}), 不予画图."\
@@ -129,10 +136,12 @@ class StaffIcon(QGraphicsItem) :
         self.position = QPointF(x, y)
         if self.position != self.pos() :
             self.setPos(self.position)
+    #}}}
 
     def contextMenuEvent(self, event) :
         Menu = StaffMenu(self.staffs, self.staff, event, self)
         self.parent.rerange()
+#}}}
 
 
 class WorkGraph(QWidget) :
@@ -140,6 +149,7 @@ class WorkGraph(QWidget) :
     SceneWidth = 1024
     SceneHeight = 600
     
+#{{{ #---- 初始化员工图标 ----#
     def __init__(self, staffs, parent=None) :
         super(WorkGraph, self).__init__(parent)
         self.staffs = staffs
@@ -162,12 +172,12 @@ class WorkGraph(QWidget) :
         self.populate()
 
         self.view.show()
+#}}}
 
-    def clear(self) :
-        pass
-
+    #{{{ # 更新图像 #
     def populate(self) :
         # 初始化局部变量 #
+        self.scene.clear()
         staffs = self.staffs
         getStaff = staffs.getStaff
         groups = staffs.getGroups()
@@ -181,7 +191,9 @@ class WorkGraph(QWidget) :
             except wrongType :
                 continue
             self.scene.addItem(staffIcon)
+    #}}}
 
+    #{{{ # 重新排位 #
     def rerange(self) :
         scenes = self.view.scene()
         stafficons = [ item for item in scenes.items()
@@ -191,7 +203,7 @@ class WorkGraph(QWidget) :
             stafficon.putInPlace()
 
         scenes.update(scenes.sceneRect())
-
+    #}}}
 
 if __name__ == '__main__' :
     app = QApplication(sys.argv)
