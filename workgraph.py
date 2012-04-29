@@ -72,7 +72,6 @@ class StaffMenu(QMenu) :
         self.staffWork(self.Id, self.NAMED)
 
     def wait(self) :
-        print("StaffWait")
         self.staffWait(self.Id)
     #}}}
 #}}}
@@ -93,7 +92,6 @@ class StaffIcon(QGraphicsItem) :
 #{{{ #---- 初始化员工图标 ----#
     def __init__(self, staffs, staff, parent) :
         super(StaffIcon, self).__init__()
-        print("初始化 员工图标.员工序号: {}".format(staff.Id))
         self.parent = parent
         self.staffs = staffs
         self.staff = staff
@@ -122,13 +120,13 @@ class StaffIcon(QGraphicsItem) :
     def putInPlace(self) :
         staff = self.staff
         wType = staff.wType
-        if wType is self.staffs.WAIT :
+        if wType == self.staffs.WAIT :
             self.color = self.WaitColor
         elif wType in self.staffs.workTypes :
             self.color = self.WorkColor
         else :
             raise wrongType("类型错误({}), 不予画图."\
-                .format(self.wType))
+                .format(wType))
         self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
         self.wTime = self.staff.wTime
         x = (self.wPos * 40)
@@ -149,12 +147,10 @@ class WorkGraph(QWidget) :
     SceneWidth = 1024
     SceneHeight = 600
     
-#{{{ #---- 初始化员工图标 ----#
+#{{{ #---- 初始化员工图表 ----#
     def __init__(self, staffs, parent=None) :
         super(WorkGraph, self).__init__(parent)
         self.staffs = staffs
-        self.workGroup = staffs.getWorkGroup()
-
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0,
@@ -181,9 +177,10 @@ class WorkGraph(QWidget) :
         staffs = self.staffs
         getStaff = staffs.getStaff
         groups = staffs.getGroups()
-        if self.workGroup is None :
+        workGroupNum = staffs.getWorkGroup()
+        if workGroupNum is None :
             return
-        workGroup = groups[self.workGroup]
+        workGroup = groups[workGroupNum]
         for Id in workGroup :
             staff = getStaff(Id)
             try :
@@ -220,13 +217,13 @@ if __name__ == '__main__' :
     S.groupStaff(3,1)
     S.setWorkGroup(1)
     S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 有选钟情况下的点钟.
-    S.staffsWork(S.SEL, 1,2,3)
-    S.reportStaffs()
-    S.staffsWork(S.NAMED, 4)
-    S.reportStaffs()
-    # 测试存入文件
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 有选钟情况下的点钟.
+    #S.staffsWork(S.SEL, 1,2,3)
+    #S.reportStaffs()
+    #S.staffsWork(S.NAMED, 4)
+    #S.reportStaffs()
+    ## 测试存入文件
 
     form = WorkGraph(S)
     rect = QApplication.desktop().availableGeometry()
