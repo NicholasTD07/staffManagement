@@ -35,8 +35,11 @@ class UpdateStaffDialog(QDialog,
             gender = staff.gender
             wTime = staff.wTime
             wType = staff.wType
-            nSeq = self.workSeqs[wTime].nSeq
-            pos = nSeq.index(staff)
+            if wType == self.staffs.IDLE :
+                pos = None
+            else :
+                nSeq = self.workSeqs[wTime].nSeq
+                pos = nSeq.index(staff)
             # 2. 设置显示文字
             self.IdLineEdit.setText("{}".format(Id))
             self.IdLineEdit.setReadOnly(True)
