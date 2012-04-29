@@ -15,6 +15,7 @@ import staffdata
 
 class GroupStaffDialog(QDialog) :
 
+    #{{{ # 初始化员工分组对话框 #
     def __init__(self, staffs, parent=None) :
         # 初始化 #
         super(GroupStaffDialog, self).__init__(parent)
@@ -36,8 +37,7 @@ class GroupStaffDialog(QDialog) :
         self.updateUnGrpTable()
         self.updateGroupedTable()
 
-
-        #---- 自定义信号 ----#
+        #{{{ #---- 自定义信号 ----#
 
         # 添加分组按键 #
         self.connect(self.addGroupButton, SIGNAL("clicked()"),
@@ -58,8 +58,10 @@ class GroupStaffDialog(QDialog) :
                         self.accept)
         self.connect(self.buttonBox, SIGNAL("rejected()"),
                         self.reject)
+        #}}}
+        #}}}
 
-    #---- 设置界面 ----#
+    #{{{ #---- 设置界面 ----#
     def setupUi(self) :
         #-- 添加组件 --#
         # 标签 #
@@ -139,9 +141,9 @@ class GroupStaffDialog(QDialog) :
         self.setLayout(self.gridLayout)
         self.resize(540, 330)
         self.setWindowTitle("员工分组")
+    #}}}
 
-    #---- 重定义函数 ----#
-
+    #{{{ #---- 重定义函数 ----#
     def accept(self) :
         reply = QMessageBox.question(self,
                     "员工分组: 尚未保存",
@@ -150,8 +152,9 @@ class GroupStaffDialog(QDialog) :
         if reply == QMessageBox.Yes :
             self.saveGroups()
         QDialog.accept(self)
+    #}}}
 
-    #---- 辅助函数 ----#
+    #{{{ #---- 辅助函数 ----#
     def saveGroups(self) :
         # 初始化局部变量 #
         unGrpIDs = self.unGrpIDs
@@ -172,14 +175,15 @@ class GroupStaffDialog(QDialog) :
                 Id = int(item.data(Qt.UserRole))
                 thisRow.append(Id)
                 unGrpIDs.remove(Id)
-            group = group + \
+            groups[row] = group + \
                     [ Id for Id in thisRow if Id not in group ]
             print("row:", row, "\n", "group:", group)
             row += 1
+    #}}}
 
-    #---- 自定义槽 ----#
+#{{{ #---- 自定义槽 ----#
 
-    #-- 数字框信号槽 --# 
+    #{{{ #-- 数字框信号槽 --# 
     def on_groupSpinBox_valueChanged(self) :
         # 初始化局部变量 #
         groups = self.groups
@@ -194,8 +198,9 @@ class GroupStaffDialog(QDialog) :
                     "设置分组",
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(maxGroups)
+    #}}}
 
-    #-- 添加至分组按键信号槽 --#
+    #{{{ #-- 添加至分组按键信号槽 --#
     def on_whichGroupButton_clicked(self) :
         # 初始化局部变量 #
         unGrpTable = self.unGrpTable
@@ -234,10 +239,12 @@ class GroupStaffDialog(QDialog) :
             unGrpTablesetCurrentCell(itemRow+1, 0)
         else :
             unGrpTablesetCurrentCell(itemRow, itemColumn+1)
+    #}}}
+#}}}
 
-    #---- 更新表格 ----#
+#{{{ #---- 更新表格 ----#
 
-    #-- 生成未分组员工表格 --#
+    #{{{ #-- 生成未分组员工表格 --#
     def updateUnGrpTable(self) :
         # 初始化局部变量 #
         i = 0
@@ -259,8 +266,9 @@ class GroupStaffDialog(QDialog) :
             unGrpTable.setItem(i // 10, i % 10, item)
             i += 1
         unGrpTable.resizeColumnsToContents()
+    #}}}
 
-    #-- 生成分组员工表格 --#
+    #{{{ #-- 生成分组员工表格 --#
     def updateGroupedTable(self) :
         # 初始化局部变量 #
         groups = self.groups
@@ -288,11 +296,13 @@ class GroupStaffDialog(QDialog) :
                 item = QTableWidgetItem(str(Id))
                 item.setData(Qt.UserRole, int(Id))
                 item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
-                unGrpTable.setItem(row, column, item)
+                groupedTable.setItem(row, column, item)
                 column += 1
             lastColumn[row] = column
             row += 1
         groupedTable.resizeColumnsToContents()
+#}}}
+#}}}
 
 
 if __name__ == "__main__" :
