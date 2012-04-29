@@ -128,8 +128,6 @@ class UpdateStaffDialog(QDialog,
                 print("检查序号: {}".format(Id))
                 if self.staffs.getStaff(Id) :
                     self.unavaliableIDs.append(Id)
-                else :
-                    return False
             return self.unavaliableIDs
 
     # 取得员工性别 #
