@@ -62,9 +62,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         # 5. 载入 上次的文件
         QTimer.singleShot(0, self.loadLastFile)
         # 6. 初始化 workGraph
-        self.workGraph = workgraph.WorkGraph(self.staffs, self)
-        # 7. 并设置为 主部件
-        self.setCentralWidget(self.workGraph)
+        QTimer.singleShot(0, self.initWorkGraph)
     #}}}
 
 #{{{ #---- 重定义 ----#
@@ -120,6 +118,16 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.staffs.setDirty(False)
             self.statusBar().showMessage(msg, 5000)
         #self.updateSOMETHING()
+    #}}}
+
+    #{{{ # 初始化工作表 #
+    def initWorkGraph(self) :
+        workGraph = workgraph.WorkGraph(self.staffs, self)
+        rect = QApplication.desktop().availableGeometry()
+        workGraph.resize(int(rect.width() * 0.75), int(rect.height() * 0.9))
+        self.workGraph = workGraph
+        self.setCentralWidget(self.workGraph)
+        # 7. 并设置为 主部件
     #}}}
 
     #{{{ # 关于 #
@@ -241,8 +249,8 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         form = shiftdialog.ShiftDialog(
                 self.staffs, self)
         if form.exec() :
+            #self.workGraph = workgraph.WorkGraph(self.staffs, self)
             self.workGraph.populate()
-            pass
     #}}}
 #}}}
 
