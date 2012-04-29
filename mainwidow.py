@@ -16,6 +16,7 @@ import stafflistdialog
 import deletestaffdialog
 import workgraph
 import groupstaffdialog
+import shiftdialog
 
 # 主窗口 UI #
 import ui_mainwindow
@@ -40,6 +41,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         self.connectSlot(self.fileQuitAction, self.close)
         self.connectSlot(self.addStaffAction, self.addStaff)
         self.connectSlot(self.groupStaffAction, self.groupStaff)
+        self.connectSlot(self.shiftGroupAction, self.shiftGroup)
         self.connectSlot(self.deleteStaffAction,
                 self.deleteStaff)
         self.connectSlot(self.checkTableAction,
@@ -213,6 +215,14 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         if form.exec() :
             #self.updateSOMETHING()
             pass
+
+    def shiftGroup(self) :
+        form = shiftdialog.ShiftDialog(
+                self.staffs, self)
+        if form.exec() :
+            #self.updateSOMETHING()
+            pass
+
 
 if __name__ == '__main__' :
     import sys

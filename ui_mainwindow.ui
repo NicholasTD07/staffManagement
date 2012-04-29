@@ -44,6 +44,7 @@
     <addaction name="separator"/>
     <addaction name="checkTableAction"/>
     <addaction name="groupStaffAction"/>
+    <addaction name="shiftGroupAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="staffMenu"/>
@@ -139,7 +140,21 @@
   </action>
   <action name="groupStaffAction">
    <property name="text">
-    <string>员工分组</string>
+    <string>员工分组(&amp;G)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="shiftGroupAction">
+   <property name="text">
+    <string>员工换班(&amp;C)</string>
+   </property>
+   <property name="toolTip">
+    <string>员工换班(C)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
  </widget>
