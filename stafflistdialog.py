@@ -157,47 +157,6 @@ class StaffListDialog(QDialog,
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
         # 调整: 列的宽度
         allTable.resizeColumnsToContents()
-    
-    # 生成: 工作表 或者 等待表
-    #def populate(self, seq) :
-    #    workSeqs = self.staffs.getWorkSeq()
-    #    maxTime = self.staffs.getMaxTime()
-    #    # 选择: 序号表, 最大值 及 (工作表 或 等待表)
-    #    if seq is self.WORK :
-    #        poses = self.workPoses
-    #        maxPos = self.staffs.getMaxWorkPos()
-    #        table = self.workTable
-    #    elif seq is self.WAIT :
-    #        poses = self.waitPoses
-    #        maxPos = self.staffs.getMaxWaitPos()
-    #        table = self.waitTable
-    #    else :
-    #        return 
-    #    # 生成: 表头
-    #    vHeads = range( maxTime + 1 )
-    #    heads = range( 1, maxPos + 1 )
-    #    heads = [ "序号:{}".format(head) for head in heads ]
-    #    # 清除: 已有内容
-    #    table.clear()
-    #    # 初始化: 设置
-    #    table.setSortingEnabled(False)
-    #    table.setRowCount(len(vHeads))
-    #    table.setColumnCount(len(heads))
-    #    # 设置: 表头
-    #    table.setHorizontalHeaderLabels(heads)
-    #    table.setVerticalHeaderLabels(
-    #            [ "工作次数".format(i) for i in vHeads])
-    #    # 设置: 内容
-    #    for row, workSeq in enumerate(workSeqs) :
-    #        for (pos, Id) in workSeq.workPoses \
-    #            if seq is self.WORK else workSeq.waitPoses :
-    #            poses[Id] = pos
-    #            item = QTableWidgetItem(str(pos))
-    #            item.setData(Qt.UserRole, int(Id))
-    #            table.setItem(row, (pos - 1), item)
-    #            item.setTextAlignment(
-    #                    Qt.AlignRight|Qt.AlignVCenter)
-    #    table.resizeColumnsToContents()
 
 
 if __name__ == '__main__' :
@@ -205,8 +164,8 @@ if __name__ == '__main__' :
 
     S = staffdata.StaffContainer()
     S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)
-    S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12,13,14,15)
-    S.staffsWork(S.NOR,1, 2, 3, 4, 6, 8, 9)
+    #S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12,13,14,15)
+    #S.staffsWork(S.NOR,1, 2, 3, 4, 6, 8, 9)
     #S.staffsWait(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
     app = QApplication(sys.argv)
