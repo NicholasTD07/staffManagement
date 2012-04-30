@@ -706,8 +706,9 @@ class StaffContainer :
                 if not checked :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                     checked = True
-            if isinstance(nSeq[sPos-1], Staff)\
-                    and nSeq[sPos-1].sType == self.SEL :
+            if (isinstance(nSeq[sPos-1], Staff)\
+                    and nSeq[sPos-1].sType == self.SEL) or\
+                    nSeq[sPos-1] is None :
                 inPos = nSeq[sPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
