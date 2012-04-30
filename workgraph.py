@@ -26,14 +26,14 @@ class StaffMenu(QMenu) :
         self.staff = staff
         self.Id = staff.Id
         # 获得员工函数 #
-        self.staffWork = self.staffs.staffWork
-        self.staffWait = self.staffs.staffWait
-        self.staffIdle = self.staffs.staffIdle
+        staffWork = self.staffs.staffWork
+        staffWait = self.staffs.staffWait
+        staffIdle = self.staffs.staffIdle
         # 获得工作类型 #
-        self.NOR = self.staffs.NOR
-        self.SEL = self.staffs.SEL
-        self.NAMED = self.staffs.NAMED
-        self.WAIT = self.staffs.WAIT
+        NOR = self.staffs.NOR
+        SEL = self.staffs.SEL
+        NAMED = self.staffs.NAMED
+        WAIT = self.staffs.WAIT
         # 添加动作 #
         self.norWorkAction = QAction("排钟", self)
         self.addAction(self.norWorkAction)
@@ -48,15 +48,15 @@ class StaffMenu(QMenu) :
         self.addAction(self.idleAction)
         # 连接动作和槽 #
         self.connect(self.norWorkAction, SIGNAL("activated()"),
-                lambda : self.staffWork(self.Id, self.NOR))
+                lambda : staffWork(self.Id, NOR))
         self.connect(self.selWorkAction, SIGNAL("activated()"),
-                lambda : self.staffWork(self.Id, self.SEL))
+                lambda : staffWork(self.Id, SEL))
         self.connect(self.namedWorkAction, SIGNAL("activated()"),
-                lambda : self.staffWork(self.Id, self.NAMED))
+                lambda : staffWork(self.Id, NAMED))
         self.connect(self.waitAction, SIGNAL("activated()"),
-                lambda : self.staffWait(self.Id))
+                lambda : staffWait(self.Id))
         self.connect(self.idleAction, SIGNAL("activated()"),
-                lambda : self.staffIdle(self.Id))
+                lambda : staffIdle(self.Id))
         self.exec(event.screenPos())
 #}}}
 #}}}
@@ -184,8 +184,10 @@ class WorkGraph(QWidget) :
                         if isinstance(item, StaffIcon)]
 
         for stafficon in stafficons :
-            stafficon.putInPlace()
-
+            try :
+                stafficon.putInPlace()
+            except wrongType :
+                continue
         scenes.update(scenes.sceneRect())
     #}}}
 
