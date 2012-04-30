@@ -117,7 +117,6 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.staffs = staffs
             self.staffs.setDirty(False)
             self.statusBar().showMessage(msg, 5000)
-        #self.updateSOMETHING()
     #}}}
 
     #{{{ # 初始化工作表 #
@@ -153,6 +152,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         self.statusBar().clearMessage()
         msg = "新建员工信息成功!"
         self.statusBar().showMessage(msg, 5000)
+        self.initWorkGraph()
     #}}}
 
     #{{{ # 读取文件 #
@@ -165,7 +165,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
                         "员工信息: 导入数据", path,
                         "员工信息文件: ({})".format(
                                     self.staffs.fileFormats()))
-        if fileName :
+        if fileName and QFile.exists(fileName) :
             ok, msg, staffs = self.staffs.load(fileName)
             if not ok :
                 QMessageBox.information(self,
@@ -175,7 +175,8 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.staffs = staffs
             self.staffs.setDirty(False)
             self.statusBar().showMessage(msg, 5000)
-            self.workGraph.populate()
+            self.initWorkGraph()
+    #}}}
     #}}}
 
     #{{{ # 保存文件 #
@@ -249,7 +250,6 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         form = shiftdialog.ShiftDialog(
                 self.staffs, self)
         if form.exec() :
-            #self.workGraph = workgraph.WorkGraph(self.staffs, self)
             self.workGraph.populate()
     #}}}
 #}}}
