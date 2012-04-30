@@ -273,7 +273,7 @@ class StaffContainer :
 
     #{{{ #---- 时间队列 ----#
 
-    #-- 操纵容器内时间队列 --#
+    #{{{ #-- 操纵容器内时间队列 --#
 
     def addTimeSeq(self) :
         self.__workSeqs.append(TimeSeq())
@@ -289,9 +289,12 @@ class StaffContainer :
             count += 1
             self.log("\t更新时间队列: 自动增加了{}列时间队列"\
                         .format(count))
+    #}}}
+
 
     # 基本操作 #
 
+    #{{{ # 自动更新员工及队列工作次数 #
     def updateMax(self, Id, time) :
         self.log("\t\t{}号员工指定第{}次工作操作, 并自动更新: "\
             .format(Id, time))
@@ -322,7 +325,9 @@ class StaffContainer :
         else :
             self.log("\t\t@@@----序列最大工作次数保持: {}次----@@@"\
             .format(time))
+    #}}}
 
+    #{{{ # 员工分组 #
     def groupStaff(self, Id, grpNum) :
         self.log("\t\t{}号员工分组(第{}组)操作:"\
             .format(Id, grpNum))
@@ -360,7 +365,9 @@ class StaffContainer :
 
         # 6. 操作完成
         self.log("\t\t@@@----成功: 员工进入分组.----@@@")
+    #}}}
 
+    #{{{ # 员工退出分组 #
     def unGrpStaff(self, Id) :
         self.log("\t\t{}号员工退出分组操作:".format(Id))
 
@@ -398,7 +405,9 @@ class StaffContainer :
 
         # 6. 操作完成
         self.log("\t\t@@@----成功: 员工退出分组.----@@@")
+    #}}}
 
+    #{{{ # 删除员工 #
     def deleteStaff(self, Id) :
         self.log("\t删除员工操作: ")
 
@@ -452,19 +461,6 @@ class StaffContainer :
         self.log("\t\t从工号队列中移除工号为: {}的员工."\
             .format(Id))
 
-        # 6. 从分组队列中移除员工工号
-        #if Id in unGrpIDs :
-        #    unGrpIDs.remove(Id)
-        #    found = True
-        #else :
-        #    found = False
-        #    try :
-        #        for group in groups :
-        #            if Id in group :
-        #                raise foundInGroup
-        #    except fonudInGroup :
-        #                found = True
-        #                group.remove(Id)
         if group is None :
             unGrpIDs.remove(Id)
             found = True
@@ -484,7 +480,9 @@ class StaffContainer :
         #  8.操作完成, 设置 dirty
         self.log("\t@@@---- 成功: 移除员工 ----@@@")
         self.__dirty = True
-            
+        #}}}
+
+    #{{{ # 正常工作 #
     def norWork(self, Id) :
         self.log("\t\t{}员工正常上班操作:".format(Id))
 
@@ -566,7 +564,9 @@ class StaffContainer :
         # 9. 操作完成, 设置文件改动
         self.log("\t\t@@@---- 成功: 员工正常上班操作 ----@@@")
         self.__dirty = True
+    #}}}
 
+    #{{{ # 选钟工作 #
     def selWork(self, Id) :
         self.log("\t\t{}号员工选钟上班工作:".format(Id))
 
@@ -645,14 +645,15 @@ class StaffContainer :
             if not workSeq.selected :
                 workSeq.selected = True
 
-
         # 9. 加入变动员工组
         self.__modStaffs.add(staff)
         
         # 10. 操作完成, 设置文件改动
         self.log("\t\t@@@---- 成功: 员工选钟上班操作 ----@@@")
         self.__dirty = True
+    #}}}
 
+    #{{{ # 点钟工作 #
     def namedWork(self, Id) :
         self.log("\t\t{}号员工点钟上班工作:".format(Id))
 
@@ -734,7 +735,8 @@ class StaffContainer :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                     checked = True
             inPos = nSeq[nPos-1]
-            if inPos is None or (isinstance(inPos, Staff) and inPos.wType == self.NOR) :
+            if inPos is None or \
+                    (isinstance(inPos, Staff) and inPos.wType == self.NOR) :
                 inPos = nSeq[nPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
@@ -755,7 +757,9 @@ class StaffContainer :
         # 8. 操作完成, 设置文件改动
         self.log("\t\t@@@---- 成功: 员工点钟上班操作 ----@@@")
         self.__dirty = True
+    #}}}
 
+    #{{{ # 员工等待 #
     def staffWait(self, Id) :
         self.log("\t{}号员工等待操作:".format(Id))
 
@@ -786,7 +790,9 @@ class StaffContainer :
         self.__dirty = True
 
         return True
+    #}}}
 
+    #{{{ # 员工下班 #
     def staffIdle(self, Id) :
         self.log("\t{}号员工下班操作:".format(Id))
 
@@ -834,9 +840,11 @@ class StaffContainer :
         # 6. 操作成功
         self.log("\t@@@----成功: 员工下班操作----@@@")
         self.__dirty = True
+    #}}}
 
     # 复合操作 #
 
+    #{{{ # 更新员工信息 #
     def updateStaff(self, Id, 
             gender=None, name=None) :
         self.log("\t更新员工操作: ")
@@ -871,9 +879,10 @@ class StaffContainer :
 
         # 7.设置容器状态为已改变
         self.__dirty = True
-
         self.log("\t@@@---- 成功: 更新员工信息 ----@@@")
+    #}}}
 
+    #{{{ # 员工上班 #
     def staffWork(self, Id, wType=NOR) :
         self.log("\t{}员工{}工作操作:".format(Id, wType))
 
@@ -915,8 +924,9 @@ class StaffContainer :
 
         self.log("\t@@@----成功: 员工上班操作----@@@")
         self.__dirty = True
+    #}}}
 
-    # 批量操作 #
+    #{{{ # 批量操作 #
 
     def addStaffs(self, gender, *IDs) :
         for Id in IDs :
@@ -929,9 +939,9 @@ class StaffContainer :
     def staffsWork(self, wType=NOR, *IDs) :
         for Id in IDs :
             self.staffWork(Id, wType)
+    #}}}
 
-    # 调试 #
-
+    #{{{ # 调试 #
     def reportStaffs(self) :
         print()
         for workSeq in self.__workSeqs :
@@ -952,6 +962,7 @@ class StaffContainer :
             msg = "".join(["员工序号: {}".format(Id) for Id in staffs])
             print(msg)
             print()
+    #}}}
     #}}}
 #}}}
 
