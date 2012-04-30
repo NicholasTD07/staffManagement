@@ -28,6 +28,7 @@ class StaffMenu(QMenu) :
         # 获得员工函数 #
         self.staffWork = self.staffs.staffWork
         self.staffWait = self.staffs.staffWait
+        self.staffIdle = self.staffs.staffIdle
         # 获得工作类型 #
         self.NOR = self.staffs.NOR
         self.SEL = self.staffs.SEL
@@ -46,34 +47,18 @@ class StaffMenu(QMenu) :
         self.idleAction = QAction("下班", self)
         self.addAction(self.idleAction)
         # 连接动作和槽 #
-        self.connectSlot(self.norWorkAction, self.norWork)
-        self.connectSlot(self.selWorkAction, self.selWork)
-        self.connectSlot(self.namedWorkAction, self.namedWork)
-        self.connectSlot(self.waitAction, self.wait)
+        self.connect(self.norWorkAction, SIGNAL("activated()"),
+                lambda : self.staffWork(self.Id, self.NOR))
+        self.connect(self.selWorkAction, SIGNAL("activated()"),
+                lambda : self.staffWork(self.Id, self.SEL))
+        self.connect(self.namedWorkAction, SIGNAL("activated()"),
+                lambda : self.staffWork(self.Id, self.NAMED))
+        self.connect(self.waitAction, SIGNAL("activated()"),
+                lambda : self.staffWait(self.Id))
+        self.connect(self.idleAction, SIGNAL("activated()"),
+                lambda : self.staffIdle(self.Id))
         self.exec(event.screenPos())
 #}}}
-
-    #{{{ # 链接信号 #
-    def connectSlot(self, action=None, slot=None,
-            signal="activated()") :
-        if action is not None :
-            if slot is not None:
-                self.connect(action, SIGNAL(signal), slot)
-    #}}}
-
-    #{{{ # 工作等待函数 #
-    def norWork(self) :
-        self.staffWork(self.Id, self.NOR)
-
-    def selWork(self) :
-        self.staffWork(self.Id, self.SEL)
-        
-    def namedWork(self) :
-        self.staffWork(self.Id, self.NAMED)
-
-    def wait(self) :
-        self.staffWait(self.Id)
-    #}}}
 #}}}
 
 
@@ -125,6 +110,7 @@ class StaffIcon(QGraphicsItem) :
         elif wType in self.staffs.workTypes :
             self.color = self.WorkColor
         else :
+            self.scene().removeItem(self)
             raise wrongType("类型错误({}), 不予画图."\
                 .format(wType))
         self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
