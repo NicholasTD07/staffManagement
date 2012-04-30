@@ -218,7 +218,11 @@ class GroupStaffDialog(QDialog) :
                     "请选择员工",
                     "尚未选择任何员工进行操作."
                     "\n请在未分组员工框内选择之后再进行操作.")
+        anyStaff = False
         for item in items :
+            if item is None :
+                continue
+            anyStaff = True
             itemRow = unGrpTable.row(item)
             itemColumn = unGrpTable.column(item)
             Id = int(item.data(Qt.UserRole))
@@ -237,10 +241,11 @@ class GroupStaffDialog(QDialog) :
         # 必须更新列大小 #
         groupedTable.resizeColumnsToContents()
         # 将选择员工放在下一个位置 #
-        if itemColumn != 0 and itemColumn % 9 == 0 :
-            unGrpTablesetCurrentCell(itemRow+1, 0)
-        else :
-            unGrpTablesetCurrentCell(itemRow, itemColumn+1)
+        if anyStaff :
+            if itemColumn != 0 and itemColumn % 9 == 0 :
+                unGrpTablesetCurrentCell(itemRow+1, 0)
+            else :
+                unGrpTablesetCurrentCell(itemRow, itemColumn+1)
     #}}}
 #}}}
 
