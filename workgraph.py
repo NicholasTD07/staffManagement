@@ -88,6 +88,7 @@ class StaffIcon(QGraphicsItem) :
                 .format(self.Id), self)
         self.StaffNum.setTextWidth(10)
         self.StaffNum.setFont(QFont("Times", 20))
+        self.StaffNum.adjustSize()
 #}}}
 
     def boundingRect(self) :
