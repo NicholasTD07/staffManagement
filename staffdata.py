@@ -534,7 +534,7 @@ class StaffContainer :
         if inPos is None :
             nSeq[nPos] = staff
             self.log("\t\t员工工作位置为空, 正常上班.")
-        elif isinstance(inPos, Staff) and inPos.wType == self.SEL :
+        elif isinstance(inPos, Staff) and inPos.sType == self.SEL :
             nSeq.insert(nPos, staff)
             self.log("\t\t员工工作位置非空为选钟员工, 插队上班.")
         else :
@@ -707,7 +707,7 @@ class StaffContainer :
                     self.log("\t\t当前工作序列长度小于工作序号, 自动增加中.")
                     checked = True
             if isinstance(nSeq[sPos-1], Staff)\
-                    and nSeq[sPos-1].wType == self.SEL :
+                    and nSeq[sPos-1].sType == self.SEL :
                 inPos = nSeq[sPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
@@ -736,7 +736,7 @@ class StaffContainer :
                     checked = True
             inPos = nSeq[nPos-1]
             if inPos is None or \
-                    (isinstance(inPos, Staff) and inPos.wType == self.NOR) :
+                    (isinstance(inPos, Staff) and inPos.sType == self.NOR) :
                 inPos = nSeq[nPos]
                 if inPos is None :
                     self.log("\t\t员工正常上点钟!")
