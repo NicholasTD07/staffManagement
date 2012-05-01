@@ -2,3 +2,6 @@
 *.swp
 test*
 log.txt
+tags
+*.pyc
+*.orig

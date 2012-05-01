@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_updatestaffdialog.ui'
 #
-# Created: Fri Mar 30 17:47:07 2012
+# Created: Mon Apr 16 09:19:13 2012
 #      by: PyQt4 UI code generator 4.8.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,10 +31,6 @@ class Ui_UpdateStaffDialog(object):
         self.label = QtGui.QLabel(UpdateStaffDialog)
         self.label.setObjectName(_fromUtf8("label"))
         self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
-        self.IdSpinBox = QtGui.QSpinBox(UpdateStaffDialog)
-        self.IdSpinBox.setMinimum(1)
-        self.IdSpinBox.setObjectName(_fromUtf8("IdSpinBox"))
-        self.gridLayout.addWidget(self.IdSpinBox, 1, 1, 1, 1)
         self.label_2 = QtGui.QLabel(UpdateStaffDialog)
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.gridLayout.addWidget(self.label_2, 2, 0, 1, 1)
@@ -46,9 +42,14 @@ class Ui_UpdateStaffDialog(object):
         self.gridLayout.addWidget(self.label_3, 3, 0, 1, 1)
         self.genderComboBox = QtGui.QComboBox(UpdateStaffDialog)
         self.genderComboBox.setObjectName(_fromUtf8("genderComboBox"))
+        self.genderComboBox.addItem(_fromUtf8(""))
+        self.genderComboBox.addItem(_fromUtf8(""))
         self.gridLayout.addWidget(self.genderComboBox, 3, 1, 1, 1)
+        self.IdLineEdit = QtGui.QLineEdit(UpdateStaffDialog)
+        self.IdLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.IdLineEdit.setObjectName(_fromUtf8("IdLineEdit"))
+        self.gridLayout.addWidget(self.IdLineEdit, 1, 1, 1, 1)
         self.gridLayout.setColumnStretch(0, 5)
-        self.gridLayout.setColumnStretch(1, 4)
         self.verticalLayout.addLayout(self.gridLayout)
         self.line = QtGui.QFrame(UpdateStaffDialog)
         self.line.setFrameShape(QtGui.QFrame.HLine)
@@ -72,9 +73,9 @@ class Ui_UpdateStaffDialog(object):
         self.wTypeLabel = QtGui.QLabel(UpdateStaffDialog)
         self.wTypeLabel.setObjectName(_fromUtf8("wTypeLabel"))
         self.gridLayout_2.addWidget(self.wTypeLabel, 2, 1, 1, 1)
-        self.posNameLable = QtGui.QLabel(UpdateStaffDialog)
-        self.posNameLable.setObjectName(_fromUtf8("posNameLable"))
-        self.gridLayout_2.addWidget(self.posNameLable, 3, 0, 1, 1)
+        self.posNameLabel = QtGui.QLabel(UpdateStaffDialog)
+        self.posNameLabel.setObjectName(_fromUtf8("posNameLabel"))
+        self.gridLayout_2.addWidget(self.posNameLabel, 3, 0, 1, 1)
         self.posLabel = QtGui.QLabel(UpdateStaffDialog)
         self.posLabel.setObjectName(_fromUtf8("posLabel"))
         self.gridLayout_2.addWidget(self.posLabel, 3, 1, 1, 1)
@@ -104,12 +105,15 @@ class Ui_UpdateStaffDialog(object):
         self.label.setText(QtGui.QApplication.translate("UpdateStaffDialog", "员工工号:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("UpdateStaffDialog", "姓名:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("UpdateStaffDialog", "性别:", None, QtGui.QApplication.UnicodeUTF8))
+        self.genderComboBox.setItemText(0, QtGui.QApplication.translate("UpdateStaffDialog", "男", None, QtGui.QApplication.UnicodeUTF8))
+        self.genderComboBox.setItemText(1, QtGui.QApplication.translate("UpdateStaffDialog", "女", None, QtGui.QApplication.UnicodeUTF8))
+        self.IdLineEdit.setToolTip(QtGui.QApplication.translate("UpdateStaffDialog", "可用空格分隔多个员工工号, 方便批量创建员工.", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("UpdateStaffDialog", "员工工作状态:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("UpdateStaffDialog", "工作次数:", None, QtGui.QApplication.UnicodeUTF8))
         self.wTimeLabel.setText(QtGui.QApplication.translate("UpdateStaffDialog", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("UpdateStaffDialog", "工作状态:", None, QtGui.QApplication.UnicodeUTF8))
         self.wTypeLabel.setText(QtGui.QApplication.translate("UpdateStaffDialog", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.posNameLable.setText(QtGui.QApplication.translate("UpdateStaffDialog", "XX位置:", None, QtGui.QApplication.UnicodeUTF8))
+        self.posNameLabel.setText(QtGui.QApplication.translate("UpdateStaffDialog", "XX位置:", None, QtGui.QApplication.UnicodeUTF8))
         self.posLabel.setText(QtGui.QApplication.translate("UpdateStaffDialog", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
 
 
