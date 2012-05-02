@@ -14,9 +14,6 @@ import ui_updatestaffdialog
 import re
 
 
-__version__="0.2.0"
-
-
 class UpdateStaffDialog(QDialog,
         ui_updatestaffdialog.Ui_UpdateStaffDialog) :
 

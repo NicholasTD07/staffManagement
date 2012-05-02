@@ -17,6 +17,8 @@ from errorclass import *
 
 
 class StaffMenu(QMenu) :
+
+
 #{{{ 员工菜单
 #{{{ #---- 初始化员工菜单 ----#
     def __init__(self, staffs, staff, event, parent=None) :
@@ -63,7 +65,9 @@ class StaffMenu(QMenu) :
 
 
 class StaffIcon(QGraphicsItem) :
-    #{{{ 员工图标
+
+
+#{{{ 员工图标
 #{{{ # 初始化共用参数 #
     red, green, blue = 0, 0, 255
     WorkColor = QColor(red, green, blue)

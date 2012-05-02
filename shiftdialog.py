@@ -16,6 +16,7 @@ import staffdata
 
 class ShiftDialog(QDialog) :
 
+
 #{{{ # 初始化员工换班对话框 #
     def __init__(self, staffs, parent=None) :
         # 初始化 #

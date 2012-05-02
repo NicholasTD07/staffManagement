@@ -8,9 +8,6 @@ import staffdata
 import ui_deletestaffdialog
 
 
-__version__="0.1.0"
-
-
 class DeleteStaffDialog(QDialog,
         ui_deletestaffdialog.Ui_DeleteStaffDialog) :
     

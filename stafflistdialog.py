@@ -14,7 +14,6 @@ import staffdata
 import ui_stafflistdialog
 import updatestaffdialog
 
-__version__ = "0.3.0"
 
 class StaffListDialog(QDialog,
             ui_stafflistdialog.Ui_StaffListDialog) :
