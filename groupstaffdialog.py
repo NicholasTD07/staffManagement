@@ -3,9 +3,6 @@
 #   员工分组对话框
 
 
-# 系统 #
-import sys
-
 # PyQt #
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *

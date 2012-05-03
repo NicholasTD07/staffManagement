@@ -2,8 +2,6 @@
 # File Info :
 #   主窗口程序
 
-# 系统 #
-import sys
 
 # PyQt #
 from PyQt4.QtCore import *

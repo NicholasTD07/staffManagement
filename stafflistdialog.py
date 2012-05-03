@@ -2,8 +2,6 @@
 # File Info :
 #   查看员工队列对话框
 
-# 系统 #
-import sys
 
 # PyQt #
 from PyQt4.QtCore import *
