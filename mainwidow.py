@@ -2,8 +2,6 @@
 # File Info :
 #   主窗口程序
 
-# 系统 #
-import sys
 
 # PyQt #
 from PyQt4.QtCore import *
@@ -18,35 +16,29 @@ import workgraph
 import groupstaffdialog
 import shiftdialog
 
-# 主窗口 UI #
-import ui_mainwindow
+
+class MainWindow(QMainWindow) :
 
 
-__version__ = "0.3.0"
-
-
-class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
-
+#{{{
     #{{{ #---- 初始化主窗口 ----# 
     def __init__(self, parent=None) : 
         # 1. 初始化 主窗口
         super(MainWindow, self).__init__(parent)
-        self.setupUi(self)
+        self.staffs = staffdata.StaffContainer()
+        self.setupUi()
 
         #{{{ 2. 连接信号和槽
-        self.staffs = staffdata.StaffContainer()
         self.connectSlot(self.fileNewAction, self.fileNew)
         self.connectSlot(self.fileOpenAction, self.fileOpen)
         self.connectSlot(self.fileSaveAction, self.fileSave)
         self.connectSlot(self.fileSaveAsAction, self.fileSaveAs)
-        self.connectSlot(self.fileQuitAction, self.close)
-        self.connectSlot(self.addStaffAction, self.addStaff)
+        self.connectSlot(self.quitAction, self.close)
+        self.connectSlot(self.staffAddAction, self.addStaff)
+        self.connectSlot(self.staffDelAction, self.deleteStaff)
         self.connectSlot(self.groupStaffAction, self.groupStaff)
-        self.connectSlot(self.shiftGroupAction, self.shiftGroup)
-        self.connectSlot(self.deleteStaffAction,
-                self.deleteStaff)
-        self.connectSlot(self.checkTableAction,
-                self.checkTable)
+        self.connectSlot(self.shiftStaffAction, self.shiftGroup)
+        self.connectSlot(self.listStaffAction, self.checkTable)
         #}}}
 
         # 3. 初始化 设置
@@ -64,6 +56,115 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         # 6. 初始化 workGraph
         QTimer.singleShot(0, self.initWorkGraph)
     #}}}
+
+#{{{ # 设置界面 #
+    def setupUi(self) :
+        # 初始化主窗口 #
+        self.resize(800, 600)
+
+        # 菜单栏状态栏工具栏 #
+        menuBar = QMenuBar(self)
+        toolBar = QToolBar(self)
+        statusBar = QStatusBar(self)
+        # 设置属性 #
+        menuBar.setObjectName("menuBar")
+        toolBar.setObjectName("toolBar")
+        statusBar.setObjectName("statusBar")
+        # 挂入主窗口 #
+        self.menuBar = menuBar
+        self.toolBar = toolBar
+        self.statusBar = statusBar
+
+    #{{{ #-- 添加动作 --#
+
+        #{{{ # 文件动作 #
+        fileNewAction = QAction("新建文件(&N)", self)
+        fileNewAction.setShortcut("Ctrl+N")
+        fileOpenAction = QAction("打开文件(&O)", self)
+        fileOpenAction.setShortcut("Ctrl+O")
+        fileSaveAction = QAction("保存文件(&S)", self)
+        fileSaveAction.setShortcut("Ctrl+S")
+        fileSaveAsAction = QAction("另存为...(&A)", self)
+        fileSaveAsAction.setShortcut("Ctrl+A")
+        quitAction = QAction("退出程序(&Q)", self)
+        quitAction.setShortcut("Ctrl+Q")
+        # 挂入主窗口 #
+        self.fileNewAction = fileNewAction
+        self.fileOpenAction = fileOpenAction
+        self.fileSaveAction = fileSaveAction
+        self.fileSaveAsAction = fileSaveAsAction
+        self.quitAction = quitAction
+        #}}}
+
+        #{{{ # 员工动作 #
+        staffAddAction = QAction("增加员工(&I)", self)
+        staffAddAction.setShortcut("Ctrl+I")
+        staffDelAction = QAction("减少员工(&D)", self)
+        staffDelAction.setShortcut("Ctrl+D")
+        groupStaffAction = QAction("员工分组(&G)", self)
+        groupStaffAction.setShortcut("Ctrl+G")
+        shiftStaffAction = QAction("轮换班组(&C)", self)
+        shiftStaffAction.setShortcut("Ctrl+C")
+        listStaffAction = QAction("查看员工(&L)", self)
+        listStaffAction.setShortcut("Ctrl+L")
+        # 挂入主窗口 #
+        self.staffAddAction = staffAddAction
+        self.staffDelAction = staffDelAction
+        self.groupStaffAction = groupStaffAction
+        self.shiftStaffAction = shiftStaffAction
+        self.listStaffAction = listStaffAction
+        #}}}
+
+        #{{{ #-- 添加菜单 --#
+        fileMenu = QMenu("文件(&F)", menuBar)
+        staffMenu = QMenu("管理员工(&M)", menuBar)
+        # 挂入主窗口 #
+        self.fileMenu = fileMenu
+        self.staffMenu = staffMenu
+        # 挂入菜单栏 #
+        menuBar.addMenu(fileMenu)
+        menuBar.addMenu(staffMenu)
+        #}}}
+
+        #{{{ #-- 添加动作 --#
+        addFileAction = fileMenu.addAction
+        addStaffAction = staffMenu.addAction
+        addToolbarAction = toolBar.addAction
+        # 文件菜单 #
+        fileActions = [ fileNewAction, fileOpenAction, None,
+                fileSaveAction, fileSaveAsAction, None, quitAction ]
+        for action in fileActions :
+            if action is None :
+                fileMenu.addSeparator()
+            else :
+                addFileAction(action)
+        # 员工菜单 #
+        staffActions = [ staffAddAction, staffDelAction, None,
+                groupStaffAction, shiftStaffAction, None, listStaffAction ]
+        for action in staffActions :
+            if action is None :
+                staffMenu.addSeparator()
+            else :
+                addStaffAction(action)
+        # 工具栏 #
+        toolBarActions = [ fileOpenAction, fileSaveAction, None,
+                staffAddAction, groupStaffAction, listStaffAction,
+                None, quitAction ]
+        for action in toolBarActions :
+            if action is None :
+                toolBar.addSeparator()
+            else :
+                addToolbarAction(action)
+        #}}}
+        
+    #}}}
+
+    #{{{ # 设置属性 #
+        self.setMenuBar(menuBar)
+        self.setStatusBar(statusBar)
+        self.addToolBar(Qt.TopToolBarArea, toolBar)
+    #}}}
+#}}}
 
 #{{{ #---- 重定义 ----#
 
@@ -116,7 +217,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             ok, msg, staffs = self.staffs.load(fileName)
             self.staffs = staffs
             self.staffs.setDirty(False)
-            self.statusBar().showMessage(msg, 5000)
+            self.statusBar.showMessage(msg, 5000)
     #}}}
 
     #{{{ # 初始化工作表 #
@@ -149,9 +250,9 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
         if not self.okToContinue() :
             return
         self.staffs.clear()
-        self.statusBar().clearMessage()
+        self.statusBar.clearMessage()
         msg = "新建员工信息成功!"
-        self.statusBar().showMessage(msg, 5000)
+        self.statusBar.showMessage(msg, 5000)
         self.initWorkGraph()
     #}}}
 
@@ -174,9 +275,8 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
                                 .format(msg))
             self.staffs = staffs
             self.staffs.setDirty(False)
-            self.statusBar().showMessage(msg, 5000)
+            self.statusBar.showMessage(msg, 5000)
             self.initWorkGraph()
-    #}}}
     #}}}
 
     #{{{ # 保存文件 #
@@ -185,7 +285,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             return self.fileSaveAs()
         else :
             ok, msg = self.staffs.save()
-            self.statusBar().showMessage(msg, 5000)
+            self.statusBar.showMessage(msg, 5000)
             return ok
     #}}}
 
@@ -201,7 +301,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             if "." not in fileName :
                 fileName += ".qpc"
             ok, msg = self.staffs.save(fileName)
-            self.statusBar().showMessage(msg, 5000)
+            self.statusBar.showMessage(msg, 5000)
             return ok
         return False
     #}}}
@@ -253,7 +353,7 @@ class MainWindow(QMainWindow, ui_mainwindow.Ui_MainWindow) :
             self.workGraph.populate()
     #}}}
 #}}}
-
+#}}}
 
 if __name__ == '__main__' :
     import sys

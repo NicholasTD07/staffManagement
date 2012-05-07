@@ -13,9 +13,6 @@ from time import time
 from errorclass import *
 
 
-__version__ = "0.3.1"
-
-
 DEBUG = True
 PRINT = True
 

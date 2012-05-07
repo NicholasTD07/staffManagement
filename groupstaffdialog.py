@@ -3,9 +3,6 @@
 #   员工分组对话框
 
 
-# 系统 #
-import sys
-
 # PyQt #
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -13,7 +10,9 @@ from PyQt4.QtGui import *
 # 调用 #
 import staffdata
 
+
 class GroupStaffDialog(QDialog) :
+
 
     #{{{ # 初始化员工分组对话框 #
     def __init__(self, staffs, parent=None) :

@@ -3,9 +3,6 @@
 #   员工分组对话框
 
 
-# 系统 #
-import sys
-
 # PyQt #
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -15,6 +12,7 @@ import staffdata
 
 
 class ShiftDialog(QDialog) :
+
 
 #{{{ # 初始化员工换班对话框 #
     def __init__(self, staffs, parent=None) :
