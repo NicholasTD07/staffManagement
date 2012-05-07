@@ -2,8 +2,6 @@
 # File Info :
 #   主窗口图表
 
-# 系统 #
-import sys
 
 # PyQt #
 from PyQt4.QtCore import *
@@ -196,6 +194,8 @@ class WorkGraph(QWidget) :
     #}}}
 
 if __name__ == '__main__' :
+    import sys
+
     app = QApplication(sys.argv)
 
     S = staffdata.StaffContainer()
