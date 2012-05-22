@@ -336,7 +336,7 @@ class StaffContainer :
 
         # 2. 检查员工是否处于 IDLE 状态
         if staff.wType != self.IDLE :
-            msg = "员工状态错误.\n需要在空闲态才能分组."
+            msg = "{}号员工状态错误.\n需要在空闲态才能分组.".format(Id)
             self.log(msg)
             raise wrongType(msg)
 
@@ -344,7 +344,7 @@ class StaffContainer :
         if Id in unGrpIDs :
             unGrpIDs.remove(Id)
         else :
-            msg = "分组失败: 员工不在未分组员工中."
+            msg = "分组失败: {}号员工不在未分组员工中.".format(Id)
             self.log(msg)
             raise notFoundInGroup(msg)
 
@@ -379,7 +379,7 @@ class StaffContainer :
 
         # 2. 检查员工是否处于 WAIT 状态
         if wType != self.WAIT :
-            msg = "员工状态错误.\n需要在等待态才能取消分组."
+            msg = "{}号员工状态错误.\n需要在等待态才能取消分组.".format(Id)
             self.log(msg)
             raise wrongType(msg)
 
@@ -387,8 +387,7 @@ class StaffContainer :
         if Id in groups[group] :
             groups[group].remove(Id)
         else :
-            msg = "取消分组失败: 员工不在{}分组内."\
-                    .format(group)
+            msg = "取消分组失败: {}号员工不在{}分组内.".format(Id, group)
             self.log(msg)
             raise notFoundInGroup(msg)
 
@@ -465,7 +464,7 @@ class StaffContainer :
             groups[group].remove(Id)
             found = True
         if not found :
-            msg = "员工组内未找到员工."
+            msg = "员工组内未找到{}号员工.".format(Id)
             self.log(msg)
             raise notFoundInGroup(msg)
         self.log("\t\t从员工组中移除工号为: {}的员工."\
@@ -493,7 +492,7 @@ class StaffContainer :
 
         # 2. 判断员工当前状态是否为等待状态
         if wType != self.WAIT :
-            msg = "员工当前状态({})错误, 无法进行排钟上班操作.".format(wType)
+            msg = "{}号员工当前状态({})错误, 无法进行排钟上班操作.".format(Id, wType)
             self.log(msg)
             raise notWaiting(msg)
 
@@ -578,7 +577,7 @@ class StaffContainer :
 
         # 2. 判断员工当前状态是否为等待状态
         if wType != self.WAIT :
-            msg = "员工当前状态({})错误, 无法进行选钟上班操作.".format(wType)
+            msg = "{}号员工当前状态({})错误, 无法进行选钟上班操作.".format(Id, wType)
             self.log(msg)
             raise notWaiting(msg)
 
@@ -666,7 +665,7 @@ class StaffContainer :
 
         # 2. 判断员工当前状态是否为等待状态
         if wType != self.WAIT :
-            msg = "员工当前状态({})错误, 无法进行点钟上班操作.".format(wType)
+            msg = "{}号员工当前状态({})错误, 无法进行点钟上班操作.".format(Id, wType)
             self.log(msg)
             raise notWaiting(msg)
 
@@ -813,7 +812,7 @@ class StaffContainer :
 
         # 2. 检查员工是否在等待状态
         if wType != self.WAIT :
-            msg = "员工不在等待状态.无法执行下班操作."
+            msg = "{}号员工不在等待状态.无法执行下班操作.".format(Id)
             self.log(msg)
             raise notWaiting(msg)
 
@@ -900,7 +899,7 @@ class StaffContainer :
 
         # 2. 检查员工当前状态是否为等待状态
         if t_wType != self.WAIT :
-            msg = "员工不在等待状态, 结束操作."
+            msg = "{}号员工不在等待状态, 结束操作.".format(Id)
             self.log(msg)
             raise notWaiting(msg)
             return
