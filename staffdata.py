@@ -900,7 +900,9 @@ class StaffContainer :
 
         # 2. 检查员工当前状态是否为等待状态
         if t_wType != self.WAIT :
-            self.log("\t员工不在等待状态, 结束操作.")
+            msg = "员工不在等待状态, 结束操作."
+            self.log(msg)
+            raise notWaiting(msg)
             return
 
         # 3. 更新 nPos, sPos
