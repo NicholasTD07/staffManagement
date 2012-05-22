@@ -465,7 +465,7 @@ class StaffContainer :
             groups[group].remove(Id)
             found = True
         if not found :
-            msg = "!!!----员工组内未找到员工.----!!!"
+            msg = "员工组内未找到员工."
             self.log(msg)
             raise notFoundInGroup(msg)
         self.log("\t\t从员工组中移除工号为: {}的员工."\
@@ -493,7 +493,7 @@ class StaffContainer :
 
         # 2. 判断员工当前状态是否为等待状态
         if wType != self.WAIT :
-            msg = "\t\t!!!----失败: 员工当前状态({})错误----!!!".format(wType)
+            msg = "员工当前状态({})错误, 无法进行排钟上班操作.".format(wType)
             self.log(msg)
             raise notWaiting(msg)
 
@@ -535,8 +535,9 @@ class StaffContainer :
             nSeq.insert(nPos, staff)
             self.log("\t\t员工工作位置非空为选钟员工, 插队上班.")
         else :
-            self.log("\t\t!!!----错误: 插入员工时出现未知错误.----!!!")
-            raise norWork("!!!----错误: 插入员工时出现未知错误.----!!!")
+            msg = "未知错误: 插入员工时出现未知错误. 请向开发者报告该问题."
+            self.log(msg)
+            raise norWork(msg)
 
         # 7. 更新队列工作序号
         if nPos not in workSeq.nPos :
@@ -577,8 +578,9 @@ class StaffContainer :
 
         # 2. 判断员工当前状态是否为等待状态
         if wType != self.WAIT :
-            self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
+            msg = "员工当前状态({})错误, 无法进行选钟上班操作.".format(wType)
+            self.log(msg)
+            raise notWaiting(msg)
 
         # 3. 提取当前工作序号, 使员工脱离工作队列
         # 3.1 判断员工工作状态
@@ -664,8 +666,9 @@ class StaffContainer :
 
         # 2. 判断员工当前状态是否为等待状态
         if wType != self.WAIT :
-            self.log("\t\t!!!----失败: 员工当前状态错误----!!!")
-            raise notWaiting("!!!----失败: 员工当前状态错误----!!!")
+            msg = "员工当前状态({})错误, 无法进行点钟上班操作.".format(wType)
+            self.log(msg)
+            raise notWaiting(msg)
 
         # 3. 使员工脱离工作队列
         pos = self.__workSeqs[wTime].nSeq.index(staff)
@@ -715,11 +718,13 @@ class StaffContainer :
                     sPos.append(sPos)
                     staff.sType = self.SEL
                 else :
-                    self.log("\t\t员工工作位置非空.退出.")
-                    raise namedWrong("员工工作位置非空.退出.")
+                    msg = "未知错误: 员工工作位置非空. 请向开发者报告该问题."
+                    self.log(msg)
+                    raise namedWrong(msg)
             else :
-                self.log("\t\t员工上一个位置并非SEL.退出.")
-                raise namedWrong("员工上一个位置并非SEL.退出.")
+                msg = "未知错误: 上一个员工状态并非选钟. 请向开发者报告该问题."
+                self.log(msg)
+                raise namedWrong(msg)
 
         else :  # 无选钟插在中间
             self.log("\t\t无员工被选钟.")
@@ -742,12 +747,14 @@ class StaffContainer :
                     workSeq.nPos.append(nPos)
                     staff.sType = self.NOR
                 else :
-                    self.log("员工工作位置异常.退出.")
-                    raise namedWrong("员工工作位置异常.退出.")
+                    msg = "未知错误: 员工工作位置异常. 请向开发者报告该问题."
+                    self.log(msg)
+                    raise namedWrong(msg)
 
             else :
-                self.log("员工上一个位置非空或者不是NOR.退出.")
-                raise namedWrong("员工上一个位置非空或者不是NOR.退出.")
+                msg = "未知错误: 员工上一个位置非空或者上一个位置员工状态不是排钟. 请向开发者报告该问题."
+                self.log(msg)
+                raise namedWrong(msg)
 
         # 7. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -918,7 +925,7 @@ class StaffContainer :
         elif wType == self.NAMED :
             self.namedWork(Id)
         else :
-            raise workWrong("需要工作的工作类型错误.")
+            raise workWrong("失败:需要工作的工作类型错误.")
 
         self.log("\t@@@----成功: 员工上班操作----@@@")
         self.__dirty = True
