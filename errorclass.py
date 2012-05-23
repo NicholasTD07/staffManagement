@@ -45,3 +45,6 @@ class workWrong(Error) :
 
 class foundInGroup(Error) :
     pass
+
+class noGrpNum(Error) :
+    pass
