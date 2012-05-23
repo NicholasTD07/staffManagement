@@ -211,13 +211,11 @@ class WorkGraph(QWidget) :
         self.scene.clear()
         staffs = self.staffs
         getStaff = staffs.getStaff
-        groups = staffs.getGroups()
-        workGroupNum = staffs.getWorkGroup()
-        if workGroupNum is None :
-            return
-        workGroup = groups[workGroupNum]
-        for Id in workGroup :
-            staff = getStaff(Id)
+        nSeq = staffs.getWorkSeq()[0].nSeq
+        staffs.printSeqs()
+        for staff in nSeq :
+            if staff is None :
+                continue
             try :
                 staffIcon = StaffIcon(self.staffs, staff, self)
             except wrongType :
