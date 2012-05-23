@@ -229,6 +229,7 @@ class StaffContainer :
                 fh.close()
             if error is not None :
                 return False, error
+            self.__dirty = False
             msg = "\t保存文件: 成功!"
             self.log(msg)
             return True, msg
@@ -373,6 +374,10 @@ class StaffContainer :
         staff = self.__staffs[Id]
         wType = staff.wType
         group = staff.group
+        if group is None :
+            msg = "错误: 员工分组属性为空, 请向开发者报告该问题."
+            self.log(msg)
+            raise noGrpNum(msg)
         # 1.2 局部变量
         unGrpIDs = self.__unGrpIDs
         groups = self.__groups
