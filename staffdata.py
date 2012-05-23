@@ -357,9 +357,9 @@ class StaffContainer :
         # 4.1 检测分组是否存在并且更新分组
         while len(groups) < (grpNum + 1) :
             groups.append([])
-        # 4.2 将员工放入分组, 并且使员工处于等待状态.
+        # 4.2 将员工放入分组
         groups[grpNum].append(Id)
-        self.staffWait(Id)
+        #self.staffWait(Id)
         self.log("\t\t员工进入第{}组分组.".format(grpNum))
         
         # 5. 更新员工组号
@@ -387,8 +387,8 @@ class StaffContainer :
         groups = self.__groups
 
         # 2. 检查员工是否处于 WAIT 状态
-        if wType != self.WAIT :
-            msg = "{}号员工状态错误.\n需要在等待态才能取消分组.".format(Id)
+        if wType != self.WAIT and wType != self.IDLE :
+            msg = "{}号员工状态({})错误.\n需要在等待或休息态才能取消分组.".format(Id, wType)
             self.log(msg)
             raise wrongType(msg)
 
@@ -403,7 +403,8 @@ class StaffContainer :
         # 4. 将员工序号插入未分组序列
         unGrpIDs.append(Id)
         # 4.1 使员工处于空闲态
-        self.staffIdle(Id)
+        if wType == self.WAIT :
+            self.staffIdle(Id)
 
         # 5. 更新员工组号
         staff.group = None
@@ -960,8 +961,6 @@ class StaffContainer :
         print()
         for workSeq in self.__workSeqs :
             nSeq = workSeq.nSeq
-            #nPos = max(workSeq.nPos)
-            #sPos = max(workSeq.sPos)
             nPos = (workSeq.nPos)
             sPos = (workSeq.sPos)
             selected = workSeq.selected
@@ -985,121 +984,121 @@ if __name__ == '__main__' :
 
     # 容器初始化
     S = StaffContainer()
-    # 清除容器
-    S.clear()
-    # 添加员工
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    # 全部等待
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 汇报情况
-    S.reportStaffs()
-    
-    # 测试 全部正常工作
-    S.staffsWork(S.NOR, 1,2,3,4,5,6,7,8,9)
-    S.reportStaffs()
+    ## 清除容器
+    #S.clear()
+    ## 添加员工
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    ## 全部等待
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 汇报情况
+    #S.reportStaffs()
+    #
+    ## 测试 全部正常工作
+    #S.staffsWork(S.NOR, 1,2,3,4,5,6,7,8,9)
+    #S.reportStaffs()
 
-    # 重建测试环境
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 全部选钟工作
-    S.staffsWork(S.SEL, 1,2,3,4,5,6,7,8,9)
-    S.reportStaffs()
+    ## 重建测试环境
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 全部选钟工作
+    #S.staffsWork(S.SEL, 1,2,3,4,5,6,7,8,9)
+    #S.reportStaffs()
 
-    # 重建测试环境
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 1N, 3N, 4N, 2S(应在 1,3 之间)
-    S.staffsWork(S.NOR, 1,3,4,5,6,7,9)
-    S.reportStaffs()
-    S.staffsWork(S.SEL, 2)
-    S.reportStaffs()
-    S.staffsWork(S.NAMED, 8)
-    S.reportStaffs()
+    ## 重建测试环境
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 1N, 3N, 4N, 2S(应在 1,3 之间)
+    #S.staffsWork(S.NOR, 1,3,4,5,6,7,9)
+    #S.reportStaffs()
+    #S.staffsWork(S.SEL, 2)
+    #S.reportStaffs()
+    #S.staffsWork(S.NAMED, 8)
+    #S.reportStaffs()
 
-    # 重建测试环境
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 1N, 2S, 3S, 4N, 5N
-    S.staffsWork(S.NOR, 1,4,5,6,7,8,9)
-    S.reportStaffs()
-    S.staffsWork(S.SEL, 2,3)
-    S.reportStaffs()
+    ## 重建测试环境
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 1N, 2S, 3S, 4N, 5N
+    #S.staffsWork(S.NOR, 1,4,5,6,7,8,9)
+    #S.reportStaffs()
+    #S.staffsWork(S.SEL, 2,3)
+    #S.reportStaffs()
 
-    # 重建测试环境
-    print()
-    print()
-    print()
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 多个员工同一位置选钟 2号
-    S.staffsWork(S.NOR, 1)
-    S.staffsWait(1)
-    S.reportStaffs()
-    S.staffsWork(S.NOR, 2)
-    S.reportStaffs()
-    S.staffsWait(2)
-    S.staffsWork(S.SEL, 2)
-    S.reportStaffs()
-    S.staffsWork(S.NOR, 3)
-    S.staffsWait(3)
-    S.reportStaffs()
-    S.staffsWork(S.SEL, 3)
-    S.reportStaffs()
+    ## 重建测试环境
+    #print()
+    #print()
+    #print()
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 多个员工同一位置选钟 2号
+    #S.staffsWork(S.NOR, 1)
+    #S.staffsWait(1)
+    #S.reportStaffs()
+    #S.staffsWork(S.NOR, 2)
+    #S.reportStaffs()
+    #S.staffsWait(2)
+    #S.staffsWork(S.SEL, 2)
+    #S.reportStaffs()
+    #S.staffsWork(S.NOR, 3)
+    #S.staffsWait(3)
+    #S.reportStaffs()
+    #S.staffsWork(S.SEL, 3)
+    #S.reportStaffs()
 
 
-    # 重建测试环境
-    print()
-    print()
-    print()
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 无选钟情况下的点钟.
-    S.staffsWork(S.NOR, 1,2,3)
-    S.staffsWork(S.NAMED, 4)
-    S.reportStaffs()
+    ## 重建测试环境
+    #print()
+    #print()
+    #print()
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 无选钟情况下的点钟.
+    #S.staffsWork(S.NOR, 1,2,3)
+    #S.staffsWork(S.NAMED, 4)
+    #S.reportStaffs()
 
-    # 重建测试环境
-    print()
-    print()
-    print()
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    # 测试 有选钟情况下的点钟.
-    S.staffsWork(S.SEL, 1,2,3)
-    S.reportStaffs()
-    S.staffsWork(S.NAMED, 4)
-    S.reportStaffs()
-    # 测试存入文件
-    S.save("test.qpc")
-    S.load("test.qpc")
+    ## 重建测试环境
+    #print()
+    #print()
+    #print()
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ## 测试 有选钟情况下的点钟.
+    #S.staffsWork(S.SEL, 1,2,3)
+    #S.reportStaffs()
+    #S.staffsWork(S.NAMED, 4)
+    #S.reportStaffs()
+    ## 测试存入文件
+    #S.save("test.qpc")
+    #S.load("test.qpc")
 
-    # 重建测试环境
-    print()
-    print()
-    print()
-    S.clear()
-    S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
-    S.reportStaffs()
-    S.staffsWait(1,2,3,4,5,6,7,8,9)
-    #S.staffWork(1, S.NAMED)
-    # 测试等待状态下的删除员工. -- 通过.
-    # 测试正常工作状态下的删除员工. -- 通过.
-    # 测试选钟工作状态下的删除员工. -- 通过.
-    # 测试点钟工作状态下的删除员工. -- 通过.
-    # 测试休息状态下的删除员工. -- 未通过.
-    S.staffIdle(1)
-    S.deleteStaff(1)
+    ## 重建测试环境
+    #print()
+    #print()
+    #print()
+    #S.clear()
+    #S.addStaffs(S.MALE, 1,2,3,4,5,6,7,8,9,)
+    #S.reportStaffs()
+    #S.staffsWait(1,2,3,4,5,6,7,8,9)
+    ##S.staffWork(1, S.NAMED)
+    ## 测试等待状态下的删除员工. -- 通过.
+    ## 测试正常工作状态下的删除员工. -- 通过.
+    ## 测试选钟工作状态下的删除员工. -- 通过.
+    ## 测试点钟工作状态下的删除员工. -- 通过.
+    ## 测试休息状态下的删除员工. -- 未通过.
+    #S.staffIdle(1)
+    #S.deleteStaff(1)
 
 
     # 重建测试环境
@@ -1115,6 +1114,7 @@ if __name__ == '__main__' :
     unGrpStaff = S.unGrpStaff
     # 测试员工分组
     group(1, 0)
+    S.staffWork(1, S.NOR)
     unGrpStaff(1)
     
 
