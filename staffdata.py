@@ -129,6 +129,10 @@ class StaffContainer :
         return self.__workGroup
 
     def setWorkGroup(self, workGroup) :
+        workSeqs = self.__workSeqs
+        for workSeq in workSeqs :
+            workSeq.nPos = [0]
+            workSeq.sPos = [0]
         self.__workGroup = workGroup
 
     def getStaff(self, Id) :
@@ -789,7 +793,6 @@ class StaffContainer :
         elif wType == self.IDLE :
             staff.wType = self.WAIT
             self.__workSeqs[0].nSeq.append(staff)
-
             
         # 3. 加入变动员工组
         self.__modStaffs.add(staff)
