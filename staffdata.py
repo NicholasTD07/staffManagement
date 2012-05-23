@@ -1028,6 +1028,21 @@ class StaffContainer :
             msg = "".join(["员工序号: {}".format(Id) for Id in staffs])
             print(msg)
             print()
+
+    def printSeqs(self) :
+        workSeqs = self.__workSeqs
+        for workSeq in workSeqs :
+            nSeq = workSeq.nSeq
+            staffs = []
+            for staff in nSeq :
+                if staff is None :
+                    staffs.append("空  ")
+                else :
+                    staffs.append("{}  ".format(staff.Id))
+            msg = "".join(["员工序号: {}".format(Id) for Id in staffs])
+            print(msg)
+            print()
+
     #}}}
     #}}}
 #}}}
