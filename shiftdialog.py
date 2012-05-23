@@ -103,6 +103,7 @@ class ShiftDialog(QDialog) :
         # 初始化局部变量 #
         workStaffs = self.workStaffs
         setWorkGroup = self.staffs.setWorkGroup
+        shiftStaff = self.staffs.shiftStaff
         standbyGrpNum = self.shiftGrpSpinBox.value() - 1
         # 检查员工状态 #
         if workStaffs :
@@ -113,7 +114,9 @@ class ShiftDialog(QDialog) :
                             .format(workStaffs))
             return
         # 更新上班分组号 #
-        setWorkGroup(standbyGrpNum) 
+        shiftStaff(standbyGrpNum)
+        setWorkGroup(standbyGrpNum)
+        self.staffs.reportStaffs()
         # 更新界面 #
         workGroupNum = self.getWorkGroup()
         if workGroupNum is None :
