@@ -26,39 +26,85 @@ class StaffMenu(QMenu) :
         self.staff = staff
         self.Id = staff.Id
         # 获得员工函数 #
-        staffWork = self.staffs.staffWork
-        staffWait = self.staffs.staffWait
-        staffIdle = self.staffs.staffIdle
+        self.staffWork = self.staffs.staffWork
+        self.staffWait = self.staffs.staffWait
+        self.staffIdle = self.staffs.staffIdle
         # 获得工作类型 #
-        NOR = self.staffs.NOR
-        SEL = self.staffs.SEL
-        NAMED = self.staffs.NAMED
-        WAIT = self.staffs.WAIT
+        self.NOR = self.staffs.NOR
+        self.SEL = self.staffs.SEL
+        self.NAMED = self.staffs.NAMED
+        self.WAIT = self.staffs.WAIT
+        self.IDLE = self.staffs.IDLE
         # 添加动作 #
         self.norWorkAction = QAction("排钟", self)
-        self.addAction(self.norWorkAction)
         self.selWorkAction = QAction("选钟", self)
-        self.addAction(self.selWorkAction)
         self.namedWorkAction = QAction("点钟", self)
-        self.addAction(self.namedWorkAction)
-        self.addSeparator()
         self.waitAction = QAction("等待", self)
-        self.addAction(self.waitAction)
         self.idleAction = QAction("下班", self)
-        self.addAction(self.idleAction)
+        # 更新菜单 #
+        self.updateMenu()
         # 连接动作和槽 #
         self.connect(self.norWorkAction, SIGNAL("activated()"),
-                lambda : staffWork(self.Id, NOR))
+                #lambda : self.staffWork(self.Id, self.NOR))
+                lambda : self.errorDetect(self.NOR))
         self.connect(self.selWorkAction, SIGNAL("activated()"),
-                lambda : staffWork(self.Id, SEL))
+                #lambda : self.staffWork(self.Id, self.SEL))
+                lambda : self.errorDetect(self.SEL))
         self.connect(self.namedWorkAction, SIGNAL("activated()"),
-                lambda : staffWork(self.Id, NAMED))
+                #lambda : self.staffWork(self.Id, self.NAMED))
+                lambda : self.errorDetect(self.NAMED))
         self.connect(self.waitAction, SIGNAL("activated()"),
-                lambda : staffWait(self.Id))
+                #lambda : self.staffWait(self.Id))
+                lambda : self.errorDetect(self.WAIT))
         self.connect(self.idleAction, SIGNAL("activated()"),
-                lambda : staffIdle(self.Id))
+                #lambda : self.staffIdle(self.Id))
+                lambda : self.errorDetect(self.IDLE))
         self.exec(event.screenPos())
 #}}}
+
+    #{{{ # 提供错误提醒 #
+    def errorDetect(self, wType) :
+        NOR = self.NOR
+        SEL = self.SEL
+        WAIT = self.WAIT
+        IDLE = self.IDLE
+        NAMED = self.NAMED
+        try :
+            if wType == NOR :
+                self.staffWork(self.Id, NOR)
+            elif wType == SEL :
+                self.staffWork(self.Id, SEL)
+            elif wType == NAMED :
+                self.staffWork(self.Id, NAMED)
+            elif wType == WAIT :
+                self.staffWait(self.Id)
+            elif wType == IDLE :
+                self.staffIdle(self.Id)
+            else :
+                QMessageBox.warning(self,
+                        "状态错误",
+                        "出现未知状态.")
+            # 更新菜单 #
+            self.updateMenu()
+        except Exception as e:
+            QMessageBox.warning(self,
+                    "错误",
+                    str(e))
+        #}}}
+
+    def updateMenu(self) :
+        self.clear()
+        wType = self.staff.wType
+        workTypes = self.staffs.workTypes
+        if wType == self.WAIT :
+            self.addAction(self.norWorkAction)
+            self.addAction(self.selWorkAction)
+            self.addAction(self.namedWorkAction)
+            self.addSeparator()
+            self.addAction(self.idleAction)
+        elif wType in workTypes :
+            self.addAction(self.waitAction)
+
 #}}}
 
 
