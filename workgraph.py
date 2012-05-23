@@ -212,7 +212,6 @@ class WorkGraph(QWidget) :
         staffs = self.staffs
         getStaff = staffs.getStaff
         nSeq = staffs.getWorkSeq()[0].nSeq
-        staffs.printSeqs()
         for staff in nSeq :
             if staff is None :
                 continue
