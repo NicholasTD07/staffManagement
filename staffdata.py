@@ -780,7 +780,7 @@ class StaffContainer :
 
         # 8. 判断是否需要更新 nPos
         nPos = self.__workSeqs[wTime].nPos
-        if pos < max(nPos) :
+        if pos <= max(nPos) :
             workSeq.nPos = [i for i in nPos if i < pos] \
                 + [i+1 for i in nPos if i >= pos]
         else :
@@ -1011,7 +1011,7 @@ class StaffContainer :
 
     #{{{ # 调试 #
     def reportStaffs(self) :
-        print()
+        print("------------------------------")
         for workSeq in self.__workSeqs :
             nSeq = workSeq.nSeq
             nPos = (workSeq.nPos)
@@ -1028,6 +1028,7 @@ class StaffContainer :
             msg = "".join(["员工序号: {}".format(Id) for Id in staffs])
             print(msg)
             print()
+        print("------------------------------")
 
     #}}}
     #}}}
