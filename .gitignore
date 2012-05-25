@@ -5,3 +5,4 @@ log.txt
 tags
 *.pyc
 *.orig
+*.qpc
