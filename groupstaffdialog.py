@@ -173,9 +173,8 @@ class GroupStaffDialog(QDialog) :
         groupStaff = self.staffs.groupStaff
         unGrpStaff = self.staffs.unGrpStaff
         staffWait = self.staffs.staffWait
-        row = 0
-        #rows = {}
         rowCount = groupedTable.rowCount()
+        row = 0
         # 获取每行的员工工号 #
         while row < rowCount :
             # 初始化循环变量 #
