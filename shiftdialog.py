@@ -141,6 +141,7 @@ class ShiftDialog(QDialog) :
                "员工换班",
                "员工换班成功!")
         self.workGrpChanged = True
+        self.workGroupNum = standbyGrpNum
     #}}}
 
     #{{{ #---- 设置界面 ----#
