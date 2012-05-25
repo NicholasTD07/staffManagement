@@ -186,6 +186,7 @@ class WorkGraph(QWidget) :
     def __init__(self, staffs, parent=None) :
         super(WorkGraph, self).__init__(parent)
         self.staffs = staffs
+        self.log = staffs.log
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0,
@@ -207,6 +208,7 @@ class WorkGraph(QWidget) :
 
     #{{{ # 更新图像 #
     def populate(self) :
+        self.log("更新图像.")
         # 初始化局部变量 #
         self.scene.clear()
         staffs = self.staffs

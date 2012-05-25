@@ -42,7 +42,7 @@ class GroupStaffDialog(QDialog) :
 
         # 添加分组按键 #
         self.connect(self.addGroupButton, SIGNAL("clicked()"),
-                lambda : self.groups.append([]))
+                self.on_addGroupButton_clicked)
                 #lambda : print("点击按键"))
 
         # 添加至分组按键 #
@@ -160,7 +160,7 @@ class GroupStaffDialog(QDialog) :
                     QMessageBox.Yes|QMessageBox.No)
         if reply == QMessageBox.Yes :
             self.saveGroups()
-        QDialog.accept(self)
+            QDialog.accept(self)
     #}}}
 
     #{{{ #---- 辅助函数 ----#
@@ -173,9 +173,8 @@ class GroupStaffDialog(QDialog) :
         groupStaff = self.staffs.groupStaff
         unGrpStaff = self.staffs.unGrpStaff
         staffWait = self.staffs.staffWait
-        row = 0
-        #rows = {}
         rowCount = groupedTable.rowCount()
+        row = 0
         # 获取每行的员工工号 #
         while row < rowCount :
             # 初始化循环变量 #
@@ -224,6 +223,14 @@ class GroupStaffDialog(QDialog) :
                     "设置分组",
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(maxGroups)
+    #}}}
+
+    #{{{ # 添加分组按钮 #
+    def on_addGroupButton_clicked(self) :
+        self.staffs.addGroup()
+        self.groupSpinBox.setRange(1, len(self.groups))
+        self.updateGroupedTable()
+        #QMessageBox.information(self, "添加分组", "添加员工分组成功!")
     #}}}
 
     #{{{ #-- 添加至分组按键信号槽 --#
