@@ -125,6 +125,9 @@ class StaffContainer :
     def getGroups(self) :
         return self.__groups
 
+    def addGroup(self) :
+        self.__groups.append([])
+
     def getWorkGroup(self) :
         return self.__workGroup
 
@@ -327,12 +330,14 @@ class StaffContainer :
 
     #{{{ # 员工换班 #
     def shiftStaff(self, waitGroupNum) :
-        self.log("员工轮班操作: ")
+        log = self.log
+        log("员工轮班操作: ")
 
         # 判断是否为当前班组 #
         if waitGroupNum == self.__workGroup :
             self.log("{}班组正在上班.退出换班操作.".format( waitGroupNum + 1) )
             return
+        log("正在上班分组号: {}, 等待上班分组号: {}.".format(self.__workGroup, waitGroupNum))
         # 初始化局部变量 #
         WAIT = self.WAIT
         IDLE = self.IDLE
@@ -361,6 +366,7 @@ class StaffContainer :
         # 清空 workSeqs #
         self.__workSeqs = []
         self.addTimeSeq()
+        log("清空工作序列.")
         # 轮换班组 #
         waitGroup = self.__groups[waitGroupNum]
         for Id in waitGroup :
@@ -371,7 +377,7 @@ class StaffContainer :
                 raise wrongType(msg)
             staffWait(Id)
         # 设置当前班组号 #
-        self.__workGroup = waitGroup
+        self.__workGroup = waitGroupNum
 
         # 操作完成 #
         self.log("@@@----轮班操作完成----@@@")
@@ -1174,6 +1180,9 @@ if __name__ == '__main__' :
     S.shiftStaff(1)
     unGrpStaff(1)
     
+    # 测试添加员工分组 #
+    S.addGroup()
+    print(len(S.getGroups()))
 
     # 此时 1,2,3,4 处于第3次工作队列.
     #      5 至 9 都留在第2次工作队列处于 等待状态
