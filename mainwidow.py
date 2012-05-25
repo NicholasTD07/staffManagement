@@ -26,6 +26,7 @@ class MainWindow(QMainWindow) :
         # 1. 初始化 主窗口
         super(MainWindow, self).__init__(parent)
         self.staffs = staffdata.StaffContainer()
+        self.log = self.staffs.log
         self.setupUi()
 
         #{{{ 2. 连接信号和槽
@@ -341,8 +342,8 @@ class MainWindow(QMainWindow) :
         form = groupstaffdialog.GroupStaffDialog(
                 self.staffs, self)
         if form.exec() :
+            print(self.staffs.getWorkSeq()[0].nSeq)
             self.workGraph.populate()
-            pass
     #}}}
 
     #{{{ # 员工换班 #
