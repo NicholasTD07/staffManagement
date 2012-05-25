@@ -131,9 +131,6 @@ class StaffContainer :
     def getWorkGroup(self) :
         return self.__workGroup
 
-    def setWorkGroup(self, workGroup) :
-        self.__workGroup = workGroup
-
     def getStaff(self, Id) :
         if Id in self.__staffs :
             return self.__staffs[Id]
@@ -548,9 +545,11 @@ class StaffContainer :
         # 5. 加入变动员工组
         self.__modStaffs.add(staff)
 
+        self.__dirty = True
+
         # 6. 操作成功
         self.log("\t@@@----成功: 员工下班操作----@@@")
-        self.__dirty = True
+        return True
     #}}}
 
     #{{{ # 删除员工 #
