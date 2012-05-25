@@ -160,7 +160,7 @@ class GroupStaffDialog(QDialog) :
                     QMessageBox.Yes|QMessageBox.No)
         if reply == QMessageBox.Yes :
             self.saveGroups()
-        QDialog.accept(self)
+            QDialog.accept(self)
     #}}}
 
     #{{{ #---- 辅助函数 ----#
