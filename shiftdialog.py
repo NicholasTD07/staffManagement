@@ -18,6 +18,7 @@ class ShiftDialog(QDialog) :
     def __init__(self, staffs, parent=None) :
         # 初始化 #
         super(ShiftDialog, self).__init__(parent)
+        self.workGrpChanged = False
 
         # 获取员工信息 #
         self.staffs = staffs
@@ -25,6 +26,7 @@ class ShiftDialog(QDialog) :
         self.groups = staffs.getGroups()
         self.getWorkGroup = staffs.getWorkGroup
         workGroupNum = self.getWorkGroup()
+        self.workGroupNum = workGroupNum
         if workGroupNum is None :
             QMessageBox.warning(self,
                     "未设置上班分组.",
@@ -67,6 +69,14 @@ class ShiftDialog(QDialog) :
     def accept(self) :
         QDialog.accept(self)
 
+    def reject(self) :
+        if self.workGrpChanged :
+            QDialog.accept(self)
+            print("Changed, accepting.")
+        else :
+            QDialog.reject(self)
+            print("not changed, rejecting.")
+
     #---- 自定义槽 ----#
 
     #{{{ # 点击表格 #
@@ -101,10 +111,12 @@ class ShiftDialog(QDialog) :
     #{{{ # 点击换班按钮 #
     def on_shiftGroupButton_clicked(self) :
         # 初始化局部变量 #
+        standbyGrpNum = self.shiftGrpSpinBox.value() - 1
+        if standbyGrpNum == self.workGroupNum :
+            return
         workStaffs = self.workStaffs
         setWorkGroup = self.staffs.setWorkGroup
         shiftStaff = self.staffs.shiftStaff
-        standbyGrpNum = self.shiftGrpSpinBox.value() - 1
         # 检查员工状态 #
         if workStaffs :
             QMessageBox.warning(self,
@@ -128,6 +140,7 @@ class ShiftDialog(QDialog) :
         QMessageBox.information(self,
                "员工换班",
                "员工换班成功!")
+        self.workGrpChanged = True
     #}}}
 
     #{{{ #---- 设置界面 ----#
@@ -275,7 +288,7 @@ if __name__ == "__main__" :
     S.groupStaff(1,1)
     S.groupStaff(2,1)
     S.groupStaff(3,1)
-    S.setWorkGroup(1)
+    S.shiftStaff(1)
     S.staffsWork(S.NOR, 1,2,3)
 
     form = ShiftDialog(S)
