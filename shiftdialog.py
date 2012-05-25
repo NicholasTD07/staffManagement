@@ -82,15 +82,23 @@ class ShiftDialog(QDialog) :
     #{{{ # 点击表格 #
     def on_workTableItem_clicked(self) :
         # 初始化局部变量 #
-        workTable = self.workTable
+        WAIT = self.staffs.WAIT
+        workTypes = self.staffs.workTypes
+        getStaff = self.staffs.getStaff
         staffWait = self.staffs.staffWait
+        staffIdle = self.staffs.staffIdle
+        workTable = self.workTable
         # 获取员工信息 #
         item = workTable.currentItem()
         if item is None :
             return
         Id = int(item.data(Qt.UserRole))
+        wType = getStaff(Id).wType
         # 进入等待状态 #
-        if staffWait(Id) :
+        if wType in workTypes :
+            if staffWait(Id) :
+                pass
+        if staffIdle(Id) :
             self.workStaffs.remove(Id)
         item.setBackground( QColor(0,255,0) )
 
@@ -115,7 +123,6 @@ class ShiftDialog(QDialog) :
         if standbyGrpNum == self.workGroupNum :
             return
         workStaffs = self.workStaffs
-        setWorkGroup = self.staffs.setWorkGroup
         shiftStaff = self.staffs.shiftStaff
         # 检查员工状态 #
         if workStaffs :
@@ -127,7 +134,6 @@ class ShiftDialog(QDialog) :
             return
         # 更新上班分组号 #
         shiftStaff(standbyGrpNum)
-        setWorkGroup(standbyGrpNum)
         self.staffs.reportStaffs()
         # 更新界面 #
         workGroupNum = self.getWorkGroup()
@@ -157,9 +163,9 @@ class ShiftDialog(QDialog) :
         self.shiftGroupLabel = QLabel("换班分组:", self)
         self.helpLabel = QLabel(
                 "说明:"
-                "\n上班分组所有员工必须处于等待状态"
+                "\n上班分组所有员工必须处于下班状态"
                 "才可换班."
-                "(红色员工正在上班,点击员工即可进入等待状态.)", self) 
+                "(红色员工正在上班,点击员工即可进入下班状态.)", self) 
 
         # 数字框 #
         shiftGrpSpinBox = QSpinBox(self)
