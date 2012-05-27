@@ -679,12 +679,14 @@ class StaffContainer :
 
         # 8. 判断是否需要更新 sPos
         sPos = self.__workSeqs[wTime].sPos
-        if nPos <= max(sPos) :
-            self.log("\t\t更新 sPos.未更新的 sPos: {}".format(sPos))
-            self.__workSeqs[wTime].sPos = \
-                    [i for i in sPos if i<nPos] + [i+1 for i in sPos if i>= nPos]
-            sPos = self.__workSeqs[wTime].sPos
-            self.log("\t\t更新 sPos.更新后的 sPos: {}".format(sPos))
+        temp = [ i for i in sPos if i != 0 ]
+        if temp :
+            if nPos >= min(temp) :
+                self.log("\t\t更新 sPos.未更新的 sPos: {}".format(sPos))
+                self.__workSeqs[wTime].sPos = \
+                        [ i for i in sPos if i<nPos ] + [ i+1 for i in sPos if i>= nPos ]
+                sPos = self.__workSeqs[wTime].sPos
+                self.log("\t\t更新 sPos.更新后的 sPos: {}".format(sPos))
         
         # 8. 加入变动员工组
         self.__modStaffs.add(staff)
@@ -749,22 +751,29 @@ class StaffContainer :
 
         # 7. 更新 selected 状态, 更新 sPos
         sPos = workSeq.sPos
-        if pos <= max(sPos) :
-            self.log("\t\t更新 sPos.未更新的 sPos: {}".format(sPos))
-            self.__workSeqs[wTime].sPos = \
-                [i for i in sPos if i < pos] + [i+1 for i in sPos if i>= pos]
-            sPos = self.__workSeqs[wTime].sPos
-            self.log("\t\t更新 sPos.未更新的 sPos: {}".format(sPos))
+        temp = [ i for i in sPos if i != 0 ]
+        if temp :
+            if pos >= min(temp) :
+                if pos in sPos :
+                    self.log("\t\t更新 sPos.未更新的 sPos: {}".format(sPos))
+                    self.__workSeqs[wTime].sPos = \
+                        [i for i in sPos if i < pos] + [i+1 for i in sPos if i>= pos]
+                    sPos = self.__workSeqs[wTime].sPos
+                    self.log("\t\t更新 sPos.未更新的 sPos: {}".format(sPos))
+
         if pos not in sPos :
             workSeq.sPos.append( pos )
-        self.log("\t\t向第{}次时间队列添加 sPos :　{}.".format(wTime, pos))
+            self.log("\t\t向第{}次时间队列添加 sPos :　{}.".format(wTime, pos))
 
         # 8. 判断是否需要更新 nPos
         nPos = self.__workSeqs[wTime].nPos
-        if pos <= max(nPos) :
-            workSeq.nPos = \
-                    [i for i in nPos if i < pos] + [i+1 for i in nPos if i >= pos]
-        else :
+        temp = [ i for i in nPos if i != 0 ]
+        if temp :
+            if pos >= min(temp) :
+                workSeq.nPos = \
+                        [i for i in nPos if i < pos] + [i+1 for i in nPos if i >= pos]
+
+        if pos >= max(nPos) :
             if not workSeq.selected :
                 workSeq.selected = True
 
@@ -927,10 +936,11 @@ class StaffContainer :
 
         # 1. 获得员工信息
         staff = self.__staffs[Id]
-        wTime = staff.wTime
-        t_wType = staff.wType
         sType = staff.sType
+        t_wType = staff.wType
+        wTime = staff.wTime
         workSeq = self.__workSeqs[wTime]
+        self.log("[{}] 员工上班前 nPos: {}, sPos: {}".format(wTime, workSeq.nPos, workSeq.sPos))
 
         # 2. 检查员工当前状态是否为等待状态
         if t_wType != self.WAIT :
@@ -961,6 +971,12 @@ class StaffContainer :
             self.namedWork(Id)
         else :
             raise workWrong("失败:需要工作的工作类型错误.")
+
+        wTime = staff.wTime
+        workSeq = self.__workSeqs[wTime]
+        workSeq.nPos.sort()
+        workSeq.sPos.sort()
+        self.log("[{}] 员工上班前 nPos: {}, sPos: {}".format(wTime, workSeq.nPos, workSeq.sPos))
 
         self.log("\t@@@----成功: 员工上班操作----@@@")
         self.__dirty = True
