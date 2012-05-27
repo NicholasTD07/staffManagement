@@ -31,9 +31,8 @@ class Staff :
 
 
     def tell(self) :
-        print("""我是{}号员工, 我叫{}, {}.处于第{}时间队列内.
-我的工作类型是: {}.""".format(self.Id, self.name, self.gender, self.wTime,
-            self.wType))
+        return """我是{}号员工, 我叫{}, {}.处于第{}时间队列内.
+我的工作类型是: {}, 我的队伍类型: {}.""".format(self.Id, self.name, self.gender, self.wTime, self.wType, self.sType)
 #}}}
 
 #{{{ #---- 定义时间队列 ----#
@@ -530,6 +529,7 @@ class StaffContainer :
         self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 5. 设置员工状态
+        staff.wTime = 0
         staff.wType = self.IDLE
         staff.sType = self.IDLE
 
