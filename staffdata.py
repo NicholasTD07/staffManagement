@@ -529,6 +529,7 @@ class StaffContainer :
         self.log("\t\t员工脱离第{}次工作队列.".format(wTime))
 
         # 5. 设置员工状态
+        staff.wTime = 0
         staff.wType = self.IDLE
         staff.sType = self.IDLE
 
