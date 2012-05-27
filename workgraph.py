@@ -129,6 +129,7 @@ class StaffIcon(QGraphicsItem) :
         self.staffs = staffs
         self.staff = staff
         self.Id = staff.Id
+        self.log = staffs.log
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
         self.putInPlace()
@@ -162,6 +163,7 @@ class StaffIcon(QGraphicsItem) :
             self.scene().removeItem(self)
             raise wrongType("类型错误({}), 不予画图."\
                 .format(wType))
+        self.log(staff.tell())
         self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
         self.wTime = self.staff.wTime
         x = (self.wPos * 40)
@@ -213,7 +215,8 @@ class WorkGraph(QWidget) :
         self.scene.clear()
         staffs = self.staffs
         getStaff = staffs.getStaff
-        nSeq = staffs.getWorkSeq()[0].nSeq
+        workSeq = staffs.getWorkSeq()[0]
+        nSeq = workSeq.nSeq
         for staff in nSeq :
             if staff is None :
                 continue
