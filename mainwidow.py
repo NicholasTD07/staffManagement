@@ -34,6 +34,9 @@ import groupstaffdialog
 import shiftdialog
 
 
+__version__ = "0.5.0"
+
+
 class MainWindow(QMainWindow) :
 
 
