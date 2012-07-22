@@ -2,6 +2,23 @@
 # File Info :
 #   主窗口程序
 
+#    Copyright 2012 Nicholas Tian
+
+#    This file is part of Staff Management Project.
+#
+#    Staff Management Project is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Straff Management Project is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Straff Management Project.  If not, see <http://www.gnu.org/licenses/>.
+
 
 # PyQt #
 from PyQt4.QtCore import *
@@ -17,6 +34,9 @@ import groupstaffdialog
 import shiftdialog
 
 
+__version__ = "0.5.0"
+
+
 class MainWindow(QMainWindow) :
 
 
@@ -26,6 +46,7 @@ class MainWindow(QMainWindow) :
         # 1. 初始化 主窗口
         super(MainWindow, self).__init__(parent)
         self.staffs = staffdata.StaffContainer()
+        self.log = self.staffs.log
         self.setupUi()
 
         #{{{ 2. 连接信号和槽
@@ -341,8 +362,8 @@ class MainWindow(QMainWindow) :
         form = groupstaffdialog.GroupStaffDialog(
                 self.staffs, self)
         if form.exec() :
+            print(self.staffs.getWorkSeq()[0].nSeq)
             self.workGraph.populate()
-            pass
     #}}}
 
     #{{{ # 员工换班 #

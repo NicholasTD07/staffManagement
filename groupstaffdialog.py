@@ -2,6 +2,23 @@
 # File Info :
 #   员工分组对话框
 
+#    Copyright 2012 Nicholas Tian
+
+#    This file is part of Staff Management Project.
+#
+#    Staff Management Project is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Straff Management Project is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Straff Management Project.  If not, see <http://www.gnu.org/licenses/>.
+
 
 # PyQt #
 from PyQt4.QtCore import *
@@ -42,7 +59,7 @@ class GroupStaffDialog(QDialog) :
 
         # 添加分组按键 #
         self.connect(self.addGroupButton, SIGNAL("clicked()"),
-                lambda : self.groups.append([]))
+                self.on_addGroupButton_clicked)
                 #lambda : print("点击按键"))
 
         # 添加至分组按键 #
@@ -160,7 +177,7 @@ class GroupStaffDialog(QDialog) :
                     QMessageBox.Yes|QMessageBox.No)
         if reply == QMessageBox.Yes :
             self.saveGroups()
-        QDialog.accept(self)
+            QDialog.accept(self)
     #}}}
 
     #{{{ #---- 辅助函数 ----#
@@ -173,9 +190,8 @@ class GroupStaffDialog(QDialog) :
         groupStaff = self.staffs.groupStaff
         unGrpStaff = self.staffs.unGrpStaff
         staffWait = self.staffs.staffWait
-        row = 0
-        #rows = {}
         rowCount = groupedTable.rowCount()
+        row = 0
         # 获取每行的员工工号 #
         while row < rowCount :
             # 初始化循环变量 #
@@ -224,6 +240,14 @@ class GroupStaffDialog(QDialog) :
                     "设置分组",
                     "超出当前最大分组数.自动设置为当前最大值")
             spinBox.setValue(maxGroups)
+    #}}}
+
+    #{{{ # 添加分组按钮 #
+    def on_addGroupButton_clicked(self) :
+        self.staffs.addGroup()
+        self.groupSpinBox.setRange(1, len(self.groups))
+        self.updateGroupedTable()
+        #QMessageBox.information(self, "添加分组", "添加员工分组成功!")
     #}}}
 
     #{{{ #-- 添加至分组按键信号槽 --#

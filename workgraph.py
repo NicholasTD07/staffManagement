@@ -2,6 +2,23 @@
 # File Info :
 #   主窗口图表
 
+#    Copyright 2012 Nicholas Tian
+
+#    This file is part of Staff Management Project.
+#
+#    Staff Management Project is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Straff Management Project is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Straff Management Project.  If not, see <http://www.gnu.org/licenses/>.
+
 
 # PyQt #
 from PyQt4.QtCore import *
@@ -129,6 +146,7 @@ class StaffIcon(QGraphicsItem) :
         self.staffs = staffs
         self.staff = staff
         self.Id = staff.Id
+        self.log = staffs.log
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
         self.putInPlace()
@@ -162,6 +180,7 @@ class StaffIcon(QGraphicsItem) :
             self.scene().removeItem(self)
             raise wrongType("类型错误({}), 不予画图."\
                 .format(wType))
+        self.log(staff.tell())
         self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
         self.wTime = self.staff.wTime
         x = (self.wPos * 40)
@@ -186,6 +205,7 @@ class WorkGraph(QWidget) :
     def __init__(self, staffs, parent=None) :
         super(WorkGraph, self).__init__(parent)
         self.staffs = staffs
+        self.log = staffs.log
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0,
@@ -207,17 +227,16 @@ class WorkGraph(QWidget) :
 
     #{{{ # 更新图像 #
     def populate(self) :
+        self.log("更新图像.")
         # 初始化局部变量 #
         self.scene.clear()
         staffs = self.staffs
         getStaff = staffs.getStaff
-        groups = staffs.getGroups()
-        workGroupNum = staffs.getWorkGroup()
-        if workGroupNum is None :
-            return
-        workGroup = groups[workGroupNum]
-        for Id in workGroup :
-            staff = getStaff(Id)
+        workSeq = staffs.getWorkSeq()[0]
+        nSeq = workSeq.nSeq
+        for staff in nSeq :
+            if staff is None :
+                continue
             try :
                 staffIcon = StaffIcon(self.staffs, staff, self)
             except wrongType :

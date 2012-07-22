@@ -2,6 +2,23 @@
 # File Info :
 #   员工分组对话框
 
+#    Copyright 2012 Nicholas Tian
+
+#    This file is part of Staff Management Project.
+#
+#    Staff Management Project is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Straff Management Project is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Straff Management Project.  If not, see <http://www.gnu.org/licenses/>.
+
 
 # PyQt #
 from PyQt4.QtCore import *
@@ -18,6 +35,7 @@ class ShiftDialog(QDialog) :
     def __init__(self, staffs, parent=None) :
         # 初始化 #
         super(ShiftDialog, self).__init__(parent)
+        self.workGrpChanged = False
 
         # 获取员工信息 #
         self.staffs = staffs
@@ -25,6 +43,7 @@ class ShiftDialog(QDialog) :
         self.groups = staffs.getGroups()
         self.getWorkGroup = staffs.getWorkGroup
         workGroupNum = self.getWorkGroup()
+        self.workGroupNum = workGroupNum
         if workGroupNum is None :
             QMessageBox.warning(self,
                     "未设置上班分组.",
@@ -67,20 +86,36 @@ class ShiftDialog(QDialog) :
     def accept(self) :
         QDialog.accept(self)
 
+    def reject(self) :
+        if self.workGrpChanged :
+            QDialog.accept(self)
+            print("Changed, accepting.")
+        else :
+            QDialog.reject(self)
+            print("not changed, rejecting.")
+
     #---- 自定义槽 ----#
 
     #{{{ # 点击表格 #
     def on_workTableItem_clicked(self) :
         # 初始化局部变量 #
-        workTable = self.workTable
+        WAIT = self.staffs.WAIT
+        workTypes = self.staffs.workTypes
+        getStaff = self.staffs.getStaff
         staffWait = self.staffs.staffWait
+        staffIdle = self.staffs.staffIdle
+        workTable = self.workTable
         # 获取员工信息 #
         item = workTable.currentItem()
         if item is None :
             return
         Id = int(item.data(Qt.UserRole))
+        wType = getStaff(Id).wType
         # 进入等待状态 #
-        if staffWait(Id) :
+        if wType in workTypes :
+            if staffWait(Id) :
+                pass
+        if staffIdle(Id) :
             self.workStaffs.remove(Id)
         item.setBackground( QColor(0,255,0) )
 
@@ -101,9 +136,11 @@ class ShiftDialog(QDialog) :
     #{{{ # 点击换班按钮 #
     def on_shiftGroupButton_clicked(self) :
         # 初始化局部变量 #
-        workStaffs = self.workStaffs
-        setWorkGroup = self.staffs.setWorkGroup
         standbyGrpNum = self.shiftGrpSpinBox.value() - 1
+        if standbyGrpNum == self.workGroupNum :
+            return
+        workStaffs = self.workStaffs
+        shiftStaff = self.staffs.shiftStaff
         # 检查员工状态 #
         if workStaffs :
             QMessageBox.warning(self,
@@ -113,7 +150,8 @@ class ShiftDialog(QDialog) :
                             .format(workStaffs))
             return
         # 更新上班分组号 #
-        setWorkGroup(standbyGrpNum) 
+        shiftStaff(standbyGrpNum)
+        self.staffs.reportStaffs()
         # 更新界面 #
         workGroupNum = self.getWorkGroup()
         if workGroupNum is None :
@@ -125,6 +163,8 @@ class ShiftDialog(QDialog) :
         QMessageBox.information(self,
                "员工换班",
                "员工换班成功!")
+        self.workGrpChanged = True
+        self.workGroupNum = standbyGrpNum
     #}}}
 
     #{{{ #---- 设置界面 ----#
@@ -140,9 +180,9 @@ class ShiftDialog(QDialog) :
         self.shiftGroupLabel = QLabel("换班分组:", self)
         self.helpLabel = QLabel(
                 "说明:"
-                "\n上班分组所有员工必须处于等待状态"
+                "\n上班分组所有员工必须处于下班状态"
                 "才可换班."
-                "(红色员工正在上班,点击员工即可进入等待状态.)", self) 
+                "(红色员工正在上班,点击员工即可进入下班状态.)", self) 
 
         # 数字框 #
         shiftGrpSpinBox = QSpinBox(self)
@@ -272,7 +312,7 @@ if __name__ == "__main__" :
     S.groupStaff(1,1)
     S.groupStaff(2,1)
     S.groupStaff(3,1)
-    S.setWorkGroup(1)
+    S.shiftStaff(1)
     S.staffsWork(S.NOR, 1,2,3)
 
     form = ShiftDialog(S)
