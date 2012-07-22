@@ -246,8 +246,10 @@ class GroupStaffDialog(QDialog) :
     def on_addGroupButton_clicked(self) :
         self.staffs.addGroup()
         self.groupSpinBox.setRange(1, len(self.groups))
-        self.updateGroupedTable()
-        #QMessageBox.information(self, "添加分组", "添加员工分组成功!")
+        rowCount = self.groupedTable.rowCount() # If now this table has 3 rows, rowCount = 3.
+        self.groupedTable.insertRow(rowCount)
+        self.groupedLastColumn[rowCount] = 0 # So here, rowCount just do.
+        #self.updateGroupedTable()
     #}}}
 
     #{{{ #-- 添加至分组按键信号槽 --#
