@@ -61,6 +61,8 @@ class StaffListDialog(QDialog) :
         self.connect(self.staffTable, SIGNAL("cellDoubleClicked(int,int)"),
                 self.on_staffTable_cellDoubleClicked)
                 #lambda : print("点击按键"))
+        self.connect(self.buttonBox, SIGNAL("rejected()"),
+                        self.reject)
         #}}}
     #}}}
 
@@ -83,7 +85,7 @@ class StaffListDialog(QDialog) :
         # 按键组 #
         buttonBox = QDialogButtonBox(self)
         buttonBox.setOrientation(Qt.Horizontal)
-        buttonBox.setStandardButtons( QDialogButtonBox.Close)
+        buttonBox.setStandardButtons(QDialogButtonBox.Close)
         buttonBox.button(QDialogButtonBox.Close).setText("关闭")
         self.buttonBox = buttonBox
 
