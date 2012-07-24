@@ -34,33 +34,49 @@ from errorclass import *
 class StaffMenu(QMenu) :
 
 
-#{{{ 员工菜单
-#{{{ #---- 初始化员工菜单 ----#
-    def __init__(self, staffs, staff, event, parent=None) :
+    "This is the popup menu when right click the staff icon in the workgraph."
+
+    #---- Initialize staff icon menu ----#
+    def __init__(self, staffs, staff, event, rerange, parent=None) :
+        # Get log #
+        log =  staffs.log
+        log("StaffMenu - init ---- Start.")
+        self.log = log
+        # Initialize parent #
         super(QMenu, self).__init__()
-        # 获得员工 #
+        # Get staff #
+        log("StaffMenu - init - Fetching staff.")
         self.staffs = staffs
         self.staff = staff
         self.Id = staff.Id
-        # 获得员工函数 #
-        self.staffWork = self.staffs.staffWork
-        self.staffWait = self.staffs.staffWait
-        self.staffIdle = self.staffs.staffIdle
-        # 获得工作类型 #
-        self.NOR = self.staffs.NOR
-        self.SEL = self.staffs.SEL
-        self.NAMED = self.staffs.NAMED
-        self.WAIT = self.staffs.WAIT
-        self.IDLE = self.staffs.IDLE
-        # 添加动作 #
+        log("Staff Id: {}, name: {}, gender: {}.".format(self.Id,
+            staff.name, staff. gender))
+        # Get staff's functions #
+        self.staffWork = staffs.staffWork
+        self.staffWait = staffs.staffWait
+        self.staffIdle = staffs.staffIdle
+        log("StaffMenu - init - Fetched staff's functions.")
+        # Get rerange function in WorkGraph #
+        self.rerange = rerange
+        # Get worktypes #
+        self.NOR = staffs.NOR
+        self.SEL = staffs.SEL
+        self.NAMED = staffs.NAMED
+        self.WAIT = staffs.WAIT
+        self.IDLE = staffs.IDLE
+        log("StaffMenu - init - Fetched worktypes.")
+        # Add actions #
         self.norWorkAction = QAction("排钟", self)
         self.selWorkAction = QAction("选钟", self)
         self.namedWorkAction = QAction("点钟", self)
         self.waitAction = QAction("等待", self)
         self.idleAction = QAction("下班", self)
-        # 更新菜单 #
+        log("StaffMenu - init - Added actions.")
+        # Update menu #
+        log("StaffMenu - init - Call updateMenu().\n")
         self.updateMenu()
-        # 连接动作和槽 #
+        log("StaffMenu - init - Updated menu.")
+        # Connect signals and slots #
         self.connect(self.norWorkAction, SIGNAL("activated()"),
                 #lambda : self.staffWork(self.Id, self.NOR))
                 lambda : self.errorDetect(self.NOR))
@@ -76,60 +92,90 @@ class StaffMenu(QMenu) :
         self.connect(self.idleAction, SIGNAL("activated()"),
                 #lambda : self.staffIdle(self.Id))
                 lambda : self.errorDetect(self.IDLE))
+        log("StaffMenu - init - Connected signals and slots.")
+        log("StaffMenu - init - End.\n\n")
         self.exec(event.screenPos())
-#}}}
+        self.rerange()
+        #result = self.exec(event.screenPos())
+        #if result is not None :
+        #    log("StaffMenu ---- Excuted.")
+        #    log("StaffMenu - Call WorkGraph's rerange().\n\n")
+        #    self.rerange()
+        #else :
+        #    log("StaffMenu ---- Gave up.\n\n")
 
-    #{{{ # 提供错误提醒 #
+    # Work function with error message #
     def errorDetect(self, wType) :
+        log = self.log
+        log("StaffMenu - errorDetect ---- Start.")
+        # Get worktypes #
         NOR = self.NOR
         SEL = self.SEL
         WAIT = self.WAIT
         IDLE = self.IDLE
         NAMED = self.NAMED
+        log("StaffMenu - errorDetect - Fetched workTypes.")
+        # Depending on the worktype, excute the right function #
         try :
+            log("StaffMenu - errorDetect - Judge what kind of worktype.")
             if wType == NOR :
+                log("StaffMenu - errorDetect - NOR.")
                 self.staffWork(self.Id, NOR)
             elif wType == SEL :
+                log("StaffMenu - errorDetect - SEL.")
                 self.staffWork(self.Id, SEL)
             elif wType == NAMED :
+                log("StaffMenu - errorDetect - NAMED.")
                 self.staffWork(self.Id, NAMED)
             elif wType == WAIT :
+                log("StaffMenu - errorDetect - WAIT.")
                 self.staffWait(self.Id)
             elif wType == IDLE :
+                log("StaffMenu - errorDetect - IDLE.")
                 self.staffIdle(self.Id)
             else :
+                log("StaffMenu - errorDetect - Wrong type.")
                 QMessageBox.warning(self,
                         "状态错误",
                         "出现未知状态.")
-            # 更新菜单 #
+            # Update Menu #
             self.updateMenu()
+            log("StaffMenu - errorDetect - Update menu.")
+        # If there is an exception, then program goes here #
         except Exception as e:
+            log("StaffIcon - errorDetect - Exception happened.")
             QMessageBox.warning(self,
                     "错误",
                     str(e))
-        #}}}
+        log("StaffMenu - errorDetect ---- End.\n\n")
 
     def updateMenu(self) :
+        log = self.log
+        log("StaffMenu - updateMenu ---- Start.")
+        log("StaffMenu - updateMenu - Clear the menu.")
         self.clear()
+        log("StaffMenu - updateMenu - Judge the worktype.")
         wType = self.staff.wType
         workTypes = self.staffs.workTypes
+        log("StaffMenu - updateMenu - Fetched workTypes.")
         if wType == self.WAIT :
+            log("StaffMenu - updateMenu - Staff waiting.")
             self.addAction(self.norWorkAction)
             self.addAction(self.selWorkAction)
             self.addAction(self.namedWorkAction)
             self.addSeparator()
             self.addAction(self.idleAction)
         elif wType in workTypes :
+            log("StaffMenu - updateMenu - Staff working.")
             self.addAction(self.waitAction)
-
-#}}}
+        log("StaffMenu - updateMenu ---- End.\n\n")
 
 
 class StaffIcon(QGraphicsItem) :
 
 
-#{{{ 员工图标
-#{{{ # 初始化共用参数 #
+    "This is the Icon in the workgraph for every working staff."
+    
     red, green, blue = 0, 0, 255
     WorkColor = QColor(red, green, blue)
 
@@ -137,63 +183,87 @@ class StaffIcon(QGraphicsItem) :
     WaitColor = QColor(red, green, blue)
 
     Rect = QRectF(0, 0, 40, 40)
-#}}}
 
-#{{{ #---- 初始化员工图标 ----#
+
+    #---- Initialize the StaffIcon ----#
     def __init__(self, staffs, staff, parent) :
+        # Get log #
+        log = staffs.log
+        log("StaffIcon - init ---- Start.")
+        self.log = log
+        # Initialize parent #
         super(StaffIcon, self).__init__()
+        # Get parent and its rerange function, staff, staffs #
         self.parent = parent
-        self.staffs = staffs
+        self.rerange = parent.rerange
         self.staff = staff
         self.Id = staff.Id
-        self.log = staffs.log
+        self.staffs = staffs
+        log("StaffIcon - init - Fetched parent, staff, staffs.")
+        # Get workSeqs and workTypes #
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
+        log("StaffIcon - init - Fetched workSeqs and workTypes.")
+        log("StaffIcon - init - Run into putInPlace().")
         self.putInPlace()
+        log("StaffIcon - init - Setup number in the icon.")
         self.StaffNum = QGraphicsTextItem("{}"\
                 .format(self.Id), self)
         self.StaffNum.setTextWidth(10)
         self.StaffNum.setFont(QFont("Times", 20))
         self.StaffNum.adjustSize()
-#}}}
+        log("StaffIcon - init ---- End.\n\n")
+
 
     def boundingRect(self) :
         return StaffIcon.Rect
+
 
     def paint(self, painter, option, widget=None):
         painter.setBrush(QBrush(self.color))
         painter.drawRect(StaffIcon.Rect)
 
+
     def update(self) :
         self.putInPlace()
         QGraphicsItem.update(self, StaffIcon.Rect)
 
-    #{{{ # 设置位置颜色 #
+
+    # Setup where it is and how does it look like #
     def putInPlace(self) :
+        # Get log #
+        log = self.log
+        log("StaffIcon - putInPlace ---- Start.")
+        # Get staff and his worktype #
         staff = self.staff
         wType = staff.wType
+        log("StaffIcon - putInPlace - Fetched staff and his worktype")
         if wType == self.staffs.WAIT :
             self.color = self.WaitColor
+            log("StaffIcon - putInPlace - Use WaitColor.")
         elif wType in self.staffs.workTypes :
             self.color = self.WorkColor
+            log("StaffIcon - putInPlace - Use WorkColor.")
         else :
+            log("StaffIcon - putInPlace ---- OOPS, wrong type.")
             self.scene().removeItem(self)
             raise wrongType("类型错误({}), 不予画图."\
                 .format(wType))
-        self.log(staff.tell())
+        log("\nStaffIcon - putInPlace - Call staff.tell.\n\t" + staff.tell() + "\n")
         self.wPos = self.workSeqs[staff.wTime].nSeq.index(staff)
         self.wTime = self.staff.wTime
         x = (self.wPos * 40)
         y = (self.wTime * 40)
         self.position = QPointF(x, y)
+        log("StaffIcon - putInPlace - Fetched work position and calculated position in WorkGraph.")
         if self.position != self.pos() :
             self.setPos(self.position)
-    #}}}
+            log("StaffIcon - putInPlace - Positon Changed.")
+        log("StaffIcon - putInPlace ---- End.\n\n")
+
 
     def contextMenuEvent(self, event) :
-        Menu = StaffMenu(self.staffs, self.staff, event, self)
-        self.parent.rerange()
-#}}}
+        StaffMenu(self.staffs, self.staff, event, self.rerange, self)
 
 
 class WorkGraph(QWidget) :
@@ -201,12 +271,18 @@ class WorkGraph(QWidget) :
     SceneWidth = 1024
     SceneHeight = 600
     
-#{{{ #---- 初始化员工图表 ----#
+    # Initialize the WorkGraph in mainwindow #
     def __init__(self, staffs, parent=None) :
+        # Get log #
+        log = staffs.log
+        self.log = log
+        log("WorkGraph - init ---- Start.")
+        # Initialize parent #
         super(WorkGraph, self).__init__(parent)
+        # Get staffs #
         self.staffs = staffs
-        self.log = staffs.log
-
+        log("WorkGraph - init - Fetched staffs.")
+        # Setup the scene and view #
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0,
                         self.SceneWidth, self.SceneHeight)
@@ -215,48 +291,74 @@ class WorkGraph(QWidget) :
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
         self.view.setFocusPolicy(Qt.NoFocus)
-
+        log("WorkGraph - init - Set up everything for scene and view in this WorkGraph.")
+        # Setup layout #
         layout = QVBoxLayout()
         layout.addWidget(self.view)
         self.setLayout(layout)
-
+        log("WorkGraph - init - Set up layout.")
+        # Populate icons for every staff #
+        log("WorkGraph - init - Call populate() to populate icons for staffs.")
         self.populate()
-
+        log("WorkGraph - init - Show the view.")
         self.view.show()
-#}}}
+        log("WorkGraph - init ---- End.\n\n")
 
-    #{{{ # 更新图像 #
+
+    # Populate icons #
     def populate(self) :
-        self.log("更新图像.")
-        # 初始化局部变量 #
+        # Get log #
+        log = self.log
+        log("WorkGraph - populate ---- Start.")
+        # Clean the scene #
+        log("WorkGraph - populate - Clean the scene.")
         self.scene.clear()
+        # Get staffs, workSeqs, and getStaff() #
         staffs = self.staffs
         getStaff = staffs.getStaff
-        workSeq = staffs.getWorkSeq()[0]
-        nSeq = workSeq.nSeq
-        for staff in nSeq :
-            if staff is None :
-                continue
-            try :
-                staffIcon = StaffIcon(self.staffs, staff, self)
-            except wrongType :
-                continue
-            self.scene.addItem(staffIcon)
-    #}}}
+        workSeqs = staffs.getWorkSeq()
+        log("WorkGraph - populate - Fetched staffs, workSeqs, and getStaff().")
+        log("WorkGraph -- populate - Entering for loop to go over every workSeq in workSeqs.\n")
+        for workSeq in workSeqs :
+            nSeq = workSeq.nSeq
+            log("WorkGraph -- populate - Go over every staff which is not None in every workSeq in a for loop.\n")
+            for staff in nSeq :
+                if staff is None :
+                    log("WorkGraph - populate - Staff is None. Next staff.")
+                    continue
+                try :
+                    log("WorkGraph - populate - Staff is not None. Get a icon for him or her.\n")
+                    staffIcon = StaffIcon(self.staffs, staff, self)
+                except wrongType :
+                    log("WorkGraph - populate - Staff has a wrong worktype.")
+                    continue
+                self.scene.addItem(staffIcon)
+                log("WorkGraph - populate - Add this icon into WorkGraph.\n")
+            log("WorkGraph - populate ---- End.\n\n")
 
-    #{{{ # 重新排位 #
+
+    # Rerange icons in the scene #
     def rerange(self) :
+        # Get log #
+        log = self.log
+        log("WorkGraph - rerange ---- Start.")
+        # Get scenes in the view and get every icon #
+        log("WorkGraph - rerange - Get scenes in the view and get every icon.")
         scenes = self.view.scene()
         stafficons = [ item for item in scenes.items()
                         if isinstance(item, StaffIcon)]
-
+        # Replace icon if needed #
+        log("WorkGraph - rerange - Go into a for loop. Replace icons if needed.\n")
         for stafficon in stafficons :
             try :
+                log("WorkGraph - rerange - Call icons' putInPlace().")
                 stafficon.putInPlace()
             except wrongType :
+                log("WorkGraph - rerange - Not calling icons' putInPlace() for staff's wrong worktype.")
                 continue
+        log("WorkGraph - rerange - Update the whole scene.")
         scenes.update(scenes.sceneRect())
-    #}}}
+        log("WorkGraph - rerange ---- End.\n\n")
 
 if __name__ == '__main__' :
     import sys
@@ -273,7 +375,7 @@ if __name__ == '__main__' :
     S.groupStaff(1,1)
     S.groupStaff(2,1)
     S.groupStaff(3,1)
-    S.setWorkGroup(1)
+    S.shiftStaff(1)
     S.reportStaffs()
     #S.staffsWait(1,2,3,4,5,6,7,8,9)
     ## 测试 有选钟情况下的点钟.
