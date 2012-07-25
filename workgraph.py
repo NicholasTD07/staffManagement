@@ -31,146 +31,6 @@ import staffdata
 from errorclass import *
 
 
-class StaffMenu(QMenu) :
-
-
-    "This is the popup menu when right click the staff icon in the workgraph."
-
-    #---- Initialize staff icon menu ----#
-    def __init__(self, staffs, staff, event, rerange, parent=None) :
-        # Get log #
-        log =  staffs.log
-        log("StaffMenu - init ---- Start.")
-        self.log = log
-        # Initialize parent #
-        super(QMenu, self).__init__()
-        # Get staff #
-        log("StaffMenu - init - Fetching staff.")
-        self.staffs = staffs
-        self.staff = staff
-        self.Id = staff.Id
-        log("Staff Id: {}, name: {}, gender: {}.".format(self.Id,
-            staff.name, staff. gender))
-        # Get staff's functions #
-        self.staffWork = staffs.staffWork
-        self.staffWait = staffs.staffWait
-        self.staffIdle = staffs.staffIdle
-        log("StaffMenu - init - Fetched staff's functions.")
-        # Get rerange function in WorkGraph #
-        self.rerange = rerange
-        # Get worktypes #
-        self.NOR = staffs.NOR
-        self.SEL = staffs.SEL
-        self.NAMED = staffs.NAMED
-        self.WAIT = staffs.WAIT
-        self.IDLE = staffs.IDLE
-        log("StaffMenu - init - Fetched worktypes.")
-        # Add actions #
-        self.norWorkAction = QAction("排钟", self)
-        self.selWorkAction = QAction("选钟", self)
-        self.namedWorkAction = QAction("点钟", self)
-        self.waitAction = QAction("等待", self)
-        self.idleAction = QAction("下班", self)
-        log("StaffMenu - init - Added actions.")
-        # Update menu #
-        log("StaffMenu - init - Call updateMenu().\n")
-        self.updateMenu()
-        log("StaffMenu - init - Updated menu.")
-        # Connect signals and slots #
-        self.connect(self.norWorkAction, SIGNAL("activated()"),
-                #lambda : self.staffWork(self.Id, self.NOR))
-                lambda : self.errorDetect(self.NOR))
-        self.connect(self.selWorkAction, SIGNAL("activated()"),
-                #lambda : self.staffWork(self.Id, self.SEL))
-                lambda : self.errorDetect(self.SEL))
-        self.connect(self.namedWorkAction, SIGNAL("activated()"),
-                #lambda : self.staffWork(self.Id, self.NAMED))
-                lambda : self.errorDetect(self.NAMED))
-        self.connect(self.waitAction, SIGNAL("activated()"),
-                #lambda : self.staffWait(self.Id))
-                lambda : self.errorDetect(self.WAIT))
-        self.connect(self.idleAction, SIGNAL("activated()"),
-                #lambda : self.staffIdle(self.Id))
-                lambda : self.errorDetect(self.IDLE))
-        log("StaffMenu - init - Connected signals and slots.")
-        log("StaffMenu - init - End.\n\n")
-        self.exec(event.screenPos())
-        self.rerange()
-        #result = self.exec(event.screenPos())
-        #if result is not None :
-        #    log("StaffMenu ---- Excuted.")
-        #    log("StaffMenu - Call WorkGraph's rerange().\n\n")
-        #    self.rerange()
-        #else :
-        #    log("StaffMenu ---- Gave up.\n\n")
-
-    # Work function with error message #
-    def errorDetect(self, wType) :
-        log = self.log
-        log("StaffMenu - errorDetect ---- Start.")
-        # Get worktypes #
-        NOR = self.NOR
-        SEL = self.SEL
-        WAIT = self.WAIT
-        IDLE = self.IDLE
-        NAMED = self.NAMED
-        log("StaffMenu - errorDetect - Fetched workTypes.")
-        # Depending on the worktype, excute the right function #
-        try :
-            log("StaffMenu - errorDetect - Judge what kind of worktype.")
-            if wType == NOR :
-                log("StaffMenu - errorDetect - NOR.")
-                self.staffWork(self.Id, NOR)
-            elif wType == SEL :
-                log("StaffMenu - errorDetect - SEL.")
-                self.staffWork(self.Id, SEL)
-            elif wType == NAMED :
-                log("StaffMenu - errorDetect - NAMED.")
-                self.staffWork(self.Id, NAMED)
-            elif wType == WAIT :
-                log("StaffMenu - errorDetect - WAIT.")
-                self.staffWait(self.Id)
-            elif wType == IDLE :
-                log("StaffMenu - errorDetect - IDLE.")
-                self.staffIdle(self.Id)
-            else :
-                log("StaffMenu - errorDetect - Wrong type.")
-                QMessageBox.warning(self,
-                        "状态错误",
-                        "出现未知状态.")
-            # Update Menu #
-            self.updateMenu()
-            log("StaffMenu - errorDetect - Update menu.")
-        # If there is an exception, then program goes here #
-        except Exception as e:
-            log("StaffIcon - errorDetect - Exception happened.")
-            QMessageBox.warning(self,
-                    "错误",
-                    str(e))
-        log("StaffMenu - errorDetect ---- End.\n\n")
-
-    def updateMenu(self) :
-        log = self.log
-        log("StaffMenu - updateMenu ---- Start.")
-        log("StaffMenu - updateMenu - Clear the menu.")
-        self.clear()
-        log("StaffMenu - updateMenu - Judge the worktype.")
-        wType = self.staff.wType
-        workTypes = self.staffs.workTypes
-        log("StaffMenu - updateMenu - Fetched workTypes.")
-        if wType == self.WAIT :
-            log("StaffMenu - updateMenu - Staff waiting.")
-            self.addAction(self.norWorkAction)
-            self.addAction(self.selWorkAction)
-            self.addAction(self.namedWorkAction)
-            self.addSeparator()
-            self.addAction(self.idleAction)
-        elif wType in workTypes :
-            log("StaffMenu - updateMenu - Staff working.")
-            self.addAction(self.waitAction)
-        log("StaffMenu - updateMenu ---- End.\n\n")
-
-
 class StaffIcon(QGraphicsItem) :
 
 
@@ -194,24 +54,26 @@ class StaffIcon(QGraphicsItem) :
         # Initialize parent #
         super(StaffIcon, self).__init__()
         # Get parent and its rerange function, staff, staffs #
-        self.parent = parent
-        self.rerange = parent.rerange
-        self.staff = staff
         self.Id = staff.Id
+        self.staff = staff
         self.staffs = staffs
+        self.rerange = parent.rerange
         log("StaffIcon - init - Fetched parent, staff, staffs.")
         # Get workSeqs and workTypes #
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
         log("StaffIcon - init - Fetched workSeqs and workTypes.")
+        # Place this icon where it should be #
         log("StaffIcon - init - Run into putInPlace().")
         self.putInPlace()
+        # Set the number inside this icon #
         log("StaffIcon - init - Setup number in the icon.")
         self.StaffNum = QGraphicsTextItem("{}"\
                 .format(self.Id), self)
         self.StaffNum.setTextWidth(10)
         self.StaffNum.setFont(QFont("Times", 20))
         self.StaffNum.adjustSize()
+        # The End #
         log("StaffIcon - init ---- End.\n\n")
 
 
@@ -263,7 +125,45 @@ class StaffIcon(QGraphicsItem) :
 
 
     def contextMenuEvent(self, event) :
-        StaffMenu(self.staffs, self.staff, event, self.rerange, self)
+        # Get log #
+        log = self.log
+        log("StaffIcon - contextMenuEvent ---- Start.")
+        # Create Menu #
+        StaffMenu = QMenu()
+        # Get Staff #
+        Id = self.Id
+        staff = self.staff
+        wType = staff.wType
+        log("\tStaff Id: {}, name: {}, gender: {}, workType: {}".format(Id,
+            staff.name, staff. gender, wType))
+        staffs = self.staffs
+        staffWork = staffs.staffWork
+        log("StaffIcon - contextMenuEvent - Fetched Id, staff, staffs, staffWork.")
+        # Create actions and connect them #
+        if wType == staffs.WAIT :
+            log("StaffMenu - contextMenuEvent - Staff is waiting.")
+            norWorkAction = StaffMenu.addAction("排钟")
+            selWorkAction = StaffMenu.addAction("选种")
+            namedWorkAction = StaffMenu.addAction("点钟")
+            StaffMenu.addSeparator()
+            idleAction = StaffMenu.addAction("下班")
+            norWorkAction.triggered.connect( lambda : staffWork(Id, staffs.NOR) )
+            selWorkAction.triggered.connect( lambda : staffWork(Id, staffs.SEL) )
+            namedWorkAction.triggered.connect( lambda : staffWork(Id, staffs.NAMED) )
+            idleAction.triggered.connect( lambda : staffs.staffIdle(Id) )
+            log("StaffMenu - contextMenuEvent - Created nor, sel, named, idle actions.")
+        elif wType in staffs.workTypes :
+            log("StaffMenu - contextMenuEvent - Staff is working.")
+            waitAction = StaffMenu.addAction("等待")
+            waitAction.triggered.connect( lambda : staffs.staffWait(Id) )
+            log("StaffMenu - contextMenuEvent - Created wait action.")
+        action = StaffMenu.exec(event.screenPos())
+        if action is not None :
+            log("StaffIcon - contextMenuEvent ---- Excuted.")
+            log("StaffIcon - contextMenuEvent - Call WorkGraph's rerange().\n\n")
+            self.rerange()
+        else :
+            log("StaffIcon - contextMenuEvent - Gave up.")
 
 
 class WorkGraph(QWidget) :
@@ -375,6 +275,12 @@ if __name__ == '__main__' :
     S.groupStaff(1,1)
     S.groupStaff(2,1)
     S.groupStaff(3,1)
+    S.groupStaff(4,1)
+    S.groupStaff(5,1)
+    S.groupStaff(6,1)
+    S.groupStaff(7,1)
+    S.groupStaff(8,1)
+    S.groupStaff(9,1)
     S.shiftStaff(1)
     S.reportStaffs()
     #S.staffsWait(1,2,3,4,5,6,7,8,9)
