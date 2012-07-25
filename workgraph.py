@@ -77,21 +77,11 @@ class StaffMenu(QMenu) :
         self.updateMenu()
         log("StaffMenu - init - Updated menu.")
         # Connect signals and slots #
-        self.connect(self.norWorkAction, SIGNAL("activated()"),
-                #lambda : self.staffWork(self.Id, self.NOR))
-                lambda : self.errorDetect(self.NOR))
-        self.connect(self.selWorkAction, SIGNAL("activated()"),
-                #lambda : self.staffWork(self.Id, self.SEL))
-                lambda : self.errorDetect(self.SEL))
-        self.connect(self.namedWorkAction, SIGNAL("activated()"),
-                #lambda : self.staffWork(self.Id, self.NAMED))
-                lambda : self.errorDetect(self.NAMED))
-        self.connect(self.waitAction, SIGNAL("activated()"),
-                #lambda : self.staffWait(self.Id))
-                lambda : self.errorDetect(self.WAIT))
-        self.connect(self.idleAction, SIGNAL("activated()"),
-                #lambda : self.staffIdle(self.Id))
-                lambda : self.errorDetect(self.IDLE))
+        self.norWorkAction.activated.connect( lambda : self.errorDetect(self.NOR) )
+        self.selWorkAction.activated.connect( lambda : self.errorDetect(self.SEL) )
+        self.namedWorkAction.activated.connect( lambda : self.errorDetect(self.NAMED) )
+        self.waitAction.activated.connect( lambda : self.errorDetect(self.WAIT) )
+        self.idleAction.activated.connect( lambda : self.errorDetect(self.IDLE) )
         log("StaffMenu - init - Connected signals and slots.")
         log("StaffMenu - init - End.\n\n")
         self.exec(event.screenPos())
@@ -375,6 +365,12 @@ if __name__ == '__main__' :
     S.groupStaff(1,1)
     S.groupStaff(2,1)
     S.groupStaff(3,1)
+    S.groupStaff(4,1)
+    S.groupStaff(5,1)
+    S.groupStaff(6,1)
+    S.groupStaff(7,1)
+    S.groupStaff(8,1)
+    S.groupStaff(9,1)
     S.shiftStaff(1)
     S.reportStaffs()
     #S.staffsWait(1,2,3,4,5,6,7,8,9)
