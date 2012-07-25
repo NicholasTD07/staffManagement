@@ -184,24 +184,26 @@ class StaffIcon(QGraphicsItem) :
         # Initialize parent #
         super(StaffIcon, self).__init__()
         # Get parent and its rerange function, staff, staffs #
-        self.parent = parent
-        self.rerange = parent.rerange
-        self.staff = staff
         self.Id = staff.Id
+        self.staff = staff
         self.staffs = staffs
+        self.rerange = parent.rerange
         log("StaffIcon - init - Fetched parent, staff, staffs.")
         # Get workSeqs and workTypes #
         self.workSeqs = staffs.getWorkSeq()
         self.workTypes = staffs.workTypes
         log("StaffIcon - init - Fetched workSeqs and workTypes.")
+        # Place this icon where it should be #
         log("StaffIcon - init - Run into putInPlace().")
         self.putInPlace()
+        # Set the number inside this icon #
         log("StaffIcon - init - Setup number in the icon.")
         self.StaffNum = QGraphicsTextItem("{}"\
                 .format(self.Id), self)
         self.StaffNum.setTextWidth(10)
         self.StaffNum.setFont(QFont("Times", 20))
         self.StaffNum.adjustSize()
+        # The End #
         log("StaffIcon - init ---- End.\n\n")
 
 
@@ -218,6 +220,27 @@ class StaffIcon(QGraphicsItem) :
         self.putInPlace()
         QGraphicsItem.update(self, StaffIcon.Rect)
 
+
+    def createActions(self, parent) :
+        # Get log #
+        log = self.log
+        log("StaffIcon - createActions ---- Start.")
+        # Get Id, staffs and staffWork #
+        Id = self.Id
+        staffs = self.staffs
+        staffWork = staffs.staffWork
+        # Create actions #
+        self.norWorkAction = QAction("排钟", parent)
+        self.selWorkAction = QAction("选钟", parent)
+        self.namedWorkAction = QAction("点钟", parent)
+        self.waitAction = QAction("等待", parent)
+        self.idleAction = QAction("下班", parent)
+        # Connect actions to slots #
+        self.norWorkAction.activated.connect( lambda : staffWork(Id, staffs.NOR) )
+        self.selWorkAction.activated.connect( lambda : staffWork(Id, staffs.SEL) )
+        self.namedWorkAction.activated.connect( lambda : staffWork(Id, staffs.NAMED) )
+        self.waitAction.activated.connect( lambda : staffs.staffWait(Id) )
+        self.idleAction.activated.connect( lambda : staffs.staffIdle(Id) )
 
     # Setup where it is and how does it look like #
     def putInPlace(self) :
@@ -253,7 +276,45 @@ class StaffIcon(QGraphicsItem) :
 
 
     def contextMenuEvent(self, event) :
-        StaffMenu(self.staffs, self.staff, event, self.rerange, self)
+        # Get log #
+        log = self.log
+        log("StaffIcon - contextMenuEvent ---- Start.")
+        # Create Menu #
+        StaffMenu = QMenu()
+        # Get Staff #
+        Id = self.Id
+        staff = self.staff
+        wType = staff.wType
+        log("\tStaff Id: {}, name: {}, gender: {}, workType: {}".format(Id,
+            staff.name, staff. gender, wType))
+        staffs = self.staffs
+        staffWork = staffs.staffWork
+        log("StaffIcon - contextMenuEvent - Fetched Id, staff, staffs, staffWork.")
+        # Create actions and connect them #
+        if wType == staffs.WAIT :
+            log("StaffMenu - contextMenuEvent - Staff is waiting.")
+            norWorkAction = StaffMenu.addAction("排钟")
+            selWorkAction = StaffMenu.addAction("选种")
+            namedWorkAction = StaffMenu.addAction("点钟")
+            StaffMenu.addSeparator()
+            idleAction = StaffMenu.addAction("下班")
+            norWorkAction.activated.connect( lambda : staffWork(Id, staffs.NOR) )
+            selWorkAction.activated.connect( lambda : staffWork(Id, staffs.SEL) )
+            namedWorkAction.activated.connect( lambda : staffWork(Id, staffs.NAMED) )
+            idleAction.activated.connect( lambda : staffs.staffIdle(Id) )
+            log("StaffMenu - contextMenuEvent - Created nor, sel, named, idle actions.")
+        elif wType in staffs.workTypes :
+            log("StaffMenu - contextMenuEvent - Staff is working.")
+            waitAction = StaffMenu.addAction("等待")
+            waitAction.activated.connect( lambda : staffs.staffWait(Id) )
+            log("StaffMenu - contextMenuEvent - Created wait action.")
+        action = StaffMenu.exec(event.screenPos())
+        if action is not None :
+            log("StaffIcon - contextMenuEvent ---- Excuted.")
+            log("StaffIcon - contextMenuEvent - Call WorkGraph's rerange().\n\n")
+            self.rerange()
+        else :
+            log("StaffIcon - contextMenuEvent - Gave up.")
 
 
 class WorkGraph(QWidget) :
